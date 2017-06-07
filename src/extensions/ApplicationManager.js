@@ -25,7 +25,7 @@ export default class ApplicationManager {
    *  ],
    * }
    * @param  {[JSON]} jsonDescription [JSON-serializable description of the application]
-   * @return {[Extension]} [A running instantiation of the application's description]
+   * @return {[Application]} [A running instantiation of the application's description]
    */
   createExtension(jsonDescription) {
     this.placeholder = jsonDescription;
