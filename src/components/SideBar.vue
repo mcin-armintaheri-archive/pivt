@@ -33,6 +33,7 @@
 <script>
 export default {
   name: 'sidebar',
+  props: ['sidebar-widgets'],
   data() {
     return { toggled: true };
   },

@@ -6,6 +6,8 @@
 
 <script>
 import SideBar from '@/components/SideBar';
+import ExtensionManager from '@/extensions/extension-manager';
+
 
 export default {
   name: 'cervo-scope',
@@ -16,6 +18,11 @@ export default {
   },
   data() {
     return {};
+  },
+  computed: {
+    sidebarWidgets() {
+      return [];
+    },
   },
 };
 </script>
