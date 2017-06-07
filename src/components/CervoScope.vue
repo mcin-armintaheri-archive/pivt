@@ -1,13 +1,14 @@
 <template>
   <div class="container">
-    <sidebar></sidebar>
+    <sidebar v-bind:sidebar-widgets="sidebarWidgets"></sidebar>
   </div>
 </template>
 
 <script>
 import SideBar from '@/components/SideBar';
-import ExtensionManager from '@/extensions/extension-manager';
+import CurveTool from '@/extensions/tools/curve-tool';
 
+const curvetool = new CurveTool();
 
 export default {
   name: 'cervo-scope',
@@ -21,7 +22,7 @@ export default {
   },
   computed: {
     sidebarWidgets() {
-      return [];
+      return [curvetool];
     },
   },
 };

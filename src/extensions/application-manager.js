@@ -1,12 +1,12 @@
-import CurveTool from './tools/curve-tool';
+import CurveTool from './tools/curve-tool/';
 
-export default class ExtensionManager {
+export default class ApplicationManager {
   constructor() {
     this.registerConstructor('CurveTool', CurveTool);
   }
   /**
-   * [createExtension Build an extension out of a JSON description]
-   * The description of the extension is formatted as follows:
+   * [createExtension Build an application out of a JSON description]
+   * The description of the application is formatted as follows:
    * ExtensionJSON = {
    *  'name': 'myNewVisualization', #The name is a camel-cased string.
    *  'scene': 'orthoPlaneBrainSlicer', #The name of the scene constructor.
@@ -24,8 +24,8 @@ export default class ExtensionManager {
    *    }
    *  ],
    * }
-   * @param  {[JSON]} jsonDescription [JSON-serializable description of the extension]
-   * @return {[Extension]} [A running instantiation of the extension's description]
+   * @param  {[JSON]} jsonDescription [JSON-serializable description of the application]
+   * @return {[Extension]} [A running instantiation of the application's description]
    */
   createExtension(jsonDescription) {
     this.placeholder = jsonDescription;
@@ -34,7 +34,7 @@ export default class ExtensionManager {
    * [mapToConstructor Takes a constructor's name as a string and returns its true
    * constructor to instatiate the tool or mediator.]
    * @param  {[String]} constructorName [Name of the tool or mediator's constructor]
-   * @return {[Function]} [The extension's constructor for the given name]
+   * @return {[Function]} [The application's constructor for the given name]
    */
   mapToConstructor(constructorName) {
     const ctr = this.registry[constructorName] || null;
@@ -43,7 +43,7 @@ export default class ExtensionManager {
   /**
    * [registerConstructor Register a constructor's name as a
    * string to it's associated constructor function.]
-   * @param  {[String]} extensionName
+   * @param  {[String]} constructorName
    * @param  {[Function]} toolConstructor [The class constructor of the tool.]
    */
   registerConstructor(constructorName, constructorFunction) {

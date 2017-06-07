@@ -1,8 +1,8 @@
 export default {
   name: 'sidebar-widget',
-  props: ['widget-component', 'widget-component-props'],
+  props: ['widget-controller'],
   render(createElement) {
-    const props = this.widgetComponentProps || {};
-    return createElement(this.widgetComponentProps, { props });
+    const props = { controller: this.widgetController };
+    return createElement(this.widgetController.sidebarWidget, { props });
   },
 };

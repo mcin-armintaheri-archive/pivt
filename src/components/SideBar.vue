@@ -3,22 +3,12 @@
     <el-row class="sidebar-layout">
       <el-col class="sidebar-menu" v-bind:class="sidebarShow" :span="22">
         <el-menu default-active="2"  class="sidebar-menu" theme="dark">
-          <el-submenu index="1">
-            <template slot="title"><i class="el-icon-message"></i>Navigator One</template>
-            <el-menu-item-group title="Group One">
-              <el-menu-item index="1-1">item one</el-menu-item>
-              <el-menu-item index="1-2">item one</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="Group Two">
-              <el-menu-item index="1-3">item three</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="1-4">
-              <template slot="title">item four</template>
-              <el-menu-item index="1-4-1">item one</el-menu-item>
-            </el-submenu>
+          <el-submenu v-for="sidebarwidget in sidebarWidgets" v-bind:key="sidebarwidget.name" index="1">
+            <template slot="title">{{ sidebarwidget.sidebarWidget.name }}: </template>
+              <el-menu-item  class="widget-container" index="1">
+                <sidebar-widget v-bind:widget-controller="sidebarwidget"></sidebar-widget>
+              </el-menu-item>
           </el-submenu>
-          <el-menu-item index="2"><i class="el-icon-menu"></i>Navigator Two</el-menu-item>
-          <el-menu-item index="3"><i class="el-icon-setting"></i>Navigator Three</el-menu-item>
         </el-menu>
       </el-col>
       <el-col :span="1">
@@ -31,8 +21,13 @@
 </template>
 
 <script>
+import SidebarWidget from '@/components/SidebarWidget';
+
 export default {
   name: 'sidebar',
+  components: {
+    'sidebar-widget': SidebarWidget,
+  },
   props: ['sidebar-widgets'],
   data() {
     return { toggled: true };
@@ -80,5 +75,8 @@ export default {
   width: 35px;
   height: 60px;
   background-color: #999;
+}
+.widget-container {
+  padding-top: 50px;
 }
 </style>
