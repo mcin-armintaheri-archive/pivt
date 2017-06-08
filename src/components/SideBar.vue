@@ -3,6 +3,14 @@
     <el-row class="sidebar-layout">
       <el-col class="sidebar-menu" v-bind:class="sidebarShow" :span="22">
         <el-menu default-active="2"  class="sidebar-menu" theme="dark">
+          <div class="add-app-button-container">
+            <el-button class="add-app-button" v-if="threeMount" type="primary" @click="newApplicationEvent">
+              <i class="el-icon-plus"></i>&nbsp;&nbsp;&nbsp;New Application
+            </el-button>
+            <el-button class="add-app-button" v-else="threeMount" type="primary" :loading="true">
+              Loading
+            </el-button>
+          </div>
           <el-submenu v-for="sidebarwidget in sidebarWidgets" v-bind:key="sidebarwidget.name" index="1">
             <template slot="title">{{ sidebarwidget.sidebarWidget.name }}: </template>
               <el-menu-item  class="widget-container" index="1">
@@ -28,7 +36,7 @@ export default {
   components: {
     'sidebar-widget': SidebarWidget,
   },
-  props: ['sidebar-widgets'],
+  props: ['sidebar-widgets', 'three-mount'],
   data() {
     return { toggled: true };
   },
@@ -43,6 +51,9 @@ export default {
   methods: {
     toggleSideBar() {
       this.toggled = !this.toggled;
+    },
+    newApplicationEvent() {
+      this.$emit('new-application', {});
     },
   },
 };
@@ -62,7 +73,8 @@ export default {
   display: none;
 }
 .sidebar-container {
-  position: relative;
+  z-index: 1;
+  position: absolute;
   min-width: 300px;
   max-width: 500px;
   width: 40%;
@@ -78,5 +90,15 @@ export default {
 }
 .widget-container {
   padding-top: 50px;
+}
+.add-app-button {
+  width: 100%;
+  height: 55px;
+}
+.add-app-button-container {
+  margin: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

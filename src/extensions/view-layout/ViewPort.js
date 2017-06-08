@@ -17,10 +17,24 @@ export default class ViewPort {
    * @param  {[Number]} height [Height as a fraction: 0.0 to 1.0]
    * @param {[String]} type [Either PERSPECTIVE or ORTHOGRAPHIC]
    */
-  constructor(canvas, bottom, left, width, height, type, control, near = 0.1, far = 1000) {
-    const rect = canvas.getBoundingClientRect();
+  constructor(
+    canvas,
+    renderer,
+    left,
+    bottom,
+    width,
+    height,
+    type,
+    control,
+    near = 0.1,
+    far = 1000,
+  ) {
+    const rectangle = canvas.getBoundingClientRect();
     this.enabled = false;
-    this.frustrumSize = height * rect.height;
+    this.canvas = canvas;
+    this.renderer = renderer;
+    this.canvasRectangle = rectangle;
+    this.frustrumSize = height * rectangle.height;
     this.viewport = { bottom, left, width, height, near, far };
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
@@ -36,7 +50,7 @@ export default class ViewPort {
       }
       default: {
         /* eslint-disable quotes */
-        const err = `Camera type must be either $ORTHOGRAPHIC or $PERSPECTIVE, not "$type"`;
+        const err = `Camera type must be either ${ORTHOGRAPHIC} or ${PERSPECTIVE}, not "${type}"`;
         throw err;
       }
     }
@@ -49,6 +63,12 @@ export default class ViewPort {
         break;
       }
     }
+  }
+  setNear(near) {
+    this.camera.near = near;
+  }
+  setFar(far) {
+    this.camera.near = far;
   }
   enableControls(boolean) {
     this.enabled = boolean;
@@ -64,13 +84,14 @@ export default class ViewPort {
     this.camera.up.y = Math.cos(angle);
     this.camera.up.normalize();
   }
-  updateAll(scene, renderer, canvasRectangle) {
+  updateCamera(scene) {
+    this.canvasRectangle = this.canvas.getBoundingClientRect();
     this.updateControls();
-    this.updateCameraConfiguration(canvasRectangle);
-    this.renderWith(scene, renderer, canvasRectangle);
+    this.updateCameraConfiguration();
+    this.renderWith(scene);
   }
-  updateCameraConfiguration(canvasRectangle) {
-    const { width, height } = canvasRectangle;
+  updateCameraConfiguration() {
+    const { width, height } = this.canvasRectangle;
     const aspect = width / height;
     this.camera.aspect = aspect;
     this.camera.left = (-this.frustrumSize * aspect) / 2;
@@ -84,7 +105,7 @@ export default class ViewPort {
       this.controls.enabled = this.enabled && this.mouseIntersects();
     }
   }
-  updateMouse(x, y, width, height) {
+  updateMousePosition(x, y, width, height) {
     const viewportWidthPX = width * this.viewport.width;
     const viewportHeightPX = height * this.viewport.height;
     this.mouse.set(
@@ -99,22 +120,22 @@ export default class ViewPort {
   mouseIntersects() {
     return Math.abs(this.mouse.x) < 1.0 && Math.abs(this.mouse.y) < 1.0;
   }
-  renderWith(scene, renderer, canvasRectangle) {
-    const { width, height } = canvasRectangle;
-    renderer.setViewport(
+  renderWith(scene) {
+    const { width, height } = this.canvasRectangle;
+    this.renderer.setViewport(
       width * this.viewport.left,
       height * this.viewport.bottom,
       width * this.viewport.width,
       height * this.viewport.height,
     );
-    renderer.setScissor(
+    this.renderer.setScissor(
       width * this.viewport.left,
       height * this.viewport.bottom,
       width * this.viewport.width,
       height * this.viewport.height,
     );
-    renderer.setScissorTest(true);
-    renderer.setClearColor(this.clearColor);
-    renderer.render(scene, this.camera);
+    this.renderer.setScissorTest(true);
+    this.renderer.setClearColor(this.clearColor);
+    this.renderer.render(scene, this.camera);
   }
 }
