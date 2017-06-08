@@ -1,13 +1,27 @@
 <template>
   <div class="container">
     <sidebar
-      v-bind:sidebar-widgets="sidebarWidgets"
+      v-bind:sidebar-widgets="[]"
       v-bind:three-mount="threeViewMountPoint !== null"
-      v-on:new-application="newApplication"
+      v-on:new-application="appSelectDialog = true"
     >
     </sidebar>
     <threeview v-on:threeViewMounted="onThreeViewMounted">
     </threeview>
+    <el-dialog
+      title="Select an application to run!"
+      :visible.sync="appSelectDialog"
+      size="small"
+    >
+      <application-select
+        v-bind:options="applications"
+        v-on:applicationSelect="loadSelectedApplication"
+      >
+      </application-select>
+      <span slot="footer">
+        <el-button @click="appSelectDialog = false">Cancel</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -36,16 +50,18 @@ export default {
   components: {
     sidebar: SideBar,
     threeview: ThreeView,
+    'application-select': ApplicationSelect,
   },
   data() {
     return {
       threeViewMountPoint: null,
       runningApplications: [],
+      appSelectDialog: false,
     };
   },
   computed: {
-    sidebarWidgets() {
-      return [];
+    applications() {
+      return APPLICATIONS;
     },
   },
   methods: {
@@ -53,32 +69,10 @@ export default {
       this.threeViewMountPoint = container;
     },
     loadSelectedApplication(application) {
+      this.appSelectDialog = false;
       const app = appManager.create(this.threeViewMountPoint, application);
       app.run();
       this.runningApplications.push(app);
-    },
-    newApplication() {
-      let selected = null;
-      const applicationSelect = (application) => {
-        selected = application;
-      };
-      this.$msgbox({
-        title: 'Select an application',
-        message: this.$createElement(ApplicationSelect, {
-          props: {
-            options: APPLICATIONS,
-            selected: this.selectedApplication,
-          },
-          on: { applicationSelect },
-        }),
-        showCancelButton: true,
-        cancelButtonText: 'Cancel',
-        confirmButtonText: 'Load',
-      }).then((action) => {
-        if (action === 'confirm') {
-          this.loadSelectedApplication(selected);
-        }
-      });
     },
   },
 };

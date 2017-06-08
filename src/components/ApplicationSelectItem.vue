@@ -1,6 +1,6 @@
 
 <template>
-  <div v-bind:class="appItemClass">
+  <div class="app-option">
     {{ this.option.name }}
   </div>
 </template>
@@ -8,17 +8,14 @@
 <script>
 export default {
   name: 'application-select-item',
-  props: ['option', 'active'],
-  computed: {
-    appItemClass() {
-      return { 'active-option': this.active };
-    },
-  },
+  props: ['option'],
 };
 </script>
 
 <style scoped>
-.active-option {
-  background-color: #f00;
+.app-option:hover {
+  background-color: #999;
+  color: #fff;
+  cursor: pointer;
 }
 </style>

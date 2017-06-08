@@ -5,7 +5,6 @@
       v-for="option in options"
       :key="option.name"
       v-bind:option="option"
-      v-bind:active="option === selected"
       v-on:click.native="selectItem(option)"
     >
     </application-select-item>
@@ -21,12 +20,8 @@ export default {
     applicationSelectItem: ApplicationSelectItem,
   },
   props: ['options'],
-  data() {
-    return { selected: null };
-  },
   methods: {
     selectItem(option) {
-      this.selected = option;
       this.$emit('applicationSelect', option);
     },
   },

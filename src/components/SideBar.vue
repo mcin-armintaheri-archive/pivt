@@ -67,12 +67,14 @@ export default {
   height: 100%;
 }
 .sidebar-menu {
+  pointer-events: all;
   height: 100%;
 }
 .sidebar-hide {
   display: none;
 }
 .sidebar-container {
+  pointer-events: none;
   z-index: 1;
   position: absolute;
   min-width: 300px;
@@ -81,6 +83,7 @@ export default {
   height: 100%;
 }
 .sidebar-toggle {
+  pointer-events: all;
   display: flex;
   justify-content: center;
   align-items: center;
