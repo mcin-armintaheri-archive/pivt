@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <sidebar
-      v-bind:sidebar-widgets="[]"
+      v-bind:applications="runningApplications"
       v-bind:three-mount="threeViewMountPoint !== null"
       v-on:new-application="appSelectDialog = true"
     >
@@ -38,12 +38,19 @@ const brainSlicer = {
   scene: 'OrthoPlanes',
   layout: 'XYZPerspectiveQuadView',
   tools: [
-    'PixpipeShader',
+    'CurveTool',
   ],
   mediators: [],
 };
 
 const APPLICATIONS = [brainSlicer];
+
+function S4() {
+  /* eslint-disable no-bitwise */
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+}
+
+// then to call it, plus stitch in '4' in the third group
 
 export default {
   name: 'cervo-scope',
@@ -69,8 +76,12 @@ export default {
       this.threeViewMountPoint = container;
     },
     loadSelectedApplication(application) {
+      const guid = (
+        `${S4()}${S4()}-${S4()}-4${S4().substr(0, 3)}-${S4()}-${S4()}${S4()}${S4()}`
+      ).toLowerCase();
       this.appSelectDialog = false;
       const app = appManager.create(this.threeViewMountPoint, application);
+      app.uid = guid;
       app.run();
       this.runningApplications.push(app);
     },

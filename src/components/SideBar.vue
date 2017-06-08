@@ -11,12 +11,12 @@
               Loading
             </el-button>
           </div>
-          <el-submenu v-for="sidebarwidget in sidebarWidgets" v-bind:key="sidebarwidget.name" index="1">
-            <template slot="title">{{ sidebarwidget.sidebarWidget.name }}: </template>
-              <el-menu-item  class="widget-container" index="1">
-                <sidebar-widget v-bind:widget-controller="sidebarwidget"></sidebar-widget>
-              </el-menu-item>
-          </el-submenu>
+          <application-sidebar-widgets
+            v-for="application in applications"
+            v-bind:application="application"
+            :key="application.uid"
+          >
+          </application-sidebar-widgets>
         </el-menu>
       </el-col>
       <el-col :span="1">
@@ -30,13 +30,15 @@
 
 <script>
 import SidebarWidget from '@/components/SidebarWidget';
+import ApplicationSidebarWidgets from '@/components/ApplicationSidebarWidgets';
 
 export default {
   name: 'sidebar',
   components: {
     'sidebar-widget': SidebarWidget,
+    'application-sidebar-widgets': ApplicationSidebarWidgets,
   },
-  props: ['sidebar-widgets', 'three-mount'],
+  props: ['applications', 'three-mount'],
   data() {
     return { toggled: true };
   },
@@ -53,7 +55,7 @@ export default {
       this.toggled = !this.toggled;
     },
     newApplicationEvent() {
-      this.$emit('new-application', {});
+      this.$emit('new-application');
     },
   },
 };
