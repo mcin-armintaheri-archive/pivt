@@ -11,13 +11,21 @@ export default class Layout {
       this.context = this.canvas.getContext('2d');
     }
     container.appendChild(this.canvas);
-    this.canvas.addEventListener('mousemove', this.mouseMove.bind(this));
-    window.addEventListener('resize', this.resizeCanvas.bind(this));
     this.resizeCanvas();
     if (!this.updateMousePosition) {
       const err = 'Layout should implement the method "updateMouse"';
       throw err;
     }
+
+    // Destructor for unregistering dom events.
+    this.mousemoveSuper = this.mouseMove.bind(this);
+    this.resizeSuper = this.resizeCanvas.bind(this);
+    this.canvas.addEventListener('mousemove', this.mousemoveSuper);
+    window.addEventListener('resize', this.resizeSuper);
+  }
+  removeLayoutListeners() {
+    this.canvas.removeEventListener('mousemove', this.mousemoveSuper);
+    window.removeEventListener('resize', this.resizeSuper);
   }
   mousePosition(event) {
     const { top, left, width, height } = this.canvas.getBoundingClientRect();
@@ -34,9 +42,5 @@ export default class Layout {
     if (this.renderer) {
       this.renderer.setSize(width, height);
     }
-  }
-  removeLayoutListeners() {
-    this.canvas.removeEventListener('mousemove', this.mouseMove.bind(this));
-    window.removeEventListener('resize', this.resizeCanvas.bind(this));
   }
 }

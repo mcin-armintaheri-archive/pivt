@@ -1,10 +1,15 @@
 import Application from './Application';
 
-// Begin Tool and Extension Imports
+// Begin Tool and Mediator Imports
 import CurveTool from './tools/curve-tool/';
 import XYZPerspectiveQuadView from './view-layout/XYZPerspectiveQuadView';
 import OrthoPlanes from './scene/OrthoPlanes';
-// End Tool and Extension Imports
+import VolumeBufferLoader from './tools/volume-buffer-loader';
+import OrthoPlanesShaderInjector from './mediators/OrthoPlanesShaderInjector';
+import QuadViewXYZLayers from './mediators/QuadViewXYZLayers';
+import QuadViewXYZPlaneShifter from './mediators/QuadViewXYZPlaneShifter';
+import OrthoPlanesContrastSettings from './mediators/OrthoPlanesContrastSettings';
+// End Tool and Mediator Imports
 
 export default class ApplicationManager {
   constructor() {
@@ -12,6 +17,11 @@ export default class ApplicationManager {
     this.registerConstructor('CurveTool', CurveTool);
     this.registerConstructor('OrthoPlanes', OrthoPlanes);
     this.registerConstructor('XYZPerspectiveQuadView', XYZPerspectiveQuadView);
+    this.registerConstructor('VolumeBufferLoader', VolumeBufferLoader);
+    this.registerConstructor('OrthoPlanesShaderInjector', OrthoPlanesShaderInjector);
+    this.registerConstructor('QuadViewXYZLayers', QuadViewXYZLayers);
+    this.registerConstructor('QuadViewXYZPlaneShifter', QuadViewXYZPlaneShifter);
+    this.registerConstructor('OrthoPlanesContrastSettings', OrthoPlanesContrastSettings);
   }
   /**
    * [create Build an application out of a JSON description]
@@ -43,10 +53,27 @@ export default class ApplicationManager {
       name,
       scene,
       layout,
+      tools,
+      mediators,
     } = jsonDescription;
+    const dependencies = {};
     const application = new Application(name);
-    application.setScene(this.createFromConstructorName(scene, viewContainer));
-    application.setLayout(this.createFromConstructorName(layout, viewContainer));
+    const sceneObj = this.createFromConstructorName(scene, viewContainer);
+    const layoutObj = this.createFromConstructorName(layout, viewContainer);
+    dependencies.scene = sceneObj;
+    application.setScene(sceneObj);
+    dependencies.layout = layoutObj;
+    application.setLayout(layoutObj);
+    tools.forEach((toolMeta) => {
+      const toolObj = this.createFromConstructorName(toolMeta.tool, sceneObj, layoutObj);
+      dependencies[toolMeta.name] = toolObj;
+      application.addTool(toolObj);
+    });
+    mediators.forEach((medMeta) => {
+      const deps = medMeta.dependencies.map(d => dependencies[d]);
+      const mediatorObj = this.createFromConstructorName(medMeta.mediator, ...deps);
+      application.addMediator(mediatorObj);
+    });
     return application;
   }
   /**

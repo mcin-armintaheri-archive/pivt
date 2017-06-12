@@ -9,7 +9,7 @@ export default class XYZPerspectiveQuadView extends Layout {
     this.topleft = new ViewPort(
       this.canvas,
       this.renderer,
-      0,
+      0.0,
       0.5,
       0.5,
       0.5,
@@ -27,8 +27,8 @@ export default class XYZPerspectiveQuadView extends Layout {
     this.bottomleft = new ViewPort(
       this.canvas,
       this.renderer,
-      0,
-      0,
+      0.0,
+      0.0,
       0.5,
       0.5,
       ORTHOGRAPHIC,
@@ -37,7 +37,7 @@ export default class XYZPerspectiveQuadView extends Layout {
       this.canvas,
       this.renderer,
       0.5,
-      0,
+      0.0,
       0.5,
       0.5,
       PERSPECTIVE,
@@ -54,6 +54,30 @@ export default class XYZPerspectiveQuadView extends Layout {
       this.bottomleft,
       this.bottomright,
     ];
+    this.selectViewport = () => {
+      this.viewports.forEach(v => v.enableControls(false));
+      this.viewports.filter(v => v.mouseIntersects())[0].enableControls(true);
+    };
+    container.addEventListener('mousedown', this.selectViewport);
+  }
+  removeLayoutListeners() {
+    super.removeEventListeners();
+    this.container.removeEventListener('mousedown', this.selectViewport);
+  }
+  getViewports() {
+    return this.viewports;
+  }
+  getTopLeft() {
+    return this.topleft;
+  }
+  getTopRight() {
+    return this.topright;
+  }
+  getBottomLeft() {
+    return this.bottomleft;
+  }
+  getBottomRight() {
+    return this.bottomright;
   }
   updateMousePosition(x, y, width, height) {
     this.viewports.forEach(v => v.updateMousePosition(x, y, width, height));

@@ -2,21 +2,27 @@
   <div class="sidebar-container">
     <el-row class="sidebar-layout">
       <el-col class="sidebar-menu" v-bind:class="sidebarShow" :span="22">
-        <el-menu default-active="2"  class="sidebar-menu" theme="dark">
+        <el-menu default-active="2"  class="sidebar-menu" theme="dark" unique-opened>
           <div class="add-app-button-container">
-            <el-button class="add-app-button" v-if="threeMount" type="primary" @click="newApplicationEvent">
+            <el-button class="add-app-button" v-if="threeMount" type="primary" @click="newApplication">
               <i class="el-icon-plus"></i>&nbsp;&nbsp;&nbsp;New Application
             </el-button>
             <el-button class="add-app-button" v-else="threeMount" type="primary" :loading="true">
               Loading
             </el-button>
           </div>
-          <application-sidebar-widgets
-            v-for="application in applications"
-            v-bind:application="application"
-            :key="application.uid"
+          <el-submenu
+            v-for="(application, idx) in applications"
+            :key="idx"
+            :index="String(idx)"
           >
-          </application-sidebar-widgets>
+            <template slot="title">{{ application.getName() + ' ' + idx }}</template>
+            <application-sidebar-widgets
+              v-bind:application="application"
+              v-bind:appIndex="idx"
+            >
+            </application-sidebar-widgets>
+          </el-submenu>
         </el-menu>
       </el-col>
       <el-col :span="1">
@@ -54,8 +60,11 @@ export default {
     toggleSideBar() {
       this.toggled = !this.toggled;
     },
-    newApplicationEvent() {
+    newApplication() {
       this.$emit('new-application');
+    },
+    switchApplication(application) {
+      this.$emit('switch-application', application);
     },
   },
 };
@@ -69,6 +78,7 @@ export default {
   height: 100%;
 }
 .sidebar-menu {
+  overflow-y: auto;
   pointer-events: all;
   height: 100%;
 }

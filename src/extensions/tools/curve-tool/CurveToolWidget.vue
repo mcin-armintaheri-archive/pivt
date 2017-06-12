@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <el-row>
-      <el-col :span="24" id="curve-tool-mount">
+      <el-col :span="24" class="curve-tool-mount">
       </el-col>
     </el-row>
     <el-row>
@@ -25,7 +25,7 @@ export default {
   name: 'curve-tool-widget',
   props: ['controller'],
   mounted() {
-    this.controller.initialize();
+    this.controller.initialize(this.$el.querySelector('.curve-tool-mount'));
     this.controller.getSpliner().setSplineType('monotonic');
   },
   data() {

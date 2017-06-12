@@ -38,17 +38,36 @@ const brainSlicer = {
   scene: 'OrthoPlanes',
   layout: 'XYZPerspectiveQuadView',
   tools: [
-    'CurveTool',
+    {
+      name: 'contrast',
+      tool: 'CurveTool',
+    },
+    {
+      name: 'loader',
+      tool: 'VolumeBufferLoader',
+    },
   ],
-  mediators: [],
+  mediators: [
+    {
+      mediator: 'OrthoPlanesShaderInjector',
+      dependencies: ['scene', 'layout', 'loader'],
+    },
+    {
+      mediator: 'QuadViewXYZLayers',
+      dependencies: ['scene', 'layout'],
+    },
+    {
+      mediator: 'OrthoPlanesContrastSettings',
+      dependencies: ['scene', 'layout', 'contrast'],
+    },
+    {
+      mediator: 'QuadViewXYZPlaneShifter',
+      dependencies: ['scene', 'layout'],
+    },
+  ],
 };
 
 const APPLICATIONS = [brainSlicer];
-
-function S4() {
-  /* eslint-disable no-bitwise */
-  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-}
 
 // then to call it, plus stitch in '4' in the third group
 
@@ -76,12 +95,8 @@ export default {
       this.threeViewMountPoint = container;
     },
     loadSelectedApplication(application) {
-      const guid = (
-        `${S4()}${S4()}-${S4()}-4${S4().substr(0, 3)}-${S4()}-${S4()}${S4()}${S4()}`
-      ).toLowerCase();
       this.appSelectDialog = false;
       const app = appManager.create(this.threeViewMountPoint, application);
-      app.uid = guid;
       app.run();
       this.runningApplications.push(app);
     },

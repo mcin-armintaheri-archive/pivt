@@ -27,7 +27,7 @@ export default class ViewPort {
     type,
     control,
     near = 0.1,
-    far = 1000,
+    far = 6000,
   ) {
     const rectangle = canvas.getBoundingClientRect();
     this.enabled = false;
@@ -35,8 +35,7 @@ export default class ViewPort {
     this.renderer = renderer;
     this.canvasRectangle = rectangle;
     this.frustrumSize = height * rectangle.height;
-    this.viewport = { bottom, left, width, height, near, far };
-    this.raycaster = new THREE.Raycaster();
+    this.viewport = { bottom, left, width, height };
     this.mouse = new THREE.Vector2();
     this.clearColor = new THREE.Color().setRGB(1.0, 1.0, 1.0);
     switch (type) {
@@ -63,18 +62,38 @@ export default class ViewPort {
         break;
       }
     }
+    this.setNear(near);
+    this.setFar(far);
+    this.camera.position.z = 5.0;
+  }
+  getTHREECamera() {
+    return this.camera;
+  }
+  getTHREEControls() {
+    return this.controls;
+  }
+  getMousePosReference() {
+    return this.mouse;
   }
   setNear(near) {
     this.camera.near = near;
   }
   setFar(far) {
-    this.camera.near = far;
+    this.camera.far = far;
   }
   enableControls(boolean) {
     this.enabled = boolean;
   }
   setClearColor(color) {
     this.clearColor = color;
+  }
+  moveTo(x = null, y = null, z = null) {
+    if (x !== null) { this.camera.position.x = x; }
+    if (y !== null) { this.camera.position.x = y; }
+    if (z !== null) { this.camera.position.x = z; }
+  }
+  lookAt(position) {
+    this.camera.lookAt(position);
   }
   followObject(sceneObject, offset, roll) {
     this.rollTo(roll);
@@ -102,20 +121,17 @@ export default class ViewPort {
   }
   updateControls() {
     if (this.controls) {
-      this.controls.enabled = this.enabled && this.mouseIntersects();
+      this.controls.enabled = this.enabled;
     }
   }
   updateMousePosition(x, y, width, height) {
     const viewportWidthPX = width * this.viewport.width;
     const viewportHeightPX = height * this.viewport.height;
+    const yOffset = this.viewport.height - this.viewport.bottom;
     this.mouse.set(
        ((2 * (((x - (width * this.viewport.left))) / viewportWidthPX)) - 1),
-      -((2 * (((y - (height * this.viewport.bottom))) / viewportHeightPX)) - 1),
+      -((2 * (((y - (height * yOffset))) / viewportHeightPX)) - 1),
     );
-  }
-  mousePickScene(sceneObjects) {
-    this.raycaster.setFromCamera(this.mouse, this.camera);
-    return this.raycaster.intersectObjects(sceneObjects);
   }
   mouseIntersects() {
     return Math.abs(this.mouse.x) < 1.0 && Math.abs(this.mouse.y) < 1.0;
