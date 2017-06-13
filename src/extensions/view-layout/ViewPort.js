@@ -30,7 +30,6 @@ export default class ViewPort {
     far = 6000,
   ) {
     const rectangle = canvas.getBoundingClientRect();
-    this.enabled = false;
     this.canvas = canvas;
     this.renderer = renderer;
     this.canvasRectangle = rectangle;
@@ -82,7 +81,14 @@ export default class ViewPort {
     this.camera.far = far;
   }
   enableControls(boolean) {
-    this.enabled = boolean;
+    if (this.controls) {
+      if (boolean) {
+        this.controls.reset();
+      } else {
+        this.controls.saveState();
+      }
+      this.controls.enabled = boolean;
+    }
   }
   setClearColor(color) {
     this.clearColor = color;
@@ -105,7 +111,6 @@ export default class ViewPort {
   }
   updateCamera(scene) {
     this.canvasRectangle = this.canvas.getBoundingClientRect();
-    this.updateControls();
     this.updateCameraConfiguration();
     this.renderWith(scene);
   }
@@ -113,16 +118,11 @@ export default class ViewPort {
     const { width, height } = this.canvasRectangle;
     const aspect = width / height;
     this.camera.aspect = aspect;
-    this.camera.left = (-this.frustrumSize * aspect) / 2;
-    this.camera.right = (this.frustrumSize * aspect) / 2;
+    this.camera.left = (-this.frustrumSize * aspect) / 4;
+    this.camera.right = (this.frustrumSize * aspect) / 4;
     this.camera.top = this.frustrumSize / 2;
     this.camera.bottom = -this.frustrumSize / 2;
     this.camera.updateProjectionMatrix();
-  }
-  updateControls() {
-    if (this.controls) {
-      this.controls.enabled = this.enabled;
-    }
   }
   updateMousePosition(x, y, width, height) {
     const viewportWidthPX = width * this.viewport.width;

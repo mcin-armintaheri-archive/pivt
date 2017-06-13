@@ -9,6 +9,7 @@ import OrthoPlanesShaderInjector from './mediators/OrthoPlanesShaderInjector';
 import QuadViewXYZLayers from './mediators/QuadViewXYZLayers';
 import QuadViewXYZPlaneShifter from './mediators/QuadViewXYZPlaneShifter';
 import OrthoPlanesContrastSettings from './mediators/OrthoPlanesContrastSettings';
+import PlanesMaterialManager from './tools/PlanesMaterialManager';
 // End Tool and Mediator Imports
 
 export default class ApplicationManager {
@@ -22,6 +23,7 @@ export default class ApplicationManager {
     this.registerConstructor('QuadViewXYZLayers', QuadViewXYZLayers);
     this.registerConstructor('QuadViewXYZPlaneShifter', QuadViewXYZPlaneShifter);
     this.registerConstructor('OrthoPlanesContrastSettings', OrthoPlanesContrastSettings);
+    this.registerConstructor('PlanesMaterialManager', PlanesMaterialManager);
   }
   /**
    * [create Build an application out of a JSON description]

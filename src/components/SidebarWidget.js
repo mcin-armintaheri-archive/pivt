@@ -3,6 +3,7 @@ export default {
   props: ['widget-controller'],
   render(createElement) {
     const props = { controller: this.widgetController };
-    return createElement(this.widgetController.sidebarWidget, { props });
+    const sidebarEl = this.widgetController.sidebarWidget;
+    return sidebarEl ? createElement(sidebarEl, { props }) : null;
   },
 };

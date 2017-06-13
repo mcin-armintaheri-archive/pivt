@@ -46,15 +46,19 @@ const brainSlicer = {
       name: 'loader',
       tool: 'VolumeBufferLoader',
     },
+    {
+      name: 'materialManager',
+      tool: 'PlanesMaterialManager',
+    },
   ],
   mediators: [
     {
       mediator: 'OrthoPlanesShaderInjector',
-      dependencies: ['scene', 'layout', 'loader'],
+      dependencies: ['scene', 'layout', 'loader', 'materialManager'],
     },
     {
       mediator: 'QuadViewXYZLayers',
-      dependencies: ['scene', 'layout'],
+      dependencies: ['scene', 'layout', 'materialManager'],
     },
     {
       mediator: 'OrthoPlanesContrastSettings',
@@ -62,7 +66,7 @@ const brainSlicer = {
     },
     {
       mediator: 'QuadViewXYZPlaneShifter',
-      dependencies: ['scene', 'layout'],
+      dependencies: ['scene', 'layout', 'materialManager'],
     },
   ],
 };

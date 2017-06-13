@@ -31,15 +31,6 @@ export default class OrthoPlanes {
   getYZ() {
     return this.planeYZ;
   }
-  getPlaneMaterial() {
-    return this.planeMaterial;
-  }
-  setShaderMaterial(material, dimensions) {
-    const planeSize = 2 * dimensions.diagonal;
-    this.planeMaterial = material.clone();
-    this.planeGeometry = new THREE.PlaneGeometry(planeSize, planeSize);
-    this.initializePlanes();
-  }
   initializePlanes() {
     this.planeXY = new THREE.Mesh(this.planeGeometry, this.planeMaterial);
     this.planeXZ = new THREE.Mesh(this.planeGeometry, this.planeMaterial);

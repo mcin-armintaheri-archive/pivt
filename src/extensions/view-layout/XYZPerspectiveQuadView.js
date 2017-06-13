@@ -54,15 +54,6 @@ export default class XYZPerspectiveQuadView extends Layout {
       this.bottomleft,
       this.bottomright,
     ];
-    this.selectViewport = () => {
-      this.viewports.forEach(v => v.enableControls(false));
-      this.viewports.filter(v => v.mouseIntersects())[0].enableControls(true);
-    };
-    container.addEventListener('mousedown', this.selectViewport);
-  }
-  removeLayoutListeners() {
-    super.removeEventListeners();
-    this.container.removeEventListener('mousedown', this.selectViewport);
   }
   getViewports() {
     return this.viewports;

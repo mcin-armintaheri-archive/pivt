@@ -201,8 +201,7 @@ const FRAGMENT = `
     // hide the outside
     if( isOusideTheVolume(worldCoordShifted) )
     {
-        // discard;
-        gl_FragColor = vec4(0.7, 0.7, 0.7, 0.3);
+        discard;
         return;
     }
     // color at the edges of the volume
@@ -233,7 +232,7 @@ const FRAGMENT = `
   }
 `;
 
-export default function OrthoPlaneShaderInjector(scene, layout, volBuffer) {
+export default function OrthoPlaneShaderInjector(scene, layout, volBuffer, materialManager) {
   volBuffer.onFileLoad((dimensions, sliceMatrixSize, textures) => {
     const material = new THREE.ShaderMaterial({
       side: THREE.DoubleSide,
@@ -306,9 +305,9 @@ export default function OrthoPlaneShaderInjector(scene, layout, volBuffer) {
         },
       },
     });
-    scene.setShaderMaterial(material, dimensions);
+    materialManager.setShaderMaterial(material, dimensions);
     layout.getViewports().forEach((v) => {
-      v.moveTo(null, null, dimensions.diagonal * 2.5);
+      v.moveTo(null, null, dimensions.diagonal * 1.5);
       v.lookAt(new THREE.Vector3(0.0, 0.0, 0.0));
     });
   });
