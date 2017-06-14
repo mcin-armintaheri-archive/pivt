@@ -3,6 +3,7 @@
     <div
       class="sidebar-widget-container"
       v-for="(tool, idx) in application.getTools()"
+      v-if="tool.sidebarWidget"
       :key="appIndex + '-' + idx"
     >
       <sidebar-widget

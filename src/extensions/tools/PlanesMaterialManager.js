@@ -1,9 +1,19 @@
+import {
+  Image3DToMosaicFilter,
+} from 'pixpipejs';
+
 const THREE = require('three');
 
+/* eslint-disable no-alert */
 export default class PlanesMaterialManager {
   constructor(scene) {
     this.scene = scene;
     this.materialChangeCallbacks = [];
+    this.texturesCreatedCallbacks = [];
+    this.volumeTextures = [];
+  }
+  getCurrentVolumeTextures() {
+    return this.volumeTextures;
   }
   getDimensions() {
     if (this.dimensions) {
@@ -26,7 +36,62 @@ export default class PlanesMaterialManager {
       }
     });
   }
+  createTextureFromBuffer(buffer) {
+    const mosaicFilter = new Image3DToMosaicFilter();
+    // genericDecoder ouputs a pixpipe.MniVolume, which iherit pixpipe.Image3D
+    // making it compatible with pixpipe.Image3DToMosaicFilter
+    mosaicFilter.addInput(buffer);
+    // which axis do we want the picture of?
+    const space = 'zspace';
+    mosaicFilter.setMetadata('axis', space);
+
+    // if time series, take it all
+    mosaicFilter.setMetadata('time', -1);
+    // run the filter
+    mosaicFilter.update();
+    if (!mosaicFilter.getNumberOfOutputs()) {
+      alert('No output for mosaicFilter.');
+      return;
+    }
+    // display the output in multiple canvas if needed
+    this.volumeTextures = [];
+    for (let nbOut = 0; nbOut < mosaicFilter.getNumberOfOutputs(); nbOut += 1) {
+      const outputMosaic = mosaicFilter.getOutput(nbOut);
+      outputMosaic.setMetadata('min', buffer.getMetadata('voxel_min'));
+      outputMosaic.setMetadata('max', buffer.getMetadata('voxel_max'));
+      const data = outputMosaic.getDataAsUInt8Array();
+      const texture = new THREE.DataTexture(
+        data,
+        outputMosaic.getWidth(),
+        outputMosaic.getHeight(),
+        THREE.LuminanceFormat,
+        THREE.UnsignedByteType,
+      );
+      texture.needsUpdate = true;
+      this.volumeTextures.push(texture);
+    }
+    const sliceMatrixSize = {};
+    sliceMatrixSize.x = mosaicFilter.getMetadata('gridWidth');
+    sliceMatrixSize.y = mosaicFilter.getMetadata('gridHeight');
+    this.dimensions = {};
+    this.dimensions.x = buffer.getMetadata('xspace').space_length;
+    this.dimensions.y = buffer.getMetadata('yspace').space_length;
+    this.dimensions.z = buffer.getMetadata('zspace').space_length;
+    this.dimensions.t = buffer.getTimeLength();
+    const { x, y, z } = this.dimensions;
+    this.dimensions.diagonal = Math.sqrt((x * x) + (y * y) + (z * z));
+    this.texturesCreatedCallbacks.forEach((f) => {
+      f(this.dimensions, sliceMatrixSize, this.volumeTextures);
+    });
+  }
+  onTexturesCreated(callback) {
+    if (callback instanceof Function) {
+      this.texturesCreatedCallbacks.push(callback);
+    }
+  }
   onMaterialChange(callback) {
-    this.materialChangeCallbacks.push(callback);
+    if (callback instanceof Function) {
+      this.materialChangeCallbacks.push(callback);
+    }
   }
 }

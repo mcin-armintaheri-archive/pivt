@@ -4,7 +4,6 @@ import Application from './Application';
 import CurveTool from './tools/curve-tool/';
 import XYZPerspectiveQuadView from './view-layout/XYZPerspectiveQuadView';
 import OrthoPlanes from './scene/OrthoPlanes';
-import VolumeBufferLoader from './tools/volume-buffer-loader';
 import OrthoPlanesShaderInjector from './mediators/OrthoPlanesShaderInjector';
 import QuadViewXYZLayers from './mediators/QuadViewXYZLayers';
 import QuadViewXYZPlaneShifter from './mediators/QuadViewXYZPlaneShifter';
@@ -18,7 +17,6 @@ export default class ApplicationManager {
     this.registerConstructor('CurveTool', CurveTool);
     this.registerConstructor('OrthoPlanes', OrthoPlanes);
     this.registerConstructor('XYZPerspectiveQuadView', XYZPerspectiveQuadView);
-    this.registerConstructor('VolumeBufferLoader', VolumeBufferLoader);
     this.registerConstructor('OrthoPlanesShaderInjector', OrthoPlanesShaderInjector);
     this.registerConstructor('QuadViewXYZLayers', QuadViewXYZLayers);
     this.registerConstructor('QuadViewXYZPlaneShifter', QuadViewXYZPlaneShifter);
@@ -87,7 +85,7 @@ export default class ApplicationManager {
   mapToConstructor(constructorName) {
     const ctr = this.registry[constructorName];
     if (!ctr) {
-      /* eslint-disable quotes */
+      // eslint-disable quotes
       const err = `"${constructorName}" is not a registered tool or mediator constructor.`;
       throw err;
     }
@@ -100,7 +98,7 @@ export default class ApplicationManager {
    * @return {[Function]} [An instance of the constructor registered for the given name]
    */
   createFromConstructorName(constructorName, ...constructorArgs) {
-    /* eslint-disable new-cap */
+    // eslint-disable new-cap
     return new (this.mapToConstructor(constructorName))(...constructorArgs);
   }
   /**

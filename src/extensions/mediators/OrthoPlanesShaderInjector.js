@@ -232,8 +232,8 @@ const FRAGMENT = `
   }
 `;
 
-export default function OrthoPlaneShaderInjector(scene, layout, volBuffer, materialManager) {
-  volBuffer.onFileLoad((dimensions, sliceMatrixSize, textures) => {
+export default function OrthoPlaneShaderInjector(scene, layout, materialManager) {
+  materialManager.onTexturesCreated((dimensions, sliceMatrixSize, textures) => {
     const material = new THREE.ShaderMaterial({
       side: THREE.DoubleSide,
       transparent: true,

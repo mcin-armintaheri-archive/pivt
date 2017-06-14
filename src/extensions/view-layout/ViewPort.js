@@ -47,7 +47,7 @@ export default class ViewPort {
         break;
       }
       default: {
-        /* eslint-disable quotes */
+        // eslint-disable quotes
         const err = `Camera type must be either ${ORTHOGRAPHIC} or ${PERSPECTIVE}, not "${type}"`;
         throw err;
       }

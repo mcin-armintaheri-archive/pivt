@@ -43,10 +43,6 @@ const brainSlicer = {
       tool: 'CurveTool',
     },
     {
-      name: 'loader',
-      tool: 'VolumeBufferLoader',
-    },
-    {
       name: 'materialManager',
       tool: 'PlanesMaterialManager',
     },
@@ -54,7 +50,7 @@ const brainSlicer = {
   mediators: [
     {
       mediator: 'OrthoPlanesShaderInjector',
-      dependencies: ['scene', 'layout', 'loader', 'materialManager'],
+      dependencies: ['scene', 'layout', 'materialManager'],
     },
     {
       mediator: 'QuadViewXYZLayers',
@@ -62,7 +58,7 @@ const brainSlicer = {
     },
     {
       mediator: 'OrthoPlanesContrastSettings',
-      dependencies: ['scene', 'layout', 'contrast'],
+      dependencies: ['contrast', 'materialManager'],
     },
     {
       mediator: 'QuadViewXYZPlaneShifter',
@@ -99,6 +95,7 @@ export default {
       this.threeViewMountPoint = container;
     },
     loadSelectedApplication(application) {
+      // TODO: make ApplicationManager a singleton.
       this.appSelectDialog = false;
       const app = appManager.create(this.threeViewMountPoint, application);
       app.run();
