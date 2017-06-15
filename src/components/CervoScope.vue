@@ -4,6 +4,7 @@
       v-bind:applications="runningApplications"
       v-bind:three-mount="threeViewMountPoint !== null"
       v-on:new-application="appSelectDialog = true"
+      v-on:show-buffer-list="showBufferList = true"
     >
     </sidebar>
     <threeview v-on:threeViewMounted="onThreeViewMounted">
@@ -22,6 +23,32 @@
         <el-button @click="appSelectDialog = false">Cancel</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="Active Buffers"
+      :visible.sync="showBufferList"
+      size="small"
+    >
+      <buffer-manager-widget v-bind:buffers="loadedBuffers">
+      </buffer-manager-widget>
+      <span slot="footer">
+        <el-button @click="showAddBuffer = true">Add</el-button>
+        <el-button @click="showBufferList = false">Cancel</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="Select a file on your computer."
+      :visible.sync="showAddBuffer"
+      size="tiny"
+    >
+      <add-buffer
+        v-on:new-file-loading="addBufferLoading = true"
+        v-on:new-file-added="newFileAddedHandler"
+      >
+      </add-buffer>
+      <span slot="footer">
+        <el-button @click="showAddBuffer = false" :loading="addBufferLoading">Cancel</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -29,9 +56,13 @@
 import SideBar from '@/components/SideBar';
 import ThreeView from '@/components/ThreeView';
 import ApplicationSelect from '@/components/ApplicationSelect';
+import BufferManagerWidget from '@/components/BufferManagerWidget';
+import AddBuffer from '@/components/AddBuffer';
 import ApplicationManager from '@/extensions/ApplicationManager';
+import BufferManager from '@/extensions/BufferManager';
 
 const appManager = new ApplicationManager();
+const buffermanager = BufferManager.getInstance();
 
 const brainSlicer = {
   name: 'BrainSlicer',
@@ -69,20 +100,24 @@ const brainSlicer = {
 
 const APPLICATIONS = [brainSlicer];
 
-// then to call it, plus stitch in '4' in the third group
-
 export default {
   name: 'cervo-scope',
   components: {
     sidebar: SideBar,
     threeview: ThreeView,
     'application-select': ApplicationSelect,
+    'add-buffer': AddBuffer,
+    'buffer-manager-widget': BufferManagerWidget,
   },
   data() {
     return {
       threeViewMountPoint: null,
       runningApplications: [],
       appSelectDialog: false,
+      loadedBuffers: [],
+      showBufferList: false,
+      showAddBuffer: false,
+      addBufferLoading: false,
     };
   },
   computed: {
@@ -100,6 +135,11 @@ export default {
       const app = appManager.create(this.threeViewMountPoint, application);
       app.run();
       this.runningApplications.push(app);
+    },
+    newFileAddedHandler() {
+      this.loadedBuffers = buffermanager.getBufferList();
+      this.addBufferLoading = false;
+      this.showAddBuffer = false;
     },
   },
 };

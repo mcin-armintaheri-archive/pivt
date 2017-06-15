@@ -8,7 +8,7 @@ import OrthoPlanesShaderInjector from './mediators/OrthoPlanesShaderInjector';
 import QuadViewXYZLayers from './mediators/QuadViewXYZLayers';
 import QuadViewXYZPlaneShifter from './mediators/QuadViewXYZPlaneShifter';
 import OrthoPlanesContrastSettings from './mediators/OrthoPlanesContrastSettings';
-import PlanesMaterialManager from './tools/PlanesMaterialManager';
+import PlanesMaterialManager from './tools/planes-material-manager';
 // End Tool and Mediator Imports
 
 export default class ApplicationManager {

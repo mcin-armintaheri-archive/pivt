@@ -1,12 +1,14 @@
 import {
   Image3DToMosaicFilter,
 } from 'pixpipejs';
+import MaterialBufferLoader from './MaterialBufferLoader';
 
 const THREE = require('three');
 
 /* eslint-disable no-alert */
 export default class PlanesMaterialManager {
   constructor(scene) {
+    this.sidebarWidget = MaterialBufferLoader;
     this.scene = scene;
     this.materialChangeCallbacks = [];
     this.texturesCreatedCallbacks = [];
@@ -36,7 +38,7 @@ export default class PlanesMaterialManager {
       }
     });
   }
-  createTextureFromBuffer(buffer) {
+  createTextureFromBuffer(buffer, callback) {
     const mosaicFilter = new Image3DToMosaicFilter();
     // genericDecoder ouputs a pixpipe.MniVolume, which iherit pixpipe.Image3D
     // making it compatible with pixpipe.Image3DToMosaicFilter
@@ -83,6 +85,7 @@ export default class PlanesMaterialManager {
     this.texturesCreatedCallbacks.forEach((f) => {
       f(this.dimensions, sliceMatrixSize, this.volumeTextures);
     });
+    callback();
   }
   onTexturesCreated(callback) {
     if (callback instanceof Function) {

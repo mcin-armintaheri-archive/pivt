@@ -3,12 +3,17 @@
     <el-row class="sidebar-layout">
       <el-col class="sidebar-menu" v-bind:class="sidebarShow" :span="22">
         <el-menu default-active="2"  class="sidebar-menu" theme="dark" unique-opened>
-          <div class="add-app-button-container">
-            <el-button class="add-app-button" v-if="threeMount" type="primary" @click="newApplication">
+          <div class="button-container">
+            <el-button class="sidebar-button" v-if="threeMount" type="primary" @click="newApplication">
               <i class="el-icon-plus"></i>&nbsp;&nbsp;&nbsp;New Application
             </el-button>
-            <el-button class="add-app-button" v-else="threeMount" type="primary" :loading="true">
+            <el-button class="sidebar-button" v-else="threeMount" type="primary" :loading="true">
               Loading
+            </el-button>
+          </div>
+          <div class="button-container">
+            <el-button class="sidebar-button" type="primary" @click="$emit('show-buffer-list')">
+              <i class="el-icon-upload2"></i>&nbsp;&nbsp;&nbsp;File Buffer List
             </el-button>
           </div>
           <el-submenu
@@ -106,11 +111,11 @@ export default {
 .widget-container {
   padding-top: 50px;
 }
-.add-app-button {
+.sidebar-button {
   width: 100%;
   height: 55px;
 }
-.add-app-button-container {
+.button-container {
   margin: 30px;
   display: flex;
   justify-content: center;

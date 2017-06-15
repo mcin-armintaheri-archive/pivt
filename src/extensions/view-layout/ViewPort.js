@@ -151,7 +151,7 @@ export default class ViewPort {
       height * this.viewport.height,
     );
     this.renderer.setScissorTest(true);
-    this.renderer.setClearColor(this.clearColor);
+    this.renderer.setClearColor(this.clearColor, 1);
     this.renderer.render(scene, this.camera);
   }
 }

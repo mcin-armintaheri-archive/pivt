@@ -17,10 +17,13 @@ class BufferManager {
   getBuffer(uid) {
     return this.buffers[uid];
   }
-  addBuffer(uid, buffer) {
-    this.buffer[uid] = buffer;
+  addBuffer(buffer) {
+    this.buffers[buffer.uid] = buffer;
+    this.bufferLoadCallbacks.forEach((f) => {
+      f(buffer);
+    });
   }
-  loadBrainVolume(file) {
+  loadBrainVolume(file, callback) {
     const file2Buff = new FileToArrayBufferReader();
     file2Buff.addInput(file);
     file2Buff.update();
@@ -41,8 +44,11 @@ class BufferManager {
       }
       loader.addBuffer({
         uid: UIDUtils.getUid(),
+        name: file.name,
+        size: file.size,
         buffer: mniVol,
       });
+      callback(mniVol);
     });
   }
   onBufferLoad(callback) {
@@ -53,11 +59,12 @@ class BufferManager {
   removeHandler(callback) {
     this.bufferLoadCallbacks = this.bufferLoadCallbacks.filter(f => f !== callback);
   }
-  loadBuffer
 }
 
 let instance = null;
 
-module.exports = function getBufferManager() {
-  return instance || (instance = new BufferManager());
+export default {
+  getInstance() {
+    return instance || (instance = new BufferManager());
+  },
 };
