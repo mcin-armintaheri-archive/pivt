@@ -30,12 +30,14 @@ export default class ViewPort {
     far = 6000,
   ) {
     const rectangle = canvas.getBoundingClientRect();
+    this.enabled = true;
     this.canvas = canvas;
     this.renderer = renderer;
     this.canvasRectangle = rectangle;
     this.frustrumSize = height * rectangle.height;
     this.viewport = { bottom, left, width, height };
     this.mouse = new THREE.Vector2();
+    this.lastMouseDown = new THREE.Vector2();
     this.clearColor = new THREE.Color().setRGB(1.0, 1.0, 1.0);
     switch (type) {
       case PERSPECTIVE: {
@@ -80,14 +82,17 @@ export default class ViewPort {
   setFar(far) {
     this.camera.far = far;
   }
-  enableControls(boolean) {
+  setEnabled(boolean) {
+    this.enabled = boolean;
+  }
+  setControlsEnabled(boolean) {
     if (this.controls) {
+      this.controls.enabled = boolean;
       if (boolean) {
         this.controls.reset();
       } else {
         this.controls.saveState();
       }
-      this.controls.enabled = boolean;
     }
   }
   setClearColor(color) {
@@ -111,6 +116,7 @@ export default class ViewPort {
   }
   updateCamera(scene) {
     this.canvasRectangle = this.canvas.getBoundingClientRect();
+
     this.updateCameraConfiguration();
     this.renderWith(scene);
   }
@@ -124,17 +130,35 @@ export default class ViewPort {
     this.camera.bottom = -this.frustrumSize / 2;
     this.camera.updateProjectionMatrix();
   }
-  updateMousePosition(x, y, width, height) {
+  getViewportMousePosition(x, y, width, height, vec2Obj) {
     const viewportWidthPX = width * this.viewport.width;
     const viewportHeightPX = height * this.viewport.height;
     const yOffset = this.viewport.height - this.viewport.bottom;
-    this.mouse.set(
+    vec2Obj.set(
        ((2 * (((x - (width * this.viewport.left))) / viewportWidthPX)) - 1),
       -((2 * (((y - (height * yOffset))) / viewportHeightPX)) - 1),
     );
   }
+  updateMousePosition(x, y, width, height) {
+    this.getViewportMousePosition(x, y, width, height, this.mouse);
+  }
+  updateLastMousePosition(x, y, width, height) {
+    this.getViewportMousePosition(x, y, width, height, this.lastMouseDown);
+    if (this.controls) {
+      if (this.controls.enabled && !this.mouseDownIntersects()) {
+        this.setControlsEnabled(false);
+      } else if (this.enabled && this.mouseDownIntersects()) {
+        this.setControlsEnabled(true);
+      } else if (this.controls.enabled && !this.enabled && this.mouseDownIntersects()) {
+        this.setControlsEnabled(false);
+      }
+    }
+  }
   mouseIntersects() {
     return Math.abs(this.mouse.x) < 1.0 && Math.abs(this.mouse.y) < 1.0;
+  }
+  mouseDownIntersects() {
+    return Math.abs(this.lastMouseDown.x) < 1.0 && Math.abs(this.lastMouseDown.y) < 1.0;
   }
   renderWith(scene) {
     const { width, height } = this.canvasRectangle;

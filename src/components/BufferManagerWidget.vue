@@ -4,6 +4,7 @@
     v-bind:data="labeledBuffers"
     empty-text="There are no buffers."
     @row-click="selectBufferEvent"
+    v-bind:row-style="{cursor: 'pointer'}"
   >
     <el-table-column prop="filename" label="Filename">
     </el-table-column>
@@ -13,14 +14,29 @@
 </template>
 
 <script>
+// TODO: search bar for buffers.
+import BufferManager from '@/extensions/BufferManager';
+
 const filesize = require('file-size');
+
+const buffermanager = BufferManager.getInstance();
 
 export default {
   name: 'buffer-manager-widget',
-  props: ['showBufferList', 'buffers'],
+  props: ['showBufferList'],
+  mounted() {
+    buffermanager.onBufferLoad(() => {
+      this.loadedBuffers = buffermanager.getBufferList();
+    });
+  },
+  data() {
+    return {
+      loadedBuffers: buffermanager.getBufferList(),
+    };
+  },
   computed: {
     labeledBuffers() {
-      return this.buffers.map(buffer => ({
+      return this.loadedBuffers.map(buffer => ({
         filename: buffer.name,
         size: filesize(buffer.size).human(),
         uid: buffer.uid,
@@ -39,8 +55,5 @@ export default {
 <style scoped>
 .buffer-table {
   width: 100%;
-}
-.el-table__row {
-  cursor: pointer;
 }
 </style>

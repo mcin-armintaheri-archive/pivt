@@ -6,12 +6,6 @@ export default class OrthoPlanes {
     this.system = new THREE.Object3D();
     this.scene.add(this.system);
     this.planes = [];
-    this.planeMaterial = new THREE.MeshBasicMaterial({
-      color: new THREE.Color().setRGB(0.8, 0.8, 0.8),
-      side: THREE.DoubleSide,
-    });
-    this.planeGeometry = new THREE.PlaneGeometry(1.0, 1.0);
-    this.initializePlanes();
   }
   getTHREEScene() {
     return this.scene;

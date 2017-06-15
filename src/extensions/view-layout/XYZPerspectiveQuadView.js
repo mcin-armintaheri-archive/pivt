@@ -48,15 +48,12 @@ export default class XYZPerspectiveQuadView extends Layout {
     this.topright.setClearColor(new THREE.Color().setRGB(0.0, 1.0, 0.0));
     this.bottomleft.setClearColor(new THREE.Color().setRGB(0.0, 0.0, 1.0));
     this.bottomright.setClearColor(new THREE.Color().setRGB(0.9, 0.9, 0.9));
-    this.viewports = [
+    this.addViewports(
       this.topleft,
       this.topright,
       this.bottomleft,
       this.bottomright,
-    ];
-  }
-  getViewports() {
-    return this.viewports;
+    );
   }
   getTopLeft() {
     return this.topleft;
@@ -69,11 +66,5 @@ export default class XYZPerspectiveQuadView extends Layout {
   }
   getBottomRight() {
     return this.bottomright;
-  }
-  updateMousePosition(x, y, width, height) {
-    this.viewports.forEach(v => v.updateMousePosition(x, y, width, height));
-  }
-  render(scene) {
-    this.viewports.forEach(v => v.updateCamera(scene));
   }
 }

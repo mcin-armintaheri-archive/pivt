@@ -10,10 +10,7 @@
       size="small"
       :modal.boolean="false"
     >
-      <buffer-manager-widget
-        v-on:select-buffer="loadBuffer"
-        v-bind:buffers="loadedBuffers"
-      >
+      <buffer-manager-widget v-on:select-buffer="loadBuffer">
       </buffer-manager-widget>
       <span slot="footer">
         <el-button @click="showMaterialAdd = false">Cancel</el-button>
@@ -24,6 +21,9 @@
       :visible.sync="showLoading"
       size="tiny"
       :modal.boolean="false"
+      :show-close.boolean="false"
+      :close-on-press-escape.boolean="false"
+      :close-on-click-modal.boolean="false"
     >
     <h2><i class="el-icon-loading"></i> Loading</h2>
     </el-dialog>
@@ -42,30 +42,24 @@ export default {
   components: {
     'buffer-manager-widget': BufferManagerWidget,
   },
-  mounted() {
-    buffermanager.onBufferLoad(() => {
-      this.loadedBuffers = buffermanager.getBufferList();
-    });
-  },
   data() {
     return {
       showMaterialAdd: false,
       showLoading: false,
-      loadedBuffers: buffermanager.getBufferList(),
     };
   },
   methods: {
     loadBuffer(uid) {
+      this.showMaterialAdd = false;
       this.showLoading = true;
       setTimeout(() => {
         this.controller.createTextureFromBuffer(
           buffermanager.getBuffer(uid).buffer,
           () => {
             this.showLoading = false;
-            this.showMaterialAdd = false;
           },
         );
-      }, 500);
+      }, 100);
     },
   },
 };

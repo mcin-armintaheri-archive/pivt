@@ -28,7 +28,7 @@
       :visible.sync="showBufferList"
       size="small"
     >
-      <buffer-manager-widget v-bind:buffers="loadedBuffers">
+      <buffer-manager-widget>
       </buffer-manager-widget>
       <span slot="footer">
         <el-button @click="showAddBuffer = true">Add</el-button>
@@ -59,10 +59,8 @@ import ApplicationSelect from '@/components/ApplicationSelect';
 import BufferManagerWidget from '@/components/BufferManagerWidget';
 import AddBuffer from '@/components/AddBuffer';
 import ApplicationManager from '@/extensions/ApplicationManager';
-import BufferManager from '@/extensions/BufferManager';
 
 const appManager = new ApplicationManager();
-const buffermanager = BufferManager.getInstance();
 
 const brainSlicer = {
   name: 'BrainSlicer',
@@ -114,7 +112,6 @@ export default {
       threeViewMountPoint: null,
       runningApplications: [],
       appSelectDialog: false,
-      loadedBuffers: [],
       showBufferList: false,
       showAddBuffer: false,
       addBufferLoading: false,
@@ -137,7 +134,6 @@ export default {
       this.runningApplications.push(app);
     },
     newFileAddedHandler() {
-      this.loadedBuffers = buffermanager.getBufferList();
       this.addBufferLoading = false;
       this.showAddBuffer = false;
     },
