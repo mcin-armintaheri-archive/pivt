@@ -4,11 +4,10 @@ export default class Layout {
   constructor(container, context3d = true) {
     this.viewports = [];
     this.container = container;
+    this.canvas = container.querySelector('.three-mount-canvas');
     if (context3d) {
-      this.renderer = new THREE.WebGLRenderer({ antialias: false });
-      this.canvas = this.renderer.domElement;
+      this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: false });
     } else {
-      this.canvas = document.createElement('canvas');
       this.context = this.canvas.getContext('2d');
     }
     container.appendChild(this.canvas);
@@ -17,13 +16,14 @@ export default class Layout {
       const err = 'Layout should implement the method "updateMouse"';
       throw err;
     }
-
-    // Destructor for unregistering dom events.
+    this.mouseisdown = false;
+    this.addLayoutListeners();
+  }
+  addLayoutListeners() {
     this.mousedownSuper = this.mouseDown.bind(this);
     this.mouseupSuper = this.mouseUp.bind(this);
     this.mousemoveSuper = this.mouseMove.bind(this);
     this.resizeSuper = this.resizeCanvas.bind(this);
-    this.mouseisdown = false;
     this.canvas.addEventListener('mousedown', this.mousedownSuper);
     this.canvas.addEventListener('mouseup', this.mouseupSuper);
     this.canvas.addEventListener('mousemove', this.mousemoveSuper);
@@ -61,6 +61,24 @@ export default class Layout {
     if (this.renderer) {
       this.renderer.setSize(width, height);
     }
+  }
+  clearCanvas() {
+    if (this.context) {
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      return;
+    }
+    this.renderer.setViewport(0, 0, this.canvas.width, this.canvas.height);
+    this.renderer.setScissor(0, 0, this.canvas.width, this.canvas.height);
+    this.renderer.setClearColor(new THREE.Color().setRGB(1.0, 1.0, 1.0));
+    this.renderer.clear(true, true, true);
+  }
+  dispose() {
+    this.clearCanvas();
+    this.viewports.forEach((v) => {
+      if (v.controls) {
+        v.controls.dispose();
+      }
+    });
   }
   getViewports() {
     return this.viewports;

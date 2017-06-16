@@ -2,7 +2,13 @@
   <div class="sidebar-container">
     <el-row class="sidebar-layout">
       <el-col class="sidebar-menu" v-bind:class="sidebarShow" :span="22">
-        <el-menu default-active="2"  class="sidebar-menu" theme="dark" unique-opened>
+        <el-menu
+          default-active="2"
+          class="sidebar-menu"
+          theme="dark"
+          unique-opened
+          @open="startApplication"
+        >
           <div class="button-container">
             <el-button class="sidebar-button" v-if="threeMount" type="primary" @click="newApplication">
               <i class="el-icon-plus"></i>&nbsp;&nbsp;&nbsp;New Application
@@ -21,7 +27,18 @@
             :key="idx"
             :index="String(idx)"
           >
-            <template slot="title">{{ application.getName() + ' ' + idx }}</template>
+            <template slot="title">
+              <div class="app-collapse">
+                <div>
+                  {{ application.getName() + ' ' + idx }}
+                </div>
+                <div class="app-collapse-controls">
+                  <el-button type="primary" @click="killApplication($event, application)">
+                    <i class="el-icon-close"></i>Remove
+                  </el-button>
+                </div>
+              </div>
+            </template>
             <application-sidebar-widgets
               v-bind:application="application"
               v-bind:appIndex="idx"
@@ -70,6 +87,13 @@ export default {
     },
     switchApplication(application) {
       this.$emit('switch-application', application);
+    },
+    killApplication(event, application) {
+      event.stopPropagation();
+      this.$emit('remove-application', application);
+    },
+    startApplication(index) {
+      this.$emit('start-application', index);
     },
   },
 };
@@ -120,5 +144,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.app-collapse {
+  display: flex;
+  justify-content: space-between;
+}
+.app-collapse-controls {
+  margin-right: 20px;
 }
 </style>

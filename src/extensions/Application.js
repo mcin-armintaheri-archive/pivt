@@ -1,6 +1,5 @@
 import UIDUtils from './UIDUtils';
 
-
 export default class Application {
   constructor(name) {
     this.uid = UIDUtils.getUid();
@@ -34,17 +33,30 @@ export default class Application {
     return this.mediators;
   }
   runApplicationLoop() {
-    if (!this.isRunning) {
-      return;
+    if (this.layout) {
+      if (!this.isRunning) {
+        return;
+      }
+      this.layout.render(this.scene.getTHREEScene());
+      window.requestAnimationFrame(this.runApplicationLoop.bind(this));
     }
-    this.layout.render(this.scene.getTHREEScene());
-    window.requestAnimationFrame(this.run.bind(this));
   }
   run() {
-    this.isRunning = true;
-    this.runApplicationLoop();
+    if (this.layout) {
+      this.layout.addLayoutListeners();
+      this.isRunning = true;
+      this.runApplicationLoop();
+    }
   }
   stop() {
-    this.isRunning = false;
+    if (this.layout) {
+      this.layout.removeLayoutListeners();
+      this.layout.clearCanvas();
+      this.isRunning = false;
+    }
+  }
+  dispose() {
+    this.stop();
+    this.layout.dispose();
   }
 }

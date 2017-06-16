@@ -3,7 +3,7 @@ const THREE = require('three');
 export default function OrthoPlaneContrastSettings(curvetool, materialManager) {
   curvetool.onChange((csObj) => {
     const planeMaterial = materialManager.getPlaneMaterial();
-    if (planeMaterial.uniforms && planeMaterial.uniforms.curveTexture) {
+    if (planeMaterial && planeMaterial.uniforms && planeMaterial.uniforms.curveTexture) {
       const ys = csObj.getYSeriesInterpolated();
       const texture = new THREE.DataTexture(
         ys,

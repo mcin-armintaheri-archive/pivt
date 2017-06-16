@@ -1,5 +1,6 @@
 <template>
   <div id="three-mount">
+    <canvas class="three-mount-canvas"></canvas>
   </div>
 </template>
 
@@ -19,7 +20,7 @@ export default {
   height: 100vh;
   width: 100vw;
 }
-#three-mount canvas {
+#three-mount .three-mount-canvas {
   height: 100vh;
   width: 100vw;
 }

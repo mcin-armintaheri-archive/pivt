@@ -88,11 +88,6 @@ export default class ViewPort {
   setControlsEnabled(boolean) {
     if (this.controls) {
       this.controls.enabled = boolean;
-      if (boolean) {
-        this.controls.reset();
-      } else {
-        this.controls.saveState();
-      }
     }
   }
   setClearColor(color) {
@@ -147,10 +142,8 @@ export default class ViewPort {
     if (this.controls) {
       if (this.controls.enabled && !this.mouseDownIntersects()) {
         this.setControlsEnabled(false);
-      } else if (this.enabled && this.mouseDownIntersects()) {
-        this.setControlsEnabled(true);
-      } else if (this.controls.enabled && !this.enabled && this.mouseDownIntersects()) {
-        this.setControlsEnabled(false);
+      } else if (this.mouseIntersects()) {
+        this.setControlsEnabled(this.enabled);
       }
     }
   }

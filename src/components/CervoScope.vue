@@ -4,6 +4,8 @@
       v-bind:applications="runningApplications"
       v-bind:three-mount="threeViewMountPoint !== null"
       v-on:new-application="appSelectDialog = true"
+      v-on:remove-application="removeApplication"
+      v-on:start-application="startApplication"
       v-on:show-buffer-list="showBufferList = true"
     >
     </sidebar>
@@ -130,12 +132,22 @@ export default {
       // TODO: make ApplicationManager a singleton.
       this.appSelectDialog = false;
       const app = appManager.create(this.threeViewMountPoint, application);
-      app.run();
+      if (this.runningApplications.length === 0) {
+        app.run();
+      }
       this.runningApplications.push(app);
     },
     newFileAddedHandler() {
       this.addBufferLoading = false;
       this.showAddBuffer = false;
+    },
+    removeApplication(application) {
+      application.dispose();
+      this.runningApplications = this.runningApplications.filter(a => a !== application);
+    },
+    startApplication(index) {
+      this.runningApplications.forEach((a) => { a.stop(); });
+      this.runningApplications[index].run();
     },
   },
 };
