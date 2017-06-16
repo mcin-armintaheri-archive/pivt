@@ -2,6 +2,7 @@ import {
   FileToArrayBufferReader,
   Image3DGenericDecoder,
 } from 'pixpipejs';
+import { MessageBox } from 'element-ui';
 
 import UIDUtils from './UIDUtils';
 
@@ -34,12 +35,18 @@ class BufferManager {
       decoder.addInput(buff);
       decoder.update();
       if (!decoder.getNumberOfOutputs()) {
-        alert('Cannot open the uploaded file.');
+        MessageBox.alert(`Cannot decode ${file.name} into a buffer.`, 'Decoding Error', {
+          confirmButtonText: 'OK',
+        });
+        callback();
         return;
       }
       const mniVol = decoder.getOutput();
       if (!mniVol) {
-        alert('Cannot decode uploaded file.');
+        MessageBox.alert(`Cannot decode ${file.name} into a buffer.`, 'Decoding Error', {
+          confirmButtonText: 'OK',
+        });
+        callback();
         return;
       }
       loader.addBuffer({

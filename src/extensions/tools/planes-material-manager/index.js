@@ -1,6 +1,8 @@
 import {
   Image3DToMosaicFilter,
 } from 'pixpipejs';
+import { MessageBox } from 'element-ui';
+
 import MaterialBufferLoader from './MaterialBufferLoader';
 
 const THREE = require('three');
@@ -52,7 +54,10 @@ export default class PlanesMaterialManager {
     // run the filter
     mosaicFilter.update();
     if (!mosaicFilter.getNumberOfOutputs()) {
-      alert('No output for mosaicFilter.');
+      MessageBox.alert('Could not turn decoded buffer into mosiac textures.', 'Texture Error', {
+        confirmButtonText: 'OK',
+      });
+      callback();
       return;
     }
     // display the output in multiple canvas if needed
