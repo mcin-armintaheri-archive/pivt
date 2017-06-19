@@ -34,6 +34,7 @@ export default class ViewPort {
     control,
     near = 0.1,
     far = 6000,
+    enableControlKeys = false,
   ) {
     const rectangle = canvas.getBoundingClientRect();
     this.enabled = true;
@@ -64,6 +65,7 @@ export default class ViewPort {
     switch (control) {
       case ORBIT: {
         this.controls = new OrbitControls(this.camera, canvas);
+        this.controls.enableKeys = enableControlKeys;
         break;
       }
       default: {
@@ -102,19 +104,17 @@ export default class ViewPort {
   }
   moveTo(x = null, y = null, z = null) {
     if (x !== null) { this.camera.position.x = x; }
-    if (y !== null) { this.camera.position.x = y; }
-    if (z !== null) { this.camera.position.x = z; }
+    if (y !== null) { this.camera.position.y = y; }
+    if (z !== null) { this.camera.position.z = z; }
   }
   lookAt(position) {
     this.camera.lookAt(position);
   }
-  followObject(sceneObject, offset, roll) {
-    this.rollTo(roll);
-  }
   rollTo(angle) {
-    this.camera.up.x = Math.sin(angle);
-    this.camera.up.y = Math.cos(angle);
-    this.camera.up.normalize();
+    const up = new THREE.Vector3(Math.sin(angle), Math.cos(angle), 0);
+    up.normalize();
+    this.camera.localToWorld(up);
+    this.camera.up.copy(up);
   }
   updateCamera(scene) {
     this.canvasRectangle = this.canvas.getBoundingClientRect();
@@ -126,8 +126,8 @@ export default class ViewPort {
     const { width, height } = this.canvasRectangle;
     const aspect = width / height;
     this.camera.aspect = aspect;
-    this.camera.left = (-this.frustrumSize * aspect) / 4;
-    this.camera.right = (this.frustrumSize * aspect) / 4;
+    this.camera.left = (-this.frustrumSize * aspect) / 2;
+    this.camera.right = (this.frustrumSize * aspect) / 2;
     this.camera.top = this.frustrumSize / 2;
     this.camera.bottom = -this.frustrumSize / 2;
     this.camera.updateProjectionMatrix();

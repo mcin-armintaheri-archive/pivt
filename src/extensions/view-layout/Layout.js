@@ -1,12 +1,13 @@
 const THREE = require('three');
 
 export default class Layout {
-  constructor(container, context3d = true) {
+  constructor(container, renderer, context3d = true) {
+    this.ups = null;
     this.viewports = [];
     this.container = container;
     this.canvas = container.querySelector('.three-mount-canvas');
     if (context3d) {
-      this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: false });
+      this.renderer = renderer;
     } else {
       this.context = this.canvas.getContext('2d');
     }
@@ -17,13 +18,12 @@ export default class Layout {
       throw err;
     }
     this.mouseisdown = false;
-    this.addLayoutListeners();
-  }
-  addLayoutListeners() {
     this.mousedownSuper = this.mouseDown.bind(this);
     this.mouseupSuper = this.mouseUp.bind(this);
     this.mousemoveSuper = this.mouseMove.bind(this);
     this.resizeSuper = this.resizeCanvas.bind(this);
+  }
+  addLayoutListeners() {
     this.canvas.addEventListener('mousedown', this.mousedownSuper);
     this.canvas.addEventListener('mouseup', this.mouseupSuper);
     this.canvas.addEventListener('mousemove', this.mousemoveSuper);
@@ -87,6 +87,12 @@ export default class Layout {
   }
   addViewports(...viewports) {
     this.viewports = this.viewports.concat(viewports);
+  }
+  enableViewports(boolean) {
+    this.viewports.forEach((v) => {
+      v.setEnabled(boolean);
+      v.setControlsEnabled(boolean);
+    });
   }
   updateMousePosition(x, y, width, height) {
     this.viewports.forEach((v) => {

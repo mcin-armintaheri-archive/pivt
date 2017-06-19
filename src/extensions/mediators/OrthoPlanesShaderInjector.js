@@ -201,7 +201,8 @@ const FRAGMENT = `
     // hide the outside
     if( isOusideTheVolume(worldCoordShifted) )
     {
-        discard;
+        // discard;
+        gl_FragColor = vec4(0.7, 0.7, 0.7, 0.2);
         return;
     }
     // color at the edges of the volume
@@ -306,9 +307,5 @@ export default function OrthoPlaneShaderInjector(scene, layout, materialManager)
       },
     });
     materialManager.setShaderMaterial(material, dimensions);
-    layout.getViewports().forEach((v) => {
-      v.moveTo(null, null, dimensions.diagonal * 1.5);
-      v.lookAt(new THREE.Vector3(0.0, 0.0, 0.0));
-    });
   });
 }

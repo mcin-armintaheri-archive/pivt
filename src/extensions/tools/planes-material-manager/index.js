@@ -36,7 +36,7 @@ export default class PlanesMaterialManager {
     this.scene.initializePlanes();
     this.materialChangeCallbacks.forEach((f) => {
       if (f instanceof Function) {
-        f(material, dimensions);
+        f(this.scene.planeMaterial, dimensions);
       }
     });
   }

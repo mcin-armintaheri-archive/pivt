@@ -37,6 +37,19 @@ export default class Application {
       if (!this.isRunning) {
         return;
       }
+      this.mediators.forEach((mediator) => {
+        if (mediator.render) {
+          mediator.render();
+        }
+      });
+      this.tools.forEach((tool) => {
+        if (tool.render) {
+          tool.render();
+        }
+      });
+      if (this.scene.update) {
+        this.scene.update();
+      }
       this.layout.render(this.scene.getTHREEScene());
       window.requestAnimationFrame(this.runApplicationLoop.bind(this));
     }
@@ -44,6 +57,7 @@ export default class Application {
   run() {
     if (this.layout) {
       this.layout.addLayoutListeners();
+      this.layout.enableViewports(true);
       this.isRunning = true;
       this.runApplicationLoop();
     }
@@ -52,6 +66,7 @@ export default class Application {
     if (this.layout) {
       this.layout.removeLayoutListeners();
       this.layout.clearCanvas();
+      this.layout.enableViewports(false);
       this.isRunning = false;
     }
   }

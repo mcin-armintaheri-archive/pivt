@@ -30,7 +30,7 @@
             <template slot="title">
               <div class="app-collapse">
                 <div>
-                  {{ application.getName() + ' ' + idx }}
+                  {{ application.getName() }}
                 </div>
                 <div class="app-collapse-controls">
                   <el-button type="primary" @click="killApplication($event, application)">

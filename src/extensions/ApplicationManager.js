@@ -9,6 +9,7 @@ import QuadViewXYZLayers from './mediators/QuadViewXYZLayers';
 import QuadViewXYZPlaneShifter from './mediators/QuadViewXYZPlaneShifter';
 import OrthoPlanesContrastSettings from './mediators/OrthoPlanesContrastSettings';
 import PlanesMaterialManager from './tools/planes-material-manager';
+import OrthoPlanesParameters from './tools/ortho-planes-parameters';
 // End Tool and Mediator Imports
 
 export default class ApplicationManager {
@@ -22,6 +23,7 @@ export default class ApplicationManager {
     this.registerConstructor('QuadViewXYZPlaneShifter', QuadViewXYZPlaneShifter);
     this.registerConstructor('OrthoPlanesContrastSettings', OrthoPlanesContrastSettings);
     this.registerConstructor('PlanesMaterialManager', PlanesMaterialManager);
+    this.registerConstructor('OrthoPlanesParameters', OrthoPlanesParameters);
   }
   /**
    * [create Build an application out of a JSON description]
@@ -48,7 +50,7 @@ export default class ApplicationManager {
    * @param  {[JSON]} jsonDescription [JSON-serializable description of the application]
    * @return {[Application]} [A running instantiation of the application's description]
    */
-  create(viewContainer, jsonDescription) {
+  create(index, viewContainer, renderer, jsonDescription) {
     const {
       name,
       scene,
@@ -57,9 +59,9 @@ export default class ApplicationManager {
       mediators,
     } = jsonDescription;
     const dependencies = {};
-    const application = new Application(name);
+    const application = new Application(`${name} ${index}`);
     const sceneObj = this.createFromConstructorName(scene, viewContainer);
-    const layoutObj = this.createFromConstructorName(layout, viewContainer);
+    const layoutObj = this.createFromConstructorName(layout, viewContainer, renderer);
     dependencies.scene = sceneObj;
     application.setScene(sceneObj);
     dependencies.layout = layoutObj;

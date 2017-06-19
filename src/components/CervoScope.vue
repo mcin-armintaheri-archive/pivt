@@ -77,6 +77,10 @@ const brainSlicer = {
       name: 'materialManager',
       tool: 'PlanesMaterialManager',
     },
+    {
+      name: 'planeParams',
+      tool: 'OrthoPlanesParameters',
+    },
   ],
   mediators: [
     {
@@ -99,6 +103,8 @@ const brainSlicer = {
 };
 
 const APPLICATIONS = [brainSlicer];
+
+const appCount = {};
 
 export default {
   name: 'cervo-scope',
@@ -125,13 +131,23 @@ export default {
     },
   },
   methods: {
-    onThreeViewMounted(container) {
-      this.threeViewMountPoint = container;
+    onThreeViewMounted({ element, renderer }) {
+      this.threeViewMountPoint = element;
+      this.threeRenderer = renderer;
     },
     loadSelectedApplication(application) {
       // TODO: make ApplicationManager a singleton.
       this.appSelectDialog = false;
-      const app = appManager.create(this.threeViewMountPoint, application);
+      if (!appCount[application.name]) {
+        appCount[application.name] = 0;
+      }
+      const app = appManager.create(
+        appCount[application.name],
+        this.threeViewMountPoint,
+        this.threeRenderer,
+        application,
+      );
+      appCount[application.name] += 1;
       if (this.runningApplications.length === 0) {
         app.run();
       }

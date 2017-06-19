@@ -7,7 +7,7 @@ export default class QuadViewXYZPlaneShifter {
     const perspCam = layout.getBottomRight();
     materialManager.onMaterialChange((mat, dimensions) => {
       this.planeshifter = new PlaneShifter(
-        scene.getSystem(),
+        scene.getPlaneSystem(),
         perspCam.getTHREECamera(),
         {
           mouse: perspCam.getMousePosReference(),
