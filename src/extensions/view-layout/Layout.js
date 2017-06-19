@@ -51,10 +51,12 @@ export default class Layout {
   mouseDown(event) {
     this.mouseisdown = true;
     const { x, y, width, height } = this.mousePosition(event);
-    this.updateLastMousePosition(x, y, width, height);
+    this.updateLastMouseDownPosition(x, y, width, height);
   }
   mouseUp() {
     this.mouseisdown = false;
+    const { x, y, width, height } = this.mousePosition(event);
+    this.updateLastMouseUpPosition(x, y, width, height);
   }
   resizeCanvas() {
     const { width, height } = this.container.getBoundingClientRect();
@@ -91,9 +93,14 @@ export default class Layout {
       v.updateMousePosition(x, y, width, height);
     });
   }
-  updateLastMousePosition(x, y, width, height) {
+  updateLastMouseDownPosition(x, y, width, height) {
     this.viewports.forEach((v) => {
-      v.updateLastMousePosition(x, y, width, height);
+      v.updateLastMouseDownPosition(x, y, width, height);
+    });
+  }
+  updateLastMouseUpPosition(x, y, width, height) {
+    this.viewports.forEach((v) => {
+      v.updateLastMouseUpPosition(x, y, width, height);
     });
   }
   render(scene) {

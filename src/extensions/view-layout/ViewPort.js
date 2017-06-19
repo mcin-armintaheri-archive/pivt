@@ -4,6 +4,12 @@ const OrbitControls = require('three-orbitcontrols');
 export const ORTHOGRAPHIC = 'ORTHOGRAPHIC';
 export const PERSPECTIVE = 'PERSPECTIVE';
 export const ORBIT = 'ORBIT';
+
+
+function mouseIntersectsViewport(mouse) {
+  return Math.abs(mouse.x) < 1.0 && Math.abs(mouse.y) < 1.0;
+}
+
 /**
  * Primitive class for splitting the canvas into a viewport.
  */
@@ -38,6 +44,7 @@ export default class ViewPort {
     this.viewport = { bottom, left, width, height };
     this.mouse = new THREE.Vector2();
     this.lastMouseDown = new THREE.Vector2();
+    this.lastMouseUp = new THREE.Vector2();
     this.clearColor = new THREE.Color().setRGB(1.0, 1.0, 1.0);
     switch (type) {
       case PERSPECTIVE: {
@@ -134,24 +141,27 @@ export default class ViewPort {
       -((2 * (((y - (height * yOffset))) / viewportHeightPX)) - 1),
     );
   }
+  mouseIntersects() {
+    return mouseIntersectsViewport(this.mouse);
+  }
   updateMousePosition(x, y, width, height) {
     this.getViewportMousePosition(x, y, width, height, this.mouse);
   }
-  updateLastMousePosition(x, y, width, height) {
+  updateLastMouseDownPosition(x, y, width, height) {
     this.getViewportMousePosition(x, y, width, height, this.lastMouseDown);
     if (this.controls) {
-      if (this.controls.enabled && !this.mouseDownIntersects()) {
+      if (this.controls.enabled && !mouseIntersectsViewport(this.lastMouseDown)) {
         this.setControlsEnabled(false);
-      } else if (this.mouseIntersects()) {
+      } else if (mouseIntersectsViewport(this.lastMouseDown)) {
         this.setControlsEnabled(this.enabled);
       }
     }
   }
-  mouseIntersects() {
-    return Math.abs(this.mouse.x) < 1.0 && Math.abs(this.mouse.y) < 1.0;
-  }
-  mouseDownIntersects() {
-    return Math.abs(this.lastMouseDown.x) < 1.0 && Math.abs(this.lastMouseDown.y) < 1.0;
+  updateLastMouseUpPosition(x, y, width, height) {
+    this.getViewportMousePosition(x, y, width, height, this.lastMouseUp);
+    if (mouseIntersectsViewport(this.lastMouseUp)) {
+      this.setControlsEnabled(true);
+    }
   }
   renderWith(scene) {
     const { width, height } = this.canvasRectangle;
