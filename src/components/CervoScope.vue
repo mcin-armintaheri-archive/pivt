@@ -88,7 +88,7 @@ const brainSlicer = {
       dependencies: ['scene', 'layout', 'materialManager'],
     },
     {
-      mediator: 'QuadViewXYZLayers',
+      mediator: 'QuadViewXYZOrthoPlanesLayers',
       dependencies: ['scene', 'layout', 'materialManager'],
     },
     {
@@ -96,8 +96,8 @@ const brainSlicer = {
       dependencies: ['contrast', 'materialManager'],
     },
     {
-      mediator: 'QuadViewXYZPlaneShifter',
-      dependencies: ['scene', 'layout', 'materialManager'],
+      mediator: 'QuadViewXYZOrthoPlanesShifter',
+      dependencies: ['scene', 'layout', 'materialManager', 'planeParams'],
     },
   ],
 };
