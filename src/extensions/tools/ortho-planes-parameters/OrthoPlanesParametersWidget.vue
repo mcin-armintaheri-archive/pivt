@@ -54,7 +54,7 @@
         @change="z => updatePlaneRot({ z })"
       >
       </el-input-number>
-      <el-button @click="updatePlaneRot({ x: 0, y: 0, z: 0 })">R</el-button>
+      <el-button @click="resetPlaneRot">R</el-button>
     </div>
   </div>
 </template>
@@ -98,6 +98,10 @@ export default {
       this.rot.x = mul(this.rot.x);
       this.rot.y = mul(this.rot.y);
       this.rot.z = mul(this.rot.z);
+    },
+    resetPlaneRot() {
+      this.updatePlaneRot({ x: 0, y: 0, z: 0 });
+      this.controller.rotationResetCallbacks.forEach(f => f());
     },
   },
 };

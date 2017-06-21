@@ -1,9 +1,9 @@
 const THREE = require('three');
-const OrbitControls = require('three-orbitcontrols');
+// const TrackBallControls = require('three-trackballcontrols');
 
 export const ORTHOGRAPHIC = 'ORTHOGRAPHIC';
 export const PERSPECTIVE = 'PERSPECTIVE';
-export const ORBIT = 'ORBIT';
+export const TRACKBALL = 'TRACKBALL';
 
 
 function mouseIntersectsViewport(mouse) {
@@ -34,7 +34,6 @@ export default class ViewPort {
     control,
     near = 0.1,
     far = 6000,
-    enableControlKeys = false,
   ) {
     const rectangle = canvas.getBoundingClientRect();
     this.enabled = true;
@@ -63,9 +62,8 @@ export default class ViewPort {
       }
     }
     switch (control) {
-      case ORBIT: {
-        this.controls = new OrbitControls(this.camera, canvas);
-        this.controls.enableKeys = enableControlKeys;
+      case TRACKBALL: {
+        // this.controls = new TrackBallControls(this.camera, canvas);
         break;
       }
       default: {

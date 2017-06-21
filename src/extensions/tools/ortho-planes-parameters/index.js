@@ -5,6 +5,7 @@ export default class OrthoPlanesParameters {
     this.sidebarWidget = OrthoPlanesParametersWidget;
     this.scene = scene;
     this.sceneUpdateCallbacks = [];
+    this.rotationResetCallbacks = [];
   }
   setPlanePos(x, y, z) {
     this.scene.getPlaneSystem().position.set(x, y, z);
@@ -19,5 +20,8 @@ export default class OrthoPlanesParameters {
   }
   onSceneUpdate(callback) {
     this.sceneUpdateCallbacks.push(callback);
+  }
+  onRotationReset(callback) {
+    this.rotationResetCallbacks.push(callback);
   }
 }

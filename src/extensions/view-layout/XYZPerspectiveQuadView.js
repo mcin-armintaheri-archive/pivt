@@ -1,4 +1,4 @@
-import ViewPort, { PERSPECTIVE, ORTHOGRAPHIC, ORBIT } from './ViewPort';
+import ViewPort, { PERSPECTIVE, ORTHOGRAPHIC, TRACKBALL } from './ViewPort';
 import Layout from './Layout';
 
 const THREE = require('three');
@@ -41,7 +41,7 @@ export default class XYZPerspectiveQuadView extends Layout {
       0.5,
       0.5,
       PERSPECTIVE,
-      ORBIT,
+      TRACKBALL,
     );
     // TODO: better colors for quadrants.
     this.topleft.setClearColor(new THREE.Color().setRGB(1.0, 0.0, 0.0));
