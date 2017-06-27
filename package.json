@@ -20,7 +20,7 @@
     "file-size": "^1.0.0",
     "pixpipejs": "github:jonathanlurie/pixpipejs",
     "three": "^0.85.2",
-    "three-trackballcontrols": "0.0.5",
+    "three-trackballcontrols": "github:armintaheri/three-trackballcontrols",
     "vue": "^2.3.3",
     "vue-router": "^2.3.1"
   },

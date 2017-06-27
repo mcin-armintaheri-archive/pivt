@@ -1,5 +1,5 @@
 const THREE = require('three');
-// const TrackBallControls = require('three-trackballcontrols');
+const TrackBallControls = require('three-trackballcontrols');
 
 export const ORTHOGRAPHIC = 'ORTHOGRAPHIC';
 export const PERSPECTIVE = 'PERSPECTIVE';
@@ -34,6 +34,7 @@ export default class ViewPort {
     control,
     near = 0.1,
     far = 6000,
+    enableControlsKeys = false,
   ) {
     const rectangle = canvas.getBoundingClientRect();
     this.enabled = true;
@@ -63,7 +64,13 @@ export default class ViewPort {
     }
     switch (control) {
       case TRACKBALL: {
-        // this.controls = new TrackBallControls(this.camera, canvas);
+        this.controls = new TrackBallControls(this.camera, canvas);
+        this.controls.rotateSpeed = 4.0;
+        this.controls.dynamicDampingFactor = 1.0;
+        this.controls.noPan = true;
+        if (!enableControlsKeys) {
+          this.controls.keys = [];
+        }
         break;
       }
       default: {
@@ -177,6 +184,9 @@ export default class ViewPort {
     );
     this.renderer.setScissorTest(true);
     this.renderer.setClearColor(this.clearColor, 1);
+    if (this.controls && this.controls.update) {
+      this.controls.update();
+    }
     this.renderer.render(scene, this.camera);
   }
 }
