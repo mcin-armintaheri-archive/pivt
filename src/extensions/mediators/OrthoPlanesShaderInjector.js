@@ -201,8 +201,7 @@ const FRAGMENT = `
     // hide the outside
     if( isOusideTheVolume(worldCoordShifted) )
     {
-        // discard;
-        gl_FragColor = vec4(0.7, 0.7, 0.7, 0.2);
+        discard;
         return;
     }
     // color at the edges of the volume

@@ -1,7 +1,6 @@
-
 <template>
   <div class="container">
-    <div class="plane-input-title">
+    <div class="input-title">
       Position:
     </div>
     <div class="plane-inputs">
@@ -29,7 +28,7 @@
       <el-button @click="updatePlanePos({ x: 0, y: 0, z: 0 })">R</el-button>
     </div>
     <br />
-    <div class="plane-input-title">
+    <div class="input-title">
       Rotation (Degrees):
     </div>
     <div class="plane-inputs">
@@ -109,9 +108,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.plane-input-title {
-  color: #ccc;
-}
 .plane-inputs {
   display: flex;
   justify-content: space-between;

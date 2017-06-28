@@ -47,6 +47,7 @@ export default class ViewPort {
     this.lastMouseDown = new THREE.Vector2();
     this.lastMouseUp = new THREE.Vector2();
     this.clearColor = new THREE.Color().setRGB(1.0, 1.0, 1.0);
+    this.pan = { x: 0, y: 0 };
     switch (type) {
       case PERSPECTIVE: {
         this.camera = new THREE.PerspectiveCamera();
@@ -67,7 +68,6 @@ export default class ViewPort {
         this.controls = new TrackBallControls(this.camera, canvas);
         this.controls.rotateSpeed = 4.0;
         this.controls.dynamicDampingFactor = 1.0;
-        this.controls.noPan = true;
         if (!enableControlsKeys) {
           this.controls.keys = [];
         }
@@ -90,6 +90,43 @@ export default class ViewPort {
   getMousePosReference() {
     return this.mouse;
   }
+  getCameraAxes() {
+    const camera = this.getTHREECamera();
+    const zDir = camera.getWorldDirection().multiplyScalar(-1.0);
+    const yDir = camera.up.clone();
+    const xDir = new THREE.Vector3().crossVectors(yDir, zDir);
+    return { xDir, yDir, zDir };
+  }
+  inversePan() {
+    const camera = this.getTHREECamera();
+    const { x, y } = this.getPan();
+    const { xDir, yDir } = this.getCameraAxes();
+    camera.position.sub(xDir.multiplyScalar(x)).sub(yDir.multiplyScalar(y));
+  }
+  applyPan() {
+    const camera = this.getTHREECamera();
+    const { x, y } = this.getPan();
+    const { xDir, yDir } = this.getCameraAxes();
+    const posOffset = new THREE.Vector3().addVectors(
+      xDir.multiplyScalar(x),
+      yDir.multiplyScalar(y),
+    );
+    camera.position.add(posOffset);
+  }
+  getPan() {
+    return this.pan;
+  }
+  setPan(pan) {
+    this.inversePan();
+    this.pan = pan;
+    this.applyPan();
+  }
+  rollBy(angle) {
+    this.inversePan();
+    const axis = this.camera.getWorldDirection().normalize().multiplyScalar(-1.0);
+    this.camera.up.applyAxisAngle(axis, angle);
+    this.applyPan();
+  }
   setNear(near) {
     this.camera.near = near;
   }
@@ -107,23 +144,19 @@ export default class ViewPort {
   setClearColor(color) {
     this.clearColor = color;
   }
-  moveTo(x = null, y = null, z = null) {
-    if (x !== null) { this.camera.position.x = x; }
-    if (y !== null) { this.camera.position.y = y; }
-    if (z !== null) { this.camera.position.z = z; }
-  }
-  lookAt(position) {
-    this.camera.lookAt(position);
-  }
-  rollTo(angle) {
-    const up = new THREE.Vector3(Math.sin(angle), Math.cos(angle), 0);
-    up.normalize();
-    this.camera.localToWorld(up);
-    this.camera.up.copy(up);
+  resetControls() {
+    if (this.controls) {
+      const pos = this.camera.position.clone();
+      pos.z = pos.length();
+      pos.x = 0;
+      pos.y = 0;
+      this.controls.reset();
+      this.camera.position.copy(pos);
+      this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+    }
   }
   updateCamera(scene) {
     this.canvasRectangle = this.canvas.getBoundingClientRect();
-
     this.updateCameraConfiguration();
     this.renderWith(scene);
   }

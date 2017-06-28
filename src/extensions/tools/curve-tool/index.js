@@ -5,6 +5,7 @@ export default class CurveTool {
   constructor() {
     this.sidebarWidget = CurveToolWidget;
     this.pointMoveCallback = function empty() {};
+    this.title = '';
   }
   initialize(container) {
     this.spliner = new CanvasSpliner(container, 250, 250);
@@ -30,5 +31,8 @@ export default class CurveTool {
   }
   getSpliner() {
     return this.spliner;
+  }
+  setTitle(title) {
+    this.title = title;
   }
 }

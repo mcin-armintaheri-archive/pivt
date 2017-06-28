@@ -81,6 +81,10 @@ const brainSlicer = {
       name: 'planeParams',
       tool: 'OrthoPlanesParameters',
     },
+    {
+      name: 'cameraParams',
+      tool: 'QuadViewCameraControls',
+    },
   ],
   mediators: [
     {

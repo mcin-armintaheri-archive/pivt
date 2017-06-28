@@ -2,8 +2,8 @@ const THREE = require('three');
 
 class PlaneCameraAligner {
   constructor(viewport, plane, planeSystem, layer, camPosition) {
-    this.camera = viewport.getTHREECamera();
-    this.camera.position.copy(camPosition);
+    this.viewport = viewport;
+    viewport.getTHREECamera().position.copy(camPosition);
     this.plane = plane;
     this.planeSystem = planeSystem;
     this.quat0 = planeSystem.quaternion.clone().inverse();
@@ -13,27 +13,37 @@ class PlaneCameraAligner {
     this.resetCameraUp();
   }
   setLayer(layer) {
-    this.camera.layers.enable(layer);
-    this.camera.layers.set(layer);
+    const camera = this.viewport.getTHREECamera();
+    camera.layers.enable(layer);
+    camera.layers.set(layer);
     this.plane.layers.enable(layer);
   }
   updateCameraOrientation() {
-    const dquat = this.planeSystem.quaternion.clone().multiply(this.quat0).normalize();
-    const camToPlane = this.camera.position.clone();
-    const rotatedCamToPlane = camToPlane.clone().applyQuaternion(dquat);
-    this.camera.position.copy(rotatedCamToPlane);
+    const camera = this.viewport.getTHREECamera();
+    const dQuaternion = this.planeSystem.quaternion.clone().multiply(this.quat0).normalize();
+    const camToPlane = camera.position.clone();
+    const rotatedCamToPlane = camToPlane.clone().applyQuaternion(dQuaternion);
+    camera.position.copy(rotatedCamToPlane);
     const unitCamToPlane = camToPlane.normalize();
     const unitRotated = rotatedCamToPlane.normalize();
     const upQuaternion = new THREE.Quaternion().setFromUnitVectors(unitCamToPlane, unitRotated);
     upQuaternion.normalize();
-    this.camera.up.applyQuaternion(upQuaternion);
-    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+    camera.up.applyQuaternion(upQuaternion);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
     this.quat0 = this.planeSystem.quaternion.clone().inverse();
   }
-  resetCameraUp() {
+  updateCamera() {
+    this.viewport.inversePan();
     this.updateCameraOrientation();
-    this.camera.up.copy(this.initialUp);
-    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+    this.viewport.applyPan();
+  }
+  resetCameraUp() {
+    const camera = this.viewport.getTHREECamera();
+    this.viewport.inversePan();
+    this.updateCameraOrientation();
+    camera.up.copy(this.initialUp);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    this.viewport.applyPan();
   }
 }
 
@@ -69,7 +79,7 @@ export default class QuadViewXYZLayers {
         new THREE.Vector3(diagonal, 0, 0),
       );
       this.aligners = [this.xyAligner, this.xzAligner, this.yzAligner];
-      layout.getBottomRight().moveTo(0, 0, 2 * diagonal);
+      layout.getBottomRight().getTHREECamera().position.set(0, 0, 2 * diagonal);
       this.planesAreLoaded = true;
     });
     planeParams.onRotationReset(this.resetCameraUps.bind(this));
@@ -82,7 +92,7 @@ export default class QuadViewXYZLayers {
   render() {
     if (this.planesAreLoaded) {
       this.aligners.forEach((aligner) => {
-        aligner.updateCameraOrientation();
+        aligner.updateCamera();
       });
     }
   }

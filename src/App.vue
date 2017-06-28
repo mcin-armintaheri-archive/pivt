@@ -23,4 +23,10 @@ body {
 #app {
   color: #2c3e50;
 }
+.input-title {
+  color: #ccc;
+}
+.widget-title {
+  color: #ccc;
+}
 </style>

@@ -1,6 +1,7 @@
 const THREE = require('three');
 
 export default function OrthoPlaneContrastSettings(curvetool, materialManager) {
+  curvetool.setTitle('Contrast');
   curvetool.onChange((csObj) => {
     const planeMaterial = materialManager.getPlaneMaterial();
     if (planeMaterial && planeMaterial.uniforms && planeMaterial.uniforms.curveTexture) {

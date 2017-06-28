@@ -1,5 +1,8 @@
 <template>
   <div class="container">
+    <div class="widget-title">
+      <h3>{{ this.controller.title }}</h3>
+    </div>
     <el-row>
       <el-col :span="24" class="curve-tool-mount">
       </el-col>
