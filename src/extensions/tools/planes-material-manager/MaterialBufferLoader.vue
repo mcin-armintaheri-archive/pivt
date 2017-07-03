@@ -25,7 +25,7 @@
       :close-on-press-escape.boolean="false"
       :close-on-click-modal.boolean="false"
     >
-    <h2><i class="el-icon-loading"></i> Loading</h2>
+    <h2><icon name="spinner" spin></icon> Loading</h2>
     </el-dialog>
   </div>
 </template>

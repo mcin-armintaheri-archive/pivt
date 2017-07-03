@@ -25,7 +25,9 @@
         @change="z => updatePlanePos({ z })"
       >
       </el-input-number>
-      <el-button @click="updatePlanePos({ x: 0, y: 0, z: 0 })">R</el-button>
+      <el-button class="reset-button" @click="updatePlanePos({ x: 0, y: 0, z: 0 })">
+        <icon name="refresh"></icon>
+      </el-button>
     </div>
     <br />
     <div class="input-title">
@@ -53,7 +55,9 @@
         @change="z => updatePlaneRot({ z })"
       >
       </el-input-number>
-      <el-button @click="resetPlaneRot">R</el-button>
+      <el-button class="reset-button" @click="resetPlaneRot">
+        <icon name="refresh"></icon>
+      </el-button>
     </div>
   </div>
 </template>
@@ -114,5 +118,8 @@ export default {
 }
 .plane-number-component {
   width: 120px;
+}
+.reset-button {
+  padding: 5px 10px;
 }
 </style>
