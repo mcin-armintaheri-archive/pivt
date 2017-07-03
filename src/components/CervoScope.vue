@@ -85,6 +85,10 @@ const brainSlicer = {
       name: 'cameraParams',
       tool: 'QuadViewCameraControls',
     },
+    {
+      name: 'quadviewCameraAxes',
+      tool: 'QuadViewCameraAxes',
+    },
   ],
   mediators: [
     {
@@ -93,7 +97,7 @@ const brainSlicer = {
     },
     {
       mediator: 'QuadViewXYZOrthoPlanesLayers',
-      dependencies: ['scene', 'layout', 'materialManager', 'planeParams'],
+      dependencies: ['scene', 'layout', 'materialManager', 'planeParams', 'quadviewCameraAxes'],
     },
     {
       mediator: 'OrthoPlanesContrastSettings',

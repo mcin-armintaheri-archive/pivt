@@ -14,7 +14,6 @@ class PlaneCameraAligner {
   }
   setLayer(layer) {
     const camera = this.viewport.getTHREECamera();
-    camera.layers.enable(layer);
     camera.layers.set(layer);
     this.plane.layers.enable(layer);
   }
@@ -48,41 +47,72 @@ class PlaneCameraAligner {
 }
 
 export default class QuadViewXYZLayers {
-  constructor(scene, layout, materialManager, planeParams) {
+  constructor(scene, layout, materialManager, planeParams, quadviewCameraAxes) {
     this.orthoCameras = layout.getViewports().slice(0, 3).map(v => v.getTHREECamera());
     this.planesAreLoaded = false;
     this.threeScene = scene.getTHREEScene();
     this.threeScene.add(...this.orthoCameras);
     this.aligners = [];
+    this.axisSystems = [];
+    planeParams.onRotationReset(this.resetCameraUps.bind(this));
     materialManager.onMaterialChange((material, dimensions) => {
       const { diagonal } = dimensions;
       this.threeScene.updateMatrixWorld(true);
-      this.xyAligner = new PlaneCameraAligner(
-        layout.getBottomLeft(),
-        scene.getXY(),
+      const planeCamConfigs = [
+        {
+          viewport: layout.getBottomLeft(),
+          plane: scene.getXY(),
+          layer: 1,
+          cameraPosition: new THREE.Vector3(0, 0, diagonal),
+        },
+        {
+          viewport: layout.getTopLeft(),
+          plane: scene.getXZ(),
+          layer: 2,
+          cameraPosition: new THREE.Vector3(0, diagonal, 0),
+        },
+        {
+          viewport: layout.getTopRight(),
+          plane: scene.getYZ(),
+          layer: 3,
+          cameraPosition: new THREE.Vector3(diagonal, 0, 0),
+        },
+      ];
+      this.aligners = planeCamConfigs.map(config => new PlaneCameraAligner(
+        config.viewport,
+        config.plane,
         scene.getPlaneSystem(),
-        1,
-        new THREE.Vector3(0, 0, diagonal),
-      );
-      this.xzAligner = new PlaneCameraAligner(
-        layout.getTopLeft(),
-        scene.getXZ(),
-        scene.getPlaneSystem(),
-        2,
-        new THREE.Vector3(0, diagonal, 0),
-      );
-      this.yzAligner = new PlaneCameraAligner(
-        layout.getTopRight(),
-        scene.getYZ(),
-        scene.getPlaneSystem(),
-        3,
-        new THREE.Vector3(diagonal, 0, 0),
-      );
-      this.aligners = [this.xyAligner, this.xzAligner, this.yzAligner];
-      layout.getBottomRight().getTHREECamera().position.set(0, 0, 2 * diagonal);
+        config.layer,
+        config.cameraPosition,
+      ));
+      this.axisSystems.forEach((axes) => {
+        axes.dispose();
+      });
+
+      layout.getBottomRight().getTHREECamera().position.set(0, 10, 2 * diagonal);
+      /*
+        If the QuadViewCameraAxes tool is bundled with the application,
+        create the axes for each orthographic camera.
+       */
+      if (quadviewCameraAxes) {
+        const thickness = 1;
+        this.axisSystems = planeCamConfigs.map(config => quadviewCameraAxes.createAxes(
+            config.viewport,
+            config.plane,
+            diagonal * 10,
+            thickness,
+            config.layer,
+        ));
+        quadviewCameraAxes.createAxes(
+          layout.getBottomRight(),
+          new THREE.Vector3(0, 0, 0),
+          diagonal * 10,
+          thickness,
+          0,
+        );
+      }
       this.planesAreLoaded = true;
     });
-    planeParams.onRotationReset(this.resetCameraUps.bind(this));
   }
   resetCameraUps() {
     this.aligners.forEach((aligner) => {
