@@ -70,6 +70,10 @@ const brainSlicer = {
   layout: 'XYZPerspectiveQuadView',
   tools: [
     {
+      name: 'quadviewCameraAxes',
+      tool: 'QuadViewCameraAxes',
+    },
+    {
       name: 'contrast',
       tool: 'CurveTool',
     },
@@ -84,10 +88,6 @@ const brainSlicer = {
     {
       name: 'cameraParams',
       tool: 'QuadViewCameraControls',
-    },
-    {
-      name: 'quadviewCameraAxes',
-      tool: 'QuadViewCameraAxes',
     },
   ],
   mediators: [

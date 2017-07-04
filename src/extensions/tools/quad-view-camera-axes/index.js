@@ -1,5 +1,5 @@
 import { VERTEX, FRAGMENT } from './DashedShader';
-// import QuadViewCameraAxesWidget from './QuadViewCameraAxesWidget';
+import QuadViewCameraAxesWidget from './QuadViewCameraAxesWidget';
 
 const THREE = require('three');
 
@@ -89,19 +89,23 @@ class CameraAxes {
   getAxisSystem() {
     return this.system;
   }
+  showAxes(boolean) {
+    this.system.children.forEach((axis) => {
+      Object.assign(axis, { visible: boolean });
+    });
+  }
 }
 
 export default class QuadViewCameraAxes {
   constructor(scene) {
+    this.sidebarWidget = QuadViewCameraAxesWidget;
     this.scene = scene;
     this.cameraAxesList = [];
-    this.showAxes = true;
-  }
-  toggleAxes() {
-    this.showAxes = !this.showAxes;
   }
   showAxes(boolean) {
-    this.showAxes = boolean;
+    this.cameraAxesList.forEach((axes) => {
+      axes.showAxes(boolean);
+    });
   }
   createAxes(viewport, target, size, thickness, layer = 0, dashLength = 10) {
     const cameraAxes = new CameraAxes(
