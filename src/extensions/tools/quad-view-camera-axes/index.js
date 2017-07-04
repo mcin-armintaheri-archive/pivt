@@ -123,7 +123,7 @@ export default class QuadViewCameraAxes {
     this.scene.remove(...this.cameraAxesList.map(axes => axes.getAxisSystem()));
     this.cameraAxesList = [];
   }
-  render() {
+  update() {
     this.cameraAxesList.forEach((axes) => {
       axes.projectAxes();
     });

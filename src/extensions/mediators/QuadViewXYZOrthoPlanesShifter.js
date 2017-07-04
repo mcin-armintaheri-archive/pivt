@@ -1,10 +1,8 @@
 import { PlaneShifter } from 'PlaneShifter';
 
-const THREE = require('three');
-
 export default function QuadViewXYZPlaneShifter(scene, layout, materialManager, planeParams) {
   const perspCam = layout.getBottomRight();
-  materialManager.onMaterialChange((mat, dimensions) => {
+  materialManager.onMaterialChange(() => {
     this.planeshifter = new PlaneShifter(
       scene.getPlaneSystem(),
       perspCam.getTHREECamera(),
@@ -19,11 +17,6 @@ export default function QuadViewXYZPlaneShifter(scene, layout, materialManager, 
       perspCam.setEnabled(true);
       planeParams.updateFromScene();
     });
-    const { x, y, z } = dimensions;
-    this.planeshifter.setBoundingBox(
-      new THREE.Box3(
-        new THREE.Vector3(-x / 2, -y / 2, -z / 2),
-        new THREE.Vector3(x / 2, y / 2, z / 2)),
-    );
+    this.planeshifter.setBoundingBox(scene.getBoundingBox());
   });
 }

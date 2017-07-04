@@ -87,6 +87,12 @@ export default class PlanesMaterialManager {
     this.dimensions.t = buffer.getTimeLength();
     const { x, y, z } = this.dimensions;
     this.dimensions.diagonal = Math.sqrt((x * x) + (y * y) + (z * z));
+    this.scene.setBoundingBox(
+      new THREE.Box3(
+        new THREE.Vector3(-x / 2, -y / 2, -z / 2),
+        new THREE.Vector3(x / 2, y / 2, z / 2),
+      ),
+    );
     this.texturesCreatedCallbacks.forEach((f) => {
       f(this.dimensions, sliceMatrixSize, this.volumeTextures);
     });

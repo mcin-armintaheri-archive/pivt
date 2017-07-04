@@ -144,13 +144,16 @@ export default class ViewPort {
   setClearColor(color) {
     this.clearColor = color;
   }
-  resetControls() {
+  resetControls(offset) {
     if (this.controls) {
       const pos = this.camera.position.clone();
       pos.z = pos.length();
       pos.x = 0;
       pos.y = 0;
       this.controls.reset();
+      if (offset instanceof THREE.Vector3) {
+        pos.add(offset);
+      }
       this.camera.position.copy(pos);
       this.camera.lookAt(new THREE.Vector3(0, 0, 0));
     }

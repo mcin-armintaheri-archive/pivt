@@ -38,13 +38,13 @@ export default class Application {
         return;
       }
       this.mediators.forEach((mediator) => {
-        if (mediator.render) {
-          mediator.render();
+        if (mediator.update) {
+          mediator.update();
         }
       });
       this.tools.forEach((tool) => {
-        if (tool.render) {
-          tool.render();
+        if (tool.update) {
+          tool.update();
         }
       });
       if (this.scene.update) {

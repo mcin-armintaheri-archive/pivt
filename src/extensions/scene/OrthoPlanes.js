@@ -9,6 +9,8 @@ export default class OrthoPlanes {
     this.scene.add(this.camSystem);
     this.scene.add(this.planeSystem);
     this.planes = [];
+    this.boundingBox = null;
+    this.planesAreLoaded = false;
   }
   getTHREEScene() {
     return this.scene;
@@ -21,6 +23,12 @@ export default class OrthoPlanes {
   }
   getPlanes() {
     return this.planes;
+  }
+  getBoundingBox() {
+    return this.boundingBox;
+  }
+  setBoundingBox(boundingBox) {
+    this.boundingBox = boundingBox;
   }
   getXY() {
     return this.planeXY;
@@ -44,5 +52,14 @@ export default class OrthoPlanes {
     this.planes.forEach((plane) => {
       this.planeSystem.add(plane);
     });
+    this.planesAreLoaded = true;
+  }
+  update() {
+    if (!this.planesAreLoaded) {
+      return;
+    }
+    if (this.boundingBox) {
+      this.boundingBox.clampPoint(this.planeSystem.position, this.planeSystem.position);
+    }
   }
 }

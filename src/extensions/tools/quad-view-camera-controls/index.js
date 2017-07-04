@@ -1,5 +1,7 @@
 import QuadViewCameraControlsWidget from './QuadViewCameraControlsWidget';
 
+const THREE = require('three');
+
 class CameraController {
   constructor(viewport) {
     this.viewport = viewport;
@@ -27,7 +29,7 @@ export default class QuadViewCameraControls {
     this.bottomright = new CameraController(this.layout.getBottomRight());
   }
   resetTrackball() {
-    this.layout.getBottomRight().resetControls();
+    this.layout.getBottomRight().resetControls(new THREE.Vector3(0, 10, 0));
   }
   getLayout() {
     return this.layout;

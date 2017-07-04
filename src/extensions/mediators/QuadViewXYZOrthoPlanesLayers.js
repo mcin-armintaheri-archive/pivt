@@ -119,7 +119,7 @@ export default class QuadViewXYZLayers {
       aligner.resetCameraUp();
     });
   }
-  render() {
+  update() {
     if (this.planesAreLoaded) {
       this.aligners.forEach((aligner) => {
         aligner.updateCamera();
