@@ -32,7 +32,6 @@ export default {
 <style scoped>
 .sidebar-widget-container {
   margin-top: 10px;
-  padding: 20px;
-  background-color: #;
+  padding: 5px;
 }
 </style>
