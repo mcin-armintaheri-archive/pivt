@@ -13,7 +13,7 @@
             <el-button class="sidebar-button" v-if="threeMount" type="primary" @click="newApplication">
               <i class="el-icon-plus"></i>&nbsp;&nbsp;&nbsp;New Application
             </el-button>
-            <el-button class="sidebar-button" v-else="threeMount" type="primary" :loading="true">
+            <el-button class="sidebar-button" v-else type="primary" :loading="true">
               Loading
             </el-button>
           </div>

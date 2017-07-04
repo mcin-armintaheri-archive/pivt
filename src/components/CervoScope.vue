@@ -1,5 +1,7 @@
 <template>
   <div class="container">
+    <floating-window-manager v-bind:applications="runningApplications">
+    </floating-window-manager>
     <sidebar
       v-bind:applications="runningApplications"
       v-bind:three-mount="threeViewMountPoint !== null"
@@ -60,6 +62,7 @@ import ThreeView from '@/components/ThreeView';
 import ApplicationSelect from '@/components/ApplicationSelect';
 import BufferManagerWidget from '@/components/BufferManagerWidget';
 import AddBuffer from '@/components/AddBuffer';
+import FloatingWindowManager from '@/components/FloatingWindowManager';
 import ApplicationManager from '@/extensions/ApplicationManager';
 import BrainSlicer from '@/applications/BrainSlicer';
 
@@ -77,6 +80,7 @@ export default {
     'application-select': ApplicationSelect,
     'add-buffer': AddBuffer,
     'buffer-manager-widget': BufferManagerWidget,
+    'floating-window-manager': FloatingWindowManager,
   },
   data() {
     return {

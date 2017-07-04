@@ -14,6 +14,7 @@ import QuadViewCameraControls from './tools/quad-view-camera-controls';
 import QuadViewCameraAxes from './tools/quad-view-camera-axes';
 import LineSegmentTool from './tools/line-segment-tool';
 import OrthoPlanesQuadViewLineSegment from './mediators/OrthoPlanesQuadViewLineSegment';
+import SpectrumPlot from './tools/spectrum-plot';
 // End Tool and Mediator Imports
 
 export default class ApplicationManager {
@@ -32,6 +33,7 @@ export default class ApplicationManager {
     this.registerConstructor('QuadViewCameraAxes', QuadViewCameraAxes);
     this.registerConstructor('LineSegmentTool', LineSegmentTool);
     this.registerConstructor('OrthoPlanesQuadViewLineSegment', OrthoPlanesQuadViewLineSegment);
+    this.registerConstructor('SpectrumPlot', SpectrumPlot);
   }
   /**
    * [create Build an application out of a JSON description]
