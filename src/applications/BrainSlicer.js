@@ -8,6 +8,10 @@ export default {
       tool: 'QuadViewCameraAxes',
     },
     {
+      name: 'lineSegmentTool',
+      tool: 'LineSegmentTool',
+    },
+    {
       name: 'contrast',
       tool: 'CurveTool',
     },
@@ -40,6 +44,10 @@ export default {
     {
       mediator: 'QuadViewXYZOrthoPlanesShifter',
       dependencies: ['scene', 'layout', 'materialManager', 'planeParams'],
+    },
+    {
+      mediator: 'OrthoPlanesQuadViewLineSegment',
+      dependencies: ['scene', 'layout', 'materialManager', 'lineSegmentTool'],
     },
   ],
 };

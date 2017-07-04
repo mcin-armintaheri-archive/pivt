@@ -16,6 +16,7 @@
   "dependencies": {
     "CanvasSpliner": "github:jonathanlurie/canvasSpliner",
     "PlaneShifter": "github:jonathanlurie/Planeshifter",
+    "SegmentDraw": "github:jonathanlurie/SegmentDraw",
     "element-ui": "^1.3.5",
     "file-size": "^1.0.0",
     "pixpipejs": "github:jonathanlurie/pixpipejs",
