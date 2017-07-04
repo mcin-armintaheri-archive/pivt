@@ -61,56 +61,11 @@ import ApplicationSelect from '@/components/ApplicationSelect';
 import BufferManagerWidget from '@/components/BufferManagerWidget';
 import AddBuffer from '@/components/AddBuffer';
 import ApplicationManager from '@/extensions/ApplicationManager';
+import BrainSlicer from '@/applications/BrainSlicer';
 
 const appManager = new ApplicationManager();
 
-const brainSlicer = {
-  name: 'BrainSlicer',
-  scene: 'OrthoPlanes',
-  layout: 'XYZPerspectiveQuadView',
-  tools: [
-    {
-      name: 'quadviewCameraAxes',
-      tool: 'QuadViewCameraAxes',
-    },
-    {
-      name: 'contrast',
-      tool: 'CurveTool',
-    },
-    {
-      name: 'materialManager',
-      tool: 'PlanesMaterialManager',
-    },
-    {
-      name: 'planeParams',
-      tool: 'OrthoPlanesParameters',
-    },
-    {
-      name: 'cameraParams',
-      tool: 'QuadViewCameraControls',
-    },
-  ],
-  mediators: [
-    {
-      mediator: 'OrthoPlanesShaderInjector',
-      dependencies: ['scene', 'layout', 'materialManager'],
-    },
-    {
-      mediator: 'QuadViewXYZOrthoPlanesLayers',
-      dependencies: ['scene', 'layout', 'materialManager', 'planeParams', 'quadviewCameraAxes'],
-    },
-    {
-      mediator: 'OrthoPlanesContrastSettings',
-      dependencies: ['contrast', 'materialManager'],
-    },
-    {
-      mediator: 'QuadViewXYZOrthoPlanesShifter',
-      dependencies: ['scene', 'layout', 'materialManager', 'planeParams'],
-    },
-  ],
-};
-
-const APPLICATIONS = [brainSlicer];
+const APPLICATIONS = [BrainSlicer];
 
 const appCount = {};
 
