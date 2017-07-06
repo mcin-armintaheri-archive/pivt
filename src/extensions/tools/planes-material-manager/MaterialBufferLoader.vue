@@ -54,7 +54,7 @@ export default {
       this.showLoading = true;
       setTimeout(() => {
         this.controller.createTextureFromBuffer(
-          buffermanager.getBuffer(uid).buffer,
+          buffermanager.getBuffer(uid),
           () => {
             this.showLoading = false;
           },

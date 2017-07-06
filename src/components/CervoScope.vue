@@ -1,7 +1,5 @@
 <template>
   <div class="container">
-    <floating-window-manager v-bind:applications="runningApplications">
-    </floating-window-manager>
     <sidebar
       v-bind:applications="runningApplications"
       v-bind:three-mount="threeViewMountPoint !== null"
@@ -11,6 +9,8 @@
       v-on:show-buffer-list="showBufferList = true"
     >
     </sidebar>
+    <floating-window-manager v-bind:applications="runningApplications">
+    </floating-window-manager>
     <threeview v-on:threeViewMounted="onThreeViewMounted">
     </threeview>
     <el-dialog

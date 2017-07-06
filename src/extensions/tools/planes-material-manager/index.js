@@ -1,5 +1,6 @@
 import {
   Image3DToMosaicFilter,
+  Image3DGenericDecoder,
 } from 'pixpipejs';
 import { MessageBox } from 'element-ui';
 
@@ -36,15 +37,34 @@ export default class PlanesMaterialManager {
     this.scene.initializePlanes();
     this.materialChangeCallbacks.forEach((f) => {
       if (f instanceof Function) {
-        f(this.scene.planeMaterial, dimensions);
+        f(this.scene.planeMaterial, dimensions, this.mniVolume);
       }
     });
   }
-  createTextureFromBuffer(buffer, callback) {
+  createTextureFromBuffer(bufferMeta, callback) {
+    const { buffer, name } = bufferMeta;
+    const decoder = new Image3DGenericDecoder();
+    decoder.addInput(buffer);
+    decoder.update();
+    if (!decoder.getNumberOfOutputs()) {
+      MessageBox.alert(`Cannot decode ${name} into a buffer.`, 'Decoding Error', {
+        confirmButtonText: 'OK',
+      });
+      callback();
+      return;
+    }
+    const mniVol = decoder.getOutput();
+    if (!mniVol) {
+      MessageBox.alert(`Cannot decode ${name} into a buffer.`, 'Decoding Error', {
+        confirmButtonText: 'OK',
+      });
+      callback();
+      return;
+    }
     const mosaicFilter = new Image3DToMosaicFilter();
     // genericDecoder ouputs a pixpipe.MniVolume, which iherit pixpipe.Image3D
     // making it compatible with pixpipe.Image3DToMosaicFilter
-    mosaicFilter.addInput(buffer);
+    mosaicFilter.addInput(mniVol);
     // which axis do we want the picture of?
     const space = 'zspace';
     mosaicFilter.setMetadata('axis', space);
@@ -64,8 +84,8 @@ export default class PlanesMaterialManager {
     this.volumeTextures = [];
     for (let nbOut = 0; nbOut < mosaicFilter.getNumberOfOutputs(); nbOut += 1) {
       const outputMosaic = mosaicFilter.getOutput(nbOut);
-      outputMosaic.setMetadata('min', buffer.getMetadata('voxel_min'));
-      outputMosaic.setMetadata('max', buffer.getMetadata('voxel_max'));
+      outputMosaic.setMetadata('min', mniVol.getMetadata('voxel_min'));
+      outputMosaic.setMetadata('max', mniVol.getMetadata('voxel_max'));
       const data = outputMosaic.getDataAsUInt8Array();
       const texture = new THREE.DataTexture(
         data,
@@ -81,10 +101,10 @@ export default class PlanesMaterialManager {
     sliceMatrixSize.x = mosaicFilter.getMetadata('gridWidth');
     sliceMatrixSize.y = mosaicFilter.getMetadata('gridHeight');
     this.dimensions = {};
-    this.dimensions.x = buffer.getMetadata('xspace').space_length;
-    this.dimensions.y = buffer.getMetadata('yspace').space_length;
-    this.dimensions.z = buffer.getMetadata('zspace').space_length;
-    this.dimensions.t = buffer.getTimeLength();
+    this.dimensions.x = mniVol.getMetadata('xspace').space_length;
+    this.dimensions.y = mniVol.getMetadata('yspace').space_length;
+    this.dimensions.z = mniVol.getMetadata('zspace').space_length;
+    this.dimensions.t = mniVol.getTimeLength();
     const { x, y, z } = this.dimensions;
     this.dimensions.diagonal = Math.sqrt((x * x) + (y * y) + (z * z));
     this.scene.setBoundingBox(
@@ -93,6 +113,7 @@ export default class PlanesMaterialManager {
         new THREE.Vector3(x / 2, y / 2, z / 2),
       ),
     );
+    this.mniVolume = mniVol;
     this.texturesCreatedCallbacks.forEach((f) => {
       f(this.dimensions, sliceMatrixSize, this.volumeTextures);
     });

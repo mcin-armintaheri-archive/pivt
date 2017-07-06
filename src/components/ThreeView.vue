@@ -29,6 +29,7 @@ export default {
   position: relative;
   height: 100vh;
   width: 100vw;
+  z-index: 0;
 }
 #three-mount .three-mount-canvas {
   height: 100vh;

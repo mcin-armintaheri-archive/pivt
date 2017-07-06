@@ -2,7 +2,7 @@
   <div class="container">
     <el-button
       type="primary"
-      @click="controller.windowConfig.open = true"
+      @click="openPlotWindow"
     >
       Show Segment Intensity Plot
     </el-button>
@@ -13,6 +13,12 @@
 export default {
   name: 'spectrum-plot-sidebar-widget',
   props: ['controller'],
+  methods: {
+    openPlotWindow() {
+      this.controller.windowConfig.open = true;
+      setTimeout(this.controller.redrawPlot.bind(this.controller), 50);
+    },
+  },
 };
 </script>
 

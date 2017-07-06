@@ -3,7 +3,7 @@
     class="buffer-table"
     v-bind:data="labeledBuffers"
     empty-text="There are no buffers."
-    @row-click="selectBufferEvent"
+    @row-click="selectBuffer"
     v-bind:row-style="{cursor: 'pointer'}"
   >
     <el-table-column prop="filename" label="Filename">
@@ -23,7 +23,6 @@ const buffermanager = BufferManager.getInstance();
 
 export default {
   name: 'buffer-manager-widget',
-  props: ['showBufferList'],
   mounted() {
     buffermanager.onBufferLoad(() => {
       this.loadedBuffers = buffermanager.getBufferList();
@@ -44,7 +43,7 @@ export default {
     },
   },
   methods: {
-    selectBufferEvent(row) {
+    selectBuffer(row) {
       this.$emit('select-buffer', row.uid);
     },
   },

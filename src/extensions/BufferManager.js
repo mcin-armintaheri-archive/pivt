@@ -1,8 +1,6 @@
 import {
   FileToArrayBufferReader,
-  Image3DGenericDecoder,
 } from 'pixpipejs';
-import { MessageBox } from 'element-ui';
 
 import UIDUtils from './UIDUtils';
 
@@ -30,32 +28,14 @@ class BufferManager {
     file2Buff.update();
     const loader = this;
     file2Buff.on('ready', function fileBufferIsReady() {
-      const buff = this.getOutput();
-      const decoder = new Image3DGenericDecoder();
-      decoder.addInput(buff);
-      decoder.update();
-      if (!decoder.getNumberOfOutputs()) {
-        MessageBox.alert(`Cannot decode ${file.name} into a buffer.`, 'Decoding Error', {
-          confirmButtonText: 'OK',
-        });
-        callback();
-        return;
-      }
-      const mniVol = decoder.getOutput();
-      if (!mniVol) {
-        MessageBox.alert(`Cannot decode ${file.name} into a buffer.`, 'Decoding Error', {
-          confirmButtonText: 'OK',
-        });
-        callback();
-        return;
-      }
+      const buffer = this.getOutput();
       loader.addBuffer({
         uid: UIDUtils.getUid(),
         name: file.name,
         size: file.size,
-        buffer: mniVol,
+        buffer,
       });
-      callback(mniVol);
+      callback(buffer);
     });
   }
   onBufferLoad(callback) {

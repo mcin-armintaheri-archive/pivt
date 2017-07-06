@@ -1,6 +1,9 @@
 import { SegmentDraw } from 'SegmentDraw';
 
 export default class LineSegmentTool {
+  constructor() {
+    this.segmentChangeCallbacks = [];
+  }
   initialize(scene, viewport) {
     this.segment = new SegmentDraw(
       scene.getPlaneSystem(),
@@ -17,5 +20,15 @@ export default class LineSegmentTool {
       viewport.setEnabled(true);
     });
     this.segment.setBoundingBox(scene.getBoundingBox());
+    this.segment.on('draw', (begin, end) => {
+      this.segmentChangeCallbacks.forEach((f) => {
+        f(begin, end);
+      });
+    });
+  }
+  onSegmentChange(callback) {
+    if (callback instanceof Function) {
+      this.segmentChangeCallbacks.push(callback);
+    }
   }
 }
