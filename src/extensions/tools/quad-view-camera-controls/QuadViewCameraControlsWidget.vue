@@ -39,6 +39,10 @@
 import OrthographicControls from './OrthographicControls';
 import PerspectiveControls from './PerspectiveControls';
 
+/**
+ * quad-view-camera-controls shows a 2x2 table of inputs for controlling
+ * the quadview layout viewports.
+ */
 export default {
   name: 'quad-view-camera-controls',
   components: {

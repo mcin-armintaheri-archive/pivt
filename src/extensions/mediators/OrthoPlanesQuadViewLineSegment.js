@@ -1,5 +1,15 @@
 const THREE = require('three');
 
+/**
+ * OrthoPlanesLineSegmentTool is a mediator that takes the begin and end
+ * position of a line segment drawn by LineSegmentTool to sample the MNI volume
+ * loaded by PlanesMaterialManager and plot those intensities into SpectrumPlot.
+ * @param  {OrthoPlanes} scene
+ * @param  {XYZPerspectiveQuadView} layout
+ * @param  {PlanesMaterialManager} materialManager
+ * @param  {LineSegmentTool} lineSegmentTool
+ * @param  {SpectrumPlot} spectrumPlot
+ */
 export default class OrthoPlanesLineSegmentTool {
   constructor(scene, layout, materialManager, lineSegmentTool, spectrumPlot) {
     spectrumPlot.setWindowTitle('Segment Intensity Plot');

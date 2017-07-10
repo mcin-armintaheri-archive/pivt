@@ -1,5 +1,16 @@
 import { PlaneShifter } from 'PlaneShifter';
 
+/**
+ * QuadViewXYZPlaneShifter uses the PlaneShifter package to bind the OrthoPlanes planes
+ * into PlaneShifter and disable the perspective viewport with the user is attemping
+ * to interact using PlaneShifter. When the interaction is over the inputs of
+ * OrthoPlanesParameters is updated.
+ * @param       {OrthoPlanes} scene
+ * @param       {XYZPerspectiveQuadView} layout
+ * @param       {PlanesMaterialManager} materialManager
+ * @param       {OrthoPlanesParameters} planeParams
+ * @constructor
+ */
 export default function QuadViewXYZPlaneShifter(scene, layout, materialManager, planeParams) {
   const perspCam = layout.getBottomRight();
   materialManager.onMaterialChange(() => {

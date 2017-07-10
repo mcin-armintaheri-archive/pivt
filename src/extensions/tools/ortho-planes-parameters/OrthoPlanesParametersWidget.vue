@@ -63,6 +63,11 @@
 </template>
 
 <script>
+/**
+ * ortho-planes-parameters-widget offers inputs for the user to
+ * precisely orient the planes in an OrthoPlanes scene.
+ * @type {String}
+ */
 export default {
   name: 'ortho-planes-parameters-widget',
   props: ['controller'],

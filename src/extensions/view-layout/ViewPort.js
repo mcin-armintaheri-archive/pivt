@@ -22,6 +22,10 @@ export default class ViewPort {
    * @param  {[Number]} width  [Width as a fraction: 0.0 to 1.0]
    * @param  {[Number]} height [Height as a fraction: 0.0 to 1.0]
    * @param {[String]} type [Either PERSPECTIVE or ORTHOGRAPHIC]
+   * @param {[String]} control [what type of control the camera should use.]
+   * @param {[number]} near [near plane of camera]
+   * @param {[number]} far [far plane of camera]
+   * @param {[boolean]} enableControlsKeys true if the viewport allow key controls
    */
   constructor(
     canvas,
@@ -81,15 +85,30 @@ export default class ViewPort {
     this.setFar(far);
     this.camera.position.z = 5.0;
   }
+  /**
+   * Get the reference to the THREE.Camera used by this viewport.
+   */
   getTHREECamera() {
     return this.camera;
   }
+  /**
+   * Get the reference to the controls used by the camera by this viewport.
+   */
   getTHREEControls() {
     return this.controls;
   }
+  /**
+   * Get a reference to the mouse position local to the current viewport's center.
+   * The position's components are normalized between -1 and 1.
+   * @return {Object} mouse reference
+   */
   getMousePosReference() {
     return this.mouse;
   }
+  /**
+   * Get the X, Y, Z unit axes of a camera in world coordinates.
+   * @return {Object} unit axes.
+   */
   getCameraAxes() {
     const camera = this.getTHREECamera();
     const zDir = camera.getWorldDirection().multiplyScalar(-1.0);
@@ -97,12 +116,21 @@ export default class ViewPort {
     const xDir = new THREE.Vector3().crossVectors(yDir, zDir);
     return { xDir, yDir, zDir };
   }
+  /**
+   * Unapply the current pan offset of the camera. Useful when transforming
+   * the camera's position and orientation without needing to worry about
+   * arbitrary panning.
+   */
   inversePan() {
     const camera = this.getTHREECamera();
     const { x, y } = this.getPan();
     const { xDir, yDir } = this.getCameraAxes();
     camera.position.sub(xDir.multiplyScalar(x)).sub(yDir.multiplyScalar(y));
   }
+  /**
+   * Apply the current pan offset of the camera. Useful after transforming
+   * the camera's position and orientation
+   */
   applyPan() {
     const camera = this.getTHREECamera();
     const { x, y } = this.getPan();
@@ -121,6 +149,10 @@ export default class ViewPort {
     this.pan = pan;
     this.applyPan();
   }
+  /**
+   * Roll the camera by an angle from it's current orientation.
+   * @param  {[type]} angle increment of roll angle
+   */
   rollBy(angle) {
     this.inversePan();
     const axis = this.camera.getWorldDirection().normalize().multiplyScalar(-1.0);
@@ -133,9 +165,17 @@ export default class ViewPort {
   setFar(far) {
     this.camera.far = far;
   }
+  /**
+   * enable the controls of the viewport.
+   * @param {boolean} boolean true to enable
+   */
   setEnabled(boolean) {
     this.enabled = boolean;
   }
+  /**
+   * enable the threejs camera's controls directly.
+   * @param {boolean} boolean true to enable
+   */
   setControlsEnabled(boolean) {
     if (this.controls) {
       this.controls.enabled = boolean;
@@ -144,6 +184,11 @@ export default class ViewPort {
   setClearColor(color) {
     this.clearColor = color;
   }
+  /**
+   * Reset the camera's orientation to it's initial orientation plus
+   * any offset passed.
+   * @param {THREE.Vector3} offset positional offset of the camera's reset position.
+   */
   resetControls(offset) {
     if (this.controls) {
       const pos = this.camera.position.clone();
@@ -173,6 +218,14 @@ export default class ViewPort {
     this.camera.bottom = -this.frustrumSize / 2;
     this.camera.updateProjectionMatrix();
   }
+  /**
+   * Get normalized viewport position of the mouse local to viewport's center.
+   * @param  {Number} x
+   * @param  {Number} y
+   * @param  {Number} width   width of canvas
+   * @param  {Number} height  height of canvas
+   * @param  {THREE.Vector2} target Vector2 to hold new mouse coordinates
+   */
   getViewportMousePosition(x, y, width, height, vec2Obj) {
     const viewportWidthPX = width * this.viewport.width;
     const viewportHeightPX = height * this.viewport.height;
@@ -182,6 +235,10 @@ export default class ViewPort {
       -((2 * (((y - (height * yOffset))) / viewportHeightPX)) - 1),
     );
   }
+  /**
+   * true of the mouse intersects this viewport.
+   * @return {boolean}
+   */
   mouseIntersects() {
     return mouseIntersectsViewport(this.mouse);
   }

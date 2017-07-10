@@ -11,6 +11,10 @@
 </template>
 
 <script>
+/**
+ * ortho-view-camera-axes-widget offers sidebar buttons for the user to show and
+ * hide the axes in the viewports.
+ */
 export default {
   name: 'ortho-view-camera-axes-widget',
   props: ['controller'],

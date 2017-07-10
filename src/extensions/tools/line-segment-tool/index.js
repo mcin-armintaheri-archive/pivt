@@ -1,5 +1,12 @@
 import { SegmentDraw } from 'SegmentDraw';
 
+/**
+ * LineSegmentTool uses the SegmentDraw package to draw line segments
+ * into an OrthoPlanes scene. When the segment tool draws, the begin
+ * and end positions are propagated into event handlers that mediators
+ * can call to, for example, sample a volume along the line.
+ * @type {Array}
+ */
 export default class LineSegmentTool {
   constructor() {
     this.segmentChangeCallbacks = [];

@@ -8,7 +8,11 @@ import MaterialBufferLoader from './MaterialBufferLoader';
 
 const THREE = require('three');
 
-/* eslint-disable no-alert */
+/**
+ * PlanesMaterialManager sets the material of the planes in the OrthoPlanes scene.
+ * PlanesMaterialManager also offers a method for creating a shader that samples
+ * an MNI volume loaded into the list of file buffers.
+ */
 export default class PlanesMaterialManager {
   constructor(scene) {
     this.sidebarWidget = MaterialBufferLoader;
@@ -29,6 +33,12 @@ export default class PlanesMaterialManager {
   getPlaneMaterial() {
     return this.scene.planeMaterial;
   }
+  /**
+   * set the OrthoPlane plane materials and call the material loaded callbacks
+   * with the dimensions of the material.
+   * @param {THREE.Material} material
+   * @param {Object} dimensions
+   */
   setShaderMaterial(material, dimensions) {
     this.dimensions = dimensions;
     const planeSize = 2 * dimensions.diagonal;
@@ -41,6 +51,16 @@ export default class PlanesMaterialManager {
       }
     });
   }
+  /**
+   * Using a buffer in the file buffer list, use pixpipe Image3DGenericDecoder
+   * to decode the buffer and then use Image3DToMosaicFilter to convert the
+   * Image3D into a mosiac. Use the mosiac to generates textures
+   * which can be sampled in a webGL shader.
+   * When the textures are created call the texturesCreatedCallbacks handlers.
+   * If the loading fails or completes, the passed callback is called.
+   * @param  {Object}   bufferMeta bufferMeta holding the volume data.
+   * @param  {Function} callback   completion/failure callback.
+   */
   createTextureFromBuffer(bufferMeta, callback) {
     const { buffer, name } = bufferMeta;
     const decoder = new Image3DGenericDecoder();

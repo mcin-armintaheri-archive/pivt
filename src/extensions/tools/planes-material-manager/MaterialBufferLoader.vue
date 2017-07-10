@@ -36,6 +36,10 @@ import BufferManagerWidget from '@/components/BufferManagerWidget';
 
 const buffermanager = BufferManager.getInstance();
 
+/**
+ * material-buffer-loader opens a modal for a user to select a file buffer
+ * and decode it mosiacs to convert into three textures.
+ */
 export default {
   name: 'material-buffer-loader',
   props: ['controller'],
@@ -49,6 +53,11 @@ export default {
     };
   },
   methods: {
+    /**
+     * When a file is selected, create the textures out of the buffer associated
+     * the the buffer uid.
+     * @param  {String} uid buffer's uid
+     */
     loadBuffer(uid) {
       this.showMaterialAdd = false;
       this.showLoading = true;
@@ -59,7 +68,7 @@ export default {
             this.showLoading = false;
           },
         );
-      }, 100);
+      }, 100); // Timeout for the ui to show loading modal.
     },
   },
 };

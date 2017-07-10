@@ -1,5 +1,10 @@
 import UIDUtils from './UIDUtils';
 
+/**
+ * Application is used to hold the running tools and mediators described in a JSON description.
+ * It can be stopped or started and will update all of its contained tools and mediators
+ * in the order they are described in an applications JSON description.
+ */
 export default class Application {
   constructor(name) {
     this.uid = UIDUtils.getUid();
@@ -32,6 +37,10 @@ export default class Application {
   getMediators() {
     return this.mediators;
   }
+  /**
+   * First update the mediators, then the tools, then the scene, then
+   * user the layout to render the scene.
+   */
   runApplicationLoop() {
     if (this.layout) {
       if (!this.isRunning) {

@@ -54,6 +54,11 @@
 </template>
 
 <script>
+/**
+ * orthographic-controls is a child component for containing the inputs
+ * associated with a single orthographic layout. It offers
+ * inputs for rolling, and panning the orthographic camera.
+ */
 export default {
   name: 'orthographic-controls',
   props: ['controller', 'title', 'camControls'],

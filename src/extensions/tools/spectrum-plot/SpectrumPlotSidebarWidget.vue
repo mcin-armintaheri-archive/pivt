@@ -10,6 +10,10 @@
 </template>
 
 <script>
+/**
+ * spectrum-plot-sidebar-widget renders a button to open the intensity plot
+ * floating window.
+ */
 export default {
   name: 'spectrum-plot-sidebar-widget',
   props: ['controller'],

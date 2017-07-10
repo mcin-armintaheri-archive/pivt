@@ -232,6 +232,14 @@ const FRAGMENT = `
   }
 `;
 
+/**
+ * OrthoPlaneShaderInjector injects a shader to sample an MNI volume and shade
+ * the planes in OrthoPlanes based on the sampled intensity.
+ * @param       {OrthoPlanes} scene
+ * @param       {Layout} layout
+ * @param       {PlanesMaterialManager} materialManager
+ * @constructor
+ */
 export default function OrthoPlaneShaderInjector(scene, layout, materialManager) {
   materialManager.onTexturesCreated((dimensions, sliceMatrixSize, textures) => {
     const material = new THREE.ShaderMaterial({

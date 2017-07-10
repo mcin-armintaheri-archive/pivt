@@ -2,6 +2,12 @@ import { SpectrumPlot2 } from 'SpectrumPlot2';
 import SpectrumPlotWindow from './SpectrumPlotWindow';
 import SpectrumPlotSidebarWidget from './SpectrumPlotSidebarWidget';
 
+/**
+ * Wrapper class for the SpectrumPlot2 package. A floating window is
+ * defined in SpectrumPlotWindow and the intensity plot given a series
+ * in drawn into the floating window using SpectrumPlot2.
+ * @type {[type]}
+ */
 export default class SpectrumPlot {
   constructor() {
     this.sidebarWidget = SpectrumPlotSidebarWidget;

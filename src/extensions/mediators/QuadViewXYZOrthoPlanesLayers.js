@@ -1,5 +1,11 @@
 const THREE = require('three');
 
+/**
+ * PlaneCameraAligner associated a viewport with a particular plane in
+ * OrthoPlanes. The aligner makes the camera in the viewport rotate and move with the
+ * plane in a matter that provides the user with a continuous orientation
+ * with the plane.
+ */
 class PlaneCameraAligner {
   constructor(viewport, plane, planeSystem, layer, camPosition) {
     this.viewport = viewport;
@@ -17,6 +23,16 @@ class PlaneCameraAligner {
     camera.layers.set(layer);
     this.plane.layers.enable(layer);
   }
+  /**
+   * Using the plane system's change in orientation, find where the new position
+   * of the camera should be by taking the unpanned position of the camera
+   * relative to the plane system and rotate it by the change in oriantation.
+   * Take the new position and the hold position and find the quaternion that
+   * transforms the intial position to the new position. This quaternion is needed
+   * to remove the rolling of the plane system's quaternion. This quaternion is
+   * used to apply a smooth rotation to the camera's up vector. The camera's pan
+   * is then reapplied.
+   */
   updateCameraOrientation() {
     const camera = this.viewport.getTHREECamera();
     const dQuaternion = this.planeSystem.quaternion.clone().multiply(this.quat0).normalize();
@@ -36,6 +52,9 @@ class PlaneCameraAligner {
     this.updateCameraOrientation();
     this.viewport.applyPan();
   }
+  /**
+   * Reset the up of the cameras to the initial up when the camera was intially fixed to the plane.
+   */
   resetCameraUp() {
     const camera = this.viewport.getTHREECamera();
     this.viewport.inversePan();
@@ -46,6 +65,17 @@ class PlaneCameraAligner {
   }
 }
 
+/**
+ * QuadViewXYZLayers forces the orthographic cameras to only view the planes and axes
+ * they are associated with. It also defines the associations themselves. When the
+ * plane rotations are reset by OrthoPlanesParameters, the camera up vectors are
+ * all reset.
+ * @param  {OrthoPlanes} scene
+ * @param  {XYZPerspectiveQuadView} layout
+ * @param  {PlanesMaterialManager} materialManager
+ * @param  {OrthoPlanesParameters} planeParams
+ * @param  {QuadViewCameraAxes} quadviewCameraAxes
+ */
 export default class QuadViewXYZLayers {
   constructor(scene, layout, materialManager, planeParams, quadviewCameraAxes) {
     this.orthoCameras = layout.getViewports().slice(0, 3).map(v => v.getTHREECamera());

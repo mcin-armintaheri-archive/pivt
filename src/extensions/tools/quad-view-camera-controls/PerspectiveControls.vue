@@ -15,6 +15,11 @@
 </template>
 
 <script>
+/**
+ * perspective-controls contains a button to reset the orientation
+ * of perspective camera.
+ * @type {String}
+ */
 export default {
   name: 'perspective-controls',
   props: ['controller', 'title'],

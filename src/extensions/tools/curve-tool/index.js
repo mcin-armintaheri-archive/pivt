@@ -1,6 +1,11 @@
 import { CanvasSpliner } from 'CanvasSpliner';
 import CurveToolWidget from './CurveToolWidget';
 
+/**
+ * CurveTool uses the CanvasSpliner package to send interpolated values through
+ * control points. This tool is handy for mediators that would like
+ * to have a continuous map defined by the user graphically.
+ */
 export default class CurveTool {
   constructor() {
     this.sidebarWidget = CurveToolWidget;

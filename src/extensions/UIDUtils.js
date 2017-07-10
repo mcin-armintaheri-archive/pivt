@@ -4,6 +4,10 @@ function S4() {
 }
 
 export default {
+  /**
+   * Generate a UUID
+   * @return {String} UUID
+   */
   getUid() {
     return (
       `${S4()}${S4()}-${S4()}-4${S4().substr(0, 3)}-${S4()}-${S4()}${S4()}${S4()}`

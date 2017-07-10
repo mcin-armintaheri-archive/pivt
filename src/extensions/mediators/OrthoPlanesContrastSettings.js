@@ -1,5 +1,12 @@
 const THREE = require('three');
 
+/**
+ * Using the interpolated values of the CurveTool, update the material
+ * of the OrthoPlanes scene with the new contrast mapping.
+ * @param       {CurveTool} curvetool
+ * @param       {PlanesMaterialManager} materialManager
+ * @constructor
+ */
 export default function OrthoPlaneContrastSettings(curvetool, materialManager) {
   curvetool.setTitle('Contrast');
   curvetool.onChange((csObj) => {

@@ -3,6 +3,11 @@ import QuadViewCameraAxesWidget from './QuadViewCameraAxesWidget';
 
 const THREE = require('three');
 
+/**
+ * create the lines and colors of an XYZ axis system bounded in a sphere.
+ * @param  {Number} radius bounding sphere radius.
+ * @return {Object} Object holding threejs curves and colors for each axis.
+ */
 function createXYZLines(radius) {
   const xLine = new THREE.LineCurve3(
     new THREE.Vector3(-radius, 0, 0),
@@ -32,6 +37,11 @@ function createXYZLines(radius) {
   ];
 }
 
+/**
+ * Given a viewport and a target scene Object or THREE.Vector3, CameraAxes
+ * will project an axis system to the viewing plane containing the target position.
+ * If the target is a THREE.Vector3 the axes are simply placed at that position.
+ */
 class CameraAxes {
   constructor(viewport, target, size, thickness, layer, dashLength) {
     this.viewport = viewport;
@@ -73,6 +83,10 @@ class CameraAxes {
       this.system.position.copy(this.target);
     }
   }
+  /**
+   * If the target is an object, project the camera's position to the viewing plane
+   * at that object and render axes at that location.
+   */
   projectAxes() {
     // Don't project if axes are positioned at a fixed point.
     if (this.target instanceof THREE.Vector3) {
@@ -89,6 +103,11 @@ class CameraAxes {
   getAxisSystem() {
     return this.system;
   }
+  /**
+   * Traverse the axes of the axis system and set their visibility to the given
+   * boolean.
+   * @param  {boolean} boolean visibility
+   */
   showAxes(boolean) {
     this.system.children.forEach((axis) => {
       Object.assign(axis, { visible: boolean });
@@ -96,6 +115,10 @@ class CameraAxes {
   }
 }
 
+/**
+ * QuadViewCameraAxes creates projected axes systems for the orthographic views
+ * of a QuadView layout and a fixed axes sytem for the perspected view.
+ */
 export default class QuadViewCameraAxes {
   constructor(scene) {
     this.sidebarWidget = QuadViewCameraAxesWidget;

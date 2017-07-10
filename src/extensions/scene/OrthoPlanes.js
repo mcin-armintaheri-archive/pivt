@@ -1,5 +1,9 @@
 const THREE = require('three');
 
+/**
+ * OrthoPlanes gives an API for modifying a threejs Scene containing 3 orthogonal
+ * planes.
+ */
 export default class OrthoPlanes {
   constructor() {
     this.scene = new THREE.Scene();

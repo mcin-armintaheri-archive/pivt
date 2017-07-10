@@ -3,6 +3,9 @@ import Layout from './Layout';
 
 const THREE = require('three');
 
+/**
+ * A simple layout for placing 4 equal size viewports into the canvas.
+ */
 export default class XYZPerspectiveQuadView extends Layout {
   constructor(container, renderer) {
     super(container, renderer);

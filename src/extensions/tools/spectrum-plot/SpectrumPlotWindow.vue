@@ -4,8 +4,12 @@
 </template>
 
 <script>
+/**
+ * spectrum-plot-window is a container component for SpectrumPlot2 to mount its
+ * plot into when the component itself is mounted.
+ */
 export default {
-  name: 'perspective-controls',
+  name: 'spectrum-plot-window',
   props: ['controller'],
   mounted() {
     this.controller.initialize(this.$el);

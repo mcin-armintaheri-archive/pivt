@@ -24,6 +24,10 @@
 </template>
 
 <script>
+/**
+ * curve-tool-widget renders the CanvasSpliner's DOM element
+ * and allows the user to change the type of the spline.
+ */
 export default {
   name: 'curve-tool-widget',
   props: ['controller'],
