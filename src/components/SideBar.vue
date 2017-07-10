@@ -128,7 +128,7 @@ export default {
 }
 .sidebar-container {
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
   position: absolute;
   min-width: 300px;
   max-width: 500px;
