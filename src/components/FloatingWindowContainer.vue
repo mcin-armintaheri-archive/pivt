@@ -22,6 +22,12 @@
 <script>
 import FloatingWindowWidget from '@/components/FloatingWindowWidget';
 
+/**
+ * Convert a tool's window config into screen space coordinates
+ * for the initial openning position of a window.
+ * @param  {[{x, y, viewportCoords}]} openPosition
+ * @return {[{x, y}]} screen space coordinates of window.
+ */
 const initialOpenPosition = (openPosition) => {
   const pos = {};
   Object.assign(pos, openPosition);
@@ -32,9 +38,14 @@ const initialOpenPosition = (openPosition) => {
   return { x, y };
 };
 
-/* eslint-disable no-use-before-define */
+/**
+ * floating-window-container renders a windows topbar, bottombar and its
+ * actual contents given by the associated tool. The running tool is
+ * passed as a prop called 'window-controller'. Handlers are set up
+ * to handle window dragging.
+ */
 export default {
-  name: 'floating-window-manager',
+  name: 'floating-window-container',
   components: {
     'floating-window-widget': FloatingWindowWidget,
   },
@@ -46,11 +57,21 @@ export default {
     let initialWindowPos;
     let mouseDownPos;
     let dragging = false;
+    /**
+     * Event handler for releasing the mouse button on the top bar.
+     * Sets the dragging flag to flase and stops the event handler
+     * for releasing the top bar.
+     */
     const releaseWindow = () => {
       this.$emit('window-release');
       dragging = false;
       window.removeEventListener('mouseup', releaseWindow);
     };
+    /**
+     * Event handler for holding down the mouse button on the top bar.
+     * Sets dragging flag to true and saves the current position of the window.
+     * Starts an event listener for when the window is released to releaseWindow()
+     */
     const grabWindow = () => {
       this.$emit('window-grab');
       const { top, left } = this.$el.getBoundingClientRect();
@@ -59,6 +80,12 @@ export default {
       mouseDownPos = { x: event.clientX, y: event.clientY };
       window.addEventListener('mouseup', releaseWindow);
     };
+    /**
+     * When the mouse is moved, moveWindow checks the dragging flag and
+     * displaces the window from how far the mouse was dragged from the
+     * mouse down position.
+     * @param  {[Event]} event
+     */
     const moveWindow = (event) => {
       if (dragging) {
         event.stopPropagation();

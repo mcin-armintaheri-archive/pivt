@@ -6,6 +6,10 @@
 </template>
 
 <script>
+/**
+ * application-select-item renders a single application option to load
+ * when creating an application.
+ */
 export default {
   name: 'application-select-item',
   props: ['option'],

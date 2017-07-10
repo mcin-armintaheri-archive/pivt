@@ -24,6 +24,13 @@
 <script>
 import FloatingWindowContainer from '@/components/FloatingWindowContainer';
 
+/**
+ * floating-window-manager creates a overlapping full-screen invisible
+ * div on the screen for each layer and renders the current running
+ * application's floating windows. The window's inner component constructor
+ * is fetched out of the tool's floatingWindow attribute and drawn
+ * using FloatingWindowWidget.
+ */
 export default {
   name: 'floating-window-manager',
   components: {

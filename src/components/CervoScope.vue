@@ -85,6 +85,7 @@ export default {
   data() {
     return {
       threeViewMountPoint: null,
+      threeRenderer: null,
       runningApplications: [],
       appSelectDialog: false,
       showBufferList: false,

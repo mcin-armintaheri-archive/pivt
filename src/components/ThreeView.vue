@@ -6,7 +6,13 @@
 
 <script>
 const THREE = require('three');
-
+/**
+ * When the three-view component is mounted, a threejs WebGLRenderer
+ * is instantiated and emmitted in the payload of the three-view-mounted
+ * event. The parent may use the canvas element and the renderer emmitted
+ * by the event to pass them to running applications.
+ * @type {String}
+ */
 export default {
   name: 'three-view',
   mounted() {

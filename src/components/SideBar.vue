@@ -62,6 +62,12 @@
 import SidebarWidget from '@/components/SidebarWidget';
 import ApplicationSidebarWidgets from '@/components/ApplicationSidebarWidgets';
 
+/**
+ * sidebar renders components responsible for creating a new application,
+ * loading files from the client's filesystem, and interacting with
+ * the currently instantiated applications.
+ * @type {String}
+ */
 export default {
   name: 'sidebar',
   components: {

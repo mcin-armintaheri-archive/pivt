@@ -1,3 +1,8 @@
+/**
+ * A low-level vuejs component purely to use the createElement callback
+ * passed by the vuejs rendering lifecycle to render an arbitrary vuejs
+ * component given its constructor.
+ */
 export default {
   name: 'sidebar-widget',
   props: ['widget-controller'],

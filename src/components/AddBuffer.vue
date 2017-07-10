@@ -10,6 +10,11 @@ const buffermanager = BufferManager.getInstance();
 export default {
   name: 'add-buffer',
   methods: {
+    /**
+     * When the file input changes, emit a vue-event containing the file
+     * reference as payload.
+     * @param {[FILE]} file The file reference taken from the input.
+     */
     addFile(file) {
       // TODO: Kind of specific to add a volume for a general buffer adder.
       this.$emit('new-file-loading');

@@ -17,6 +17,14 @@
 <script>
 import SidebarWidget from '@/components/SidebarWidget';
 
+/**
+ * application-sidebar-widgets renders all the widgets
+ * associated with a specific tool running in the application.
+ * The widgets are rendered in the order the tool is defined
+ * in the application's JSON description.
+ * The component is given the instance of the running application
+ * and its index in the creation order of the applications.
+ */
 export default {
   name: 'application-sidebar-widgets',
   components: {

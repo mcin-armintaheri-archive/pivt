@@ -21,6 +21,11 @@ const filesize = require('file-size');
 
 const buffermanager = BufferManager.getInstance();
 
+/**
+ * buffer-manager-widget renders a list of the currently
+ * loaded files uploaded by the user. By default it
+ * emits a select-buffer event when a file is clicked.
+ */
 export default {
   name: 'buffer-manager-widget',
   mounted() {
@@ -34,6 +39,12 @@ export default {
     };
   },
   computed: {
+    /**
+     * For each loaded buffer create an objects holding the
+     * filename, size, and uid of the file. This object
+     * is used as the row attributes in the file table.
+     * @return {[Array]} list of row attributes of all the loaded buffers.
+     */
     labeledBuffers() {
       return this.loadedBuffers.map(buffer => ({
         filename: buffer.name,
@@ -43,6 +54,11 @@ export default {
     },
   },
   methods: {
+    /**
+     * If a buffer is selected, emit the uid of the buffer to the
+     * parent componenet.
+     * @param  {[Object]} row attributes of the clicked file
+     */
     selectBuffer(row) {
       this.$emit('select-buffer', row.uid);
     },

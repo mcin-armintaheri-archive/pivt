@@ -14,6 +14,10 @@
 <script>
 import ApplicationSelectItem from '@/components/ApplicationSelectItem';
 
+/**
+ * application-select component renders the list of possible applications to
+ * run given the json configurations passed as an array to the props.
+ */
 export default {
   name: 'application-select',
   components: {
