@@ -22,29 +22,31 @@
               <i class="el-icon-upload2"></i>&nbsp;&nbsp;&nbsp;File Buffer List
             </el-button>
           </div>
-          <el-submenu
-            v-for="(application, idx) in applications"
-            :key="idx"
-            :index="String(idx)"
-          >
-            <template slot="title">
-              <div class="app-collapse">
-                <div>
-                  {{ application.getName() }}
-                </div>
-                <div class="app-collapse-controls">
-                  <el-button type="primary" @click="killApplication($event, application)">
-                    <i class="el-icon-close"></i>Remove
-                  </el-button>
-                </div>
-              </div>
-            </template>
-            <application-sidebar-widgets
-              v-bind:application="application"
-              v-bind:appIndex="idx"
+          <div class="app-menu-scroll">
+            <el-submenu
+              v-for="(application, idx) in applications"
+              :key="idx"
+              :index="String(idx)"
             >
-            </application-sidebar-widgets>
-          </el-submenu>
+              <template slot="title">
+                <div class="app-collapse">
+                  <div>
+                    {{ application.getName() }}
+                  </div>
+                  <div class="app-collapse-controls">
+                    <el-button type="primary" @click="killApplication($event, application)">
+                      <i class="el-icon-close"></i>Remove
+                    </el-button>
+                  </div>
+                </div>
+              </template>
+              <application-sidebar-widgets
+                v-bind:application="application"
+                v-bind:appIndex="idx"
+              >
+              </application-sidebar-widgets>
+            </el-submenu>
+          </div>
         </el-menu>
       </el-col>
       <el-col :span="1">
@@ -107,16 +109,20 @@ export default {
   height: 100%;
 }
 .sidebar-menu {
-  overflow-y: auto;
+  overflow-y: hidden;
   pointer-events: all;
   height: 100%;
+}
+.app-menu-scroll {
+  height: calc(100vh - 200px);
+  overflow-y: auto;
 }
 .sidebar-hide {
   display: none;
 }
 .sidebar-container {
   pointer-events: none;
-  z-index: 2;
+  z-index: 1;
   position: absolute;
   min-width: 300px;
   max-width: 500px;
