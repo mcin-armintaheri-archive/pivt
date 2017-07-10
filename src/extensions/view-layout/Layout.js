@@ -4,9 +4,13 @@ const THREE = require('three');
  * Base class for all layouts. All mouse events and resize events
  * are handled in his layout. this is so all layouts can be made simple
  * and only need to fetch the mouse coordinates stored in the super class.
- * @type {[type]}
  */
 export default class Layout {
+  /**
+   * @param  {[type]}  container        DOM element hosting the layout
+   * @param  {[type]}  renderer         Possible renderer for threejs
+   * @param  {Boolean} [context3d=true] Use 2D or 3D rendering
+   */
   constructor(container, renderer, context3d = true) {
     this.ups = null;
     this.viewports = [];

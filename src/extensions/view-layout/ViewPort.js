@@ -226,11 +226,11 @@ export default class ViewPort {
    * @param  {Number} height  height of canvas
    * @param  {THREE.Vector2} target Vector2 to hold new mouse coordinates
    */
-  getViewportMousePosition(x, y, width, height, vec2Obj) {
+  getViewportMousePosition(x, y, width, height, target) {
     const viewportWidthPX = width * this.viewport.width;
     const viewportHeightPX = height * this.viewport.height;
     const yOffset = this.viewport.height - this.viewport.bottom;
-    vec2Obj.set(
+    target.set(
        ((2 * (((x - (width * this.viewport.left))) / viewportWidthPX)) - 1),
       -((2 * (((y - (height * yOffset))) / viewportHeightPX)) - 1),
     );
@@ -242,9 +242,25 @@ export default class ViewPort {
   mouseIntersects() {
     return mouseIntersectsViewport(this.mouse);
   }
+  /**
+   * Update the mouse position reference with the current local viewport position
+   * of the mouse with coordinates mapped to -1, 1.
+   * @param  {Number} x
+   * @param  {Number} y
+   * @param  {Number} width   width of canvas
+   * @param  {Number} height  height of canvas
+   */
   updateMousePosition(x, y, width, height) {
     this.getViewportMousePosition(x, y, width, height, this.mouse);
   }
+  /**
+   * Update the lastMouseDown position reference with the current local viewport position
+   * of the mouse with coordinates mapped to -1, 1. Used when mouse is clicked in the viewport.
+   * @param  {Number} x
+   * @param  {Number} y
+   * @param  {Number} width   width of canvas
+   * @param  {Number} height  height of canvas
+   */
   updateLastMouseDownPosition(x, y, width, height) {
     this.getViewportMousePosition(x, y, width, height, this.lastMouseDown);
     if (this.controls) {
@@ -255,12 +271,24 @@ export default class ViewPort {
       }
     }
   }
+  /**
+   * Update the lastMouseUp position reference with the current local viewport position
+   * of the mouse with coordinates mapped to -1, 1. Used when mouse is released in the viewport.
+   * @param  {Number} x
+   * @param  {Number} y
+   * @param  {Number} width   width of canvas
+   * @param  {Number} height  height of canvas
+   */
   updateLastMouseUpPosition(x, y, width, height) {
     this.getViewportMousePosition(x, y, width, height, this.lastMouseUp);
     if (mouseIntersectsViewport(this.lastMouseUp)) {
       this.setControlsEnabled(true);
     }
   }
+  /**
+   * Render the scene to the viewport using the camera associated with this viewport.
+   * @param  {THREE.Scene} scene
+   */
   renderWith(scene) {
     const { width, height } = this.canvasRectangle;
     this.renderer.setViewport(

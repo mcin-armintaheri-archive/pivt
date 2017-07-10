@@ -12,6 +12,13 @@ export default class CurveTool {
     this.pointMoveCallback = function empty() {};
     this.title = '';
   }
+  /**
+   * Given a DOM container, inject the curve spliner tool into the element
+   * and add controls points to (0,0) and (1,1). When the spliner is updated,
+   * call all handlers bound to this event.
+   * @param  {[type]} container [description]
+   * @return {[type]}           [description]
+   */
   initialize(container) {
     this.spliner = new CanvasSpliner(container, 250, 250);
     this.spliner.add({ x: 0, y: 0, xLocked: true, safe: true });
@@ -37,6 +44,10 @@ export default class CurveTool {
   getSpliner() {
     return this.spliner;
   }
+  /**
+   * Set the title of the sidebar widget.
+   * @param {String} title
+   */
   setTitle(title) {
     this.title = title;
   }

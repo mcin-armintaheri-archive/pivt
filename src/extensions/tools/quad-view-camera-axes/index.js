@@ -130,6 +130,16 @@ export default class QuadViewCameraAxes {
       axes.showAxes(boolean);
     });
   }
+  /**
+   * Factory method for constructing camera axis systems.
+   * @param  {ViewPort} viewport
+   * @param  {THREE.Object3D} target Either THREE.Object3D or THREE.Vector3
+   * @param  {THREE.Vector3}  target Either THREE.Object3D or THREE.Vector3
+   * @param  {Number} size radius of bounding sphere of the axes
+   * @param  {Number} thickness thickness of axis lines
+   * @param  {Number} [layer=0] scene layer for filtering to cameras
+   * @param  {Number} [dashLength=10] length of axes dashes in negative direction.
+   */
   createAxes(viewport, target, size, thickness, layer = 0, dashLength = 10) {
     const cameraAxes = new CameraAxes(
       viewport,
@@ -142,6 +152,9 @@ export default class QuadViewCameraAxes {
     this.scene.getTHREEScene().add(cameraAxes.getAxisSystem());
     this.cameraAxesList.push(cameraAxes);
   }
+  /**
+   * Destroy all axis systems
+   */
   dispose() {
     this.scene.remove(...this.cameraAxesList.map(axes => axes.getAxisSystem()));
     this.cameraAxesList = [];
