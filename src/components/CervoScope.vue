@@ -27,32 +27,8 @@
         <el-button @click="appSelectDialog = false">Cancel</el-button>
       </span>
     </el-dialog>
-    <el-dialog
-      title="Active Buffers"
-      :visible.sync="showBufferList"
-      size="small"
-    >
-      <buffer-manager-widget>
-      </buffer-manager-widget>
-      <span slot="footer">
-        <el-button @click="showAddBuffer = true">Add</el-button>
-        <el-button @click="showBufferList = false">Cancel</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog
-      title="Select a file on your computer."
-      :visible.sync="showAddBuffer"
-      size="tiny"
-    >
-      <add-buffer
-        v-on:new-file-loading="addBufferLoading = true"
-        v-on:new-file-added="newFileAddedHandler"
-      >
-      </add-buffer>
-      <span slot="footer">
-        <el-button @click="showAddBuffer = false" :loading="addBufferLoading">Cancel</el-button>
-      </span>
-    </el-dialog>
+    <add-buffer :show-dialog.sync="showBufferList">
+    </add-buffer>
   </div>
 </template>
 
@@ -89,8 +65,6 @@ export default {
       runningApplications: [],
       appSelectDialog: false,
       showBufferList: false,
-      showAddBuffer: false,
-      addBufferLoading: false,
     };
   },
   computed: {
@@ -120,10 +94,6 @@ export default {
         app.run();
       }
       this.runningApplications.push(app);
-    },
-    newFileAddedHandler() {
-      this.addBufferLoading = false;
-      this.showAddBuffer = false;
     },
     removeApplication(application) {
       application.dispose();

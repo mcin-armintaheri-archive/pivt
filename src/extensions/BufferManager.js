@@ -46,7 +46,7 @@ class BufferManager {
    * @param  {FILE} file BLOB containing buffer data.
    * @param  {Function} callback function called with buffer when loading is complete.
    */
-  loadBrainVolume(file, callback) {
+  loadBuffer(file, callback) {
     const file2Buff = new FileToArrayBufferReader();
     file2Buff.addInput(file);
     file2Buff.update();
