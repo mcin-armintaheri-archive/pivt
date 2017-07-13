@@ -110,6 +110,15 @@ export default {
 <!-- TODO: use dropshadow to give "on top" look -->
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.sidebar-container {
+  pointer-events: none;
+  z-index: 3;
+  position: fixed;
+  min-width: 300px;
+  max-width: 500px;
+  width: 40%;
+  min-height: 100%;
+}
 .sidebar-layout {
   width: 100%;
   height: 100%;
@@ -125,15 +134,6 @@ export default {
 }
 .sidebar-hide {
   display: none;
-}
-.sidebar-container {
-  pointer-events: none;
-  z-index: 2;
-  position: absolute;
-  min-width: 300px;
-  max-width: 500px;
-  width: 40%;
-  height: 100%;
 }
 .sidebar-toggle {
   pointer-events: all;

@@ -8,8 +8,8 @@ export default {
       tool: 'QuadViewCameraAxes',
     },
     {
-      name: 'spectrumPlot',
-      tool: 'SpectrumPlot',
+      name: 'intensityPlot',
+      tool: 'IntensityPlotWindow',
     },
     {
       name: 'lineSegmentTool',
@@ -51,7 +51,7 @@ export default {
     },
     {
       mediator: 'OrthoPlanesQuadViewLineSegment',
-      dependencies: ['scene', 'layout', 'materialManager', 'lineSegmentTool', 'spectrumPlot'],
+      dependencies: ['scene', 'layout', 'materialManager', 'lineSegmentTool', 'intensityPlot'],
     },
   ],
 };

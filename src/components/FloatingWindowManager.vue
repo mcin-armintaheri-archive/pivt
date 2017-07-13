@@ -44,13 +44,13 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
 #floating-windows {
   pointer-events: none;
   position: absolute;
   width: 100vw;
   height: 100vh;
-  z-index: 1;
+  z-index: 2;
 }
  #floating-windows .floating-window-layer {
   pointer-events: none;

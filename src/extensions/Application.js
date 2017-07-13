@@ -1,4 +1,5 @@
 import UIDUtils from './UIDUtils';
+import CanvasLayout from './view-layout/canvas/CanvasLayout';
 
 /**
  * Application is used to hold the running tools and mediators described in a JSON description.
@@ -42,45 +43,51 @@ export default class Application {
    * user the layout to render the scene.
    */
   runApplicationLoop() {
-    if (this.layout) {
-      if (!this.isRunning) {
-        return;
-      }
-      this.mediators.forEach((mediator) => {
-        if (mediator.update) {
-          mediator.update();
-        }
-      });
-      this.tools.forEach((tool) => {
-        if (tool.update) {
-          tool.update();
-        }
-      });
-      if (this.scene.update) {
-        this.scene.update();
-      }
-      this.layout.render(this.scene.getTHREEScene());
-      window.requestAnimationFrame(this.runApplicationLoop.bind(this));
+    if (!this.isRunning) {
+      return;
     }
+    this.mediators.forEach((mediator) => {
+      if (mediator.update) {
+        mediator.update();
+      }
+    });
+    this.tools.forEach((tool) => {
+      if (tool.update) {
+        tool.update();
+      }
+    });
+    if (this.scene && this.scene.update) {
+      this.scene.update();
+    }
+    if (this.layout.render) {
+      if (this.scene && this.scene.getTHREEScene) {
+        this.layout.render(this.scene.getTHREEScene());
+      } else {
+        this.layout.render();
+      }
+    }
+    window.requestAnimationFrame(this.runApplicationLoop.bind(this));
   }
   run() {
-    if (this.layout) {
+    this.isRunning = true;
+    if (this.layout instanceof CanvasLayout) {
       this.layout.addLayoutListeners();
       this.layout.enableViewports(true);
-      this.isRunning = true;
-      this.runApplicationLoop();
     }
+    this.runApplicationLoop();
   }
   stop() {
-    if (this.layout) {
+    this.isRunning = false;
+    if (this.layout instanceof CanvasLayout) {
       this.layout.removeLayoutListeners();
       this.layout.clearCanvas();
       this.layout.enableViewports(false);
-      this.isRunning = false;
     }
   }
   dispose() {
     this.stop();
-    this.layout.dispose();
+    if (this.layout.dispose) {
+      this.layout.dispose();
+    }
   }
 }

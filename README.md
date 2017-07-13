@@ -12,7 +12,7 @@ by a name and a constructor. The name is used to associate a tool to an identifi
 when passing the tool intances to mediators.
 
 Each tool is given a reference only to the scene of the application and the layout.
-A scene is the underlying model of any application directly being visualized by the layout.
+A scene is the underlying model of a 3D application directly being visualized by the layout.
 A layout is some perspectives into the scene being rendered on the scene.
 A tool can then use the layout and scene to handle some visualization concern.
 
@@ -29,7 +29,7 @@ the application is simplified and the computation is fast. The preffered approac
 to use callbacks but this can get unwiedly when an interaction depends on a very large
 number of state variables.
 
-The idea of this suite is to write simple tools and mediator is such a way
+The idea of this suite is to write simple tools and mediators in such a way
 that allows applications to be described using only JSON descriptions. This should
 make visualization development a more streamlined task rather than building arbitrary
 visualization tool which need similar layouts, scenes, and operations.

@@ -11,6 +11,8 @@
     </sidebar>
     <floating-window-manager v-bind:applications="runningApplications">
     </floating-window-manager>
+    <vue-component-view v-bind:applications="runningApplications">
+    </vue-component-view>
     <threeview v-on:threeViewMounted="onThreeViewMounted">
     </threeview>
     <el-dialog
@@ -35,16 +37,18 @@
 <script>
 import SideBar from '@/components/SideBar';
 import ThreeView from '@/components/ThreeView';
+import VueComponentView from '@/components/VueComponentView';
 import ApplicationSelect from '@/components/ApplicationSelect';
 import BufferManagerWidget from '@/components/BufferManagerWidget';
 import AddBuffer from '@/components/AddBuffer';
 import FloatingWindowManager from '@/components/FloatingWindowManager';
 import ApplicationManager from '@/extensions/ApplicationManager';
 import BrainSlicer from '@/applications/BrainSlicer';
+import EEGViewer from '@/applications/EEGViewer';
 
 const appManager = new ApplicationManager();
 
-const APPLICATIONS = [BrainSlicer];
+const APPLICATIONS = [BrainSlicer, EEGViewer];
 
 const appCount = {};
 
@@ -53,6 +57,7 @@ export default {
   components: {
     sidebar: SideBar,
     threeview: ThreeView,
+    'vue-component-view': VueComponentView,
     'application-select': ApplicationSelect,
     'add-buffer': AddBuffer,
     'buffer-manager-widget': BufferManagerWidget,
@@ -112,7 +117,7 @@ export default {
 .container {
   overflow: hidden;
   margin: 0;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  min-width: 100vw;
 }
 </style>

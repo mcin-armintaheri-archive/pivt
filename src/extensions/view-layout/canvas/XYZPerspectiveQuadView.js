@@ -1,12 +1,12 @@
 import ViewPort, { PERSPECTIVE, ORTHOGRAPHIC, TRACKBALL } from './ViewPort';
-import Layout from './Layout';
+import CanvasLayout from './CanvasLayout';
 
 const THREE = require('three');
 
 /**
  * A simple layout for placing 4 equal size viewports into the canvas.
  */
-export default class XYZPerspectiveQuadView extends Layout {
+export default class XYZPerspectiveQuadView extends CanvasLayout {
   constructor(container, renderer) {
     super(container, renderer);
     this.topleft = new ViewPort(

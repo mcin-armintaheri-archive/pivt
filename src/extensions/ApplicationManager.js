@@ -1,9 +1,18 @@
 import Application from './Application';
+import CanvasLayout from './view-layout/canvas/CanvasLayout';
+
+// Begin Layout Imports
+import XYZPerspectiveQuadView from './view-layout/canvas/XYZPerspectiveQuadView';
+import CellGrid from './view-layout/vue/eeg-cells/';
+// End Layout Imports
+
+// Begin Scene Imports
+import OrthoPlanes from './scene/OrthoPlanes';
+// End Scene Imports
+
 
 // Begin Tool and Mediator Imports
 import CurveTool from './tools/curve-tool/';
-import XYZPerspectiveQuadView from './view-layout/XYZPerspectiveQuadView';
-import OrthoPlanes from './scene/OrthoPlanes';
 import OrthoPlanesShaderInjector from './mediators/OrthoPlanesShaderInjector';
 import QuadViewXYZOrthoPlanesLayers from './mediators/QuadViewXYZOrthoPlanesLayers';
 import QuadViewXYZOrthoPlanesShifter from './mediators/QuadViewXYZOrthoPlanesShifter';
@@ -14,14 +23,26 @@ import QuadViewCameraControls from './tools/quad-view-camera-controls';
 import QuadViewCameraAxes from './tools/quad-view-camera-axes';
 import LineSegmentTool from './tools/line-segment-tool';
 import OrthoPlanesQuadViewLineSegment from './mediators/OrthoPlanesQuadViewLineSegment';
-import SpectrumPlot from './tools/spectrum-plot';
+import IntensityPlotWindow from './tools/intensity-plot-window';
+import EEGSpectrumPlot from './tools/eeg-spectrum-plot';
+import EEGFileLoader from './tools/eeg-file-loader';
 // End Tool and Mediator Imports
 
 export default class ApplicationManager {
   constructor() {
     this.registry = {};
-    this.registerConstructor('CurveTool', CurveTool);
+
+    // Begin Layout Registers
+    this.registerConstructor('XYZPerspectiveQuadView', XYZPerspectiveQuadView);
+    this.registerConstructor('CellGrid', CellGrid);
+    // End Layout Registers
+
+    // Begin Scene Registers
     this.registerConstructor('OrthoPlanes', OrthoPlanes);
+    // End Scene Registers
+
+    // Begin Tool and Mediator Registers
+    this.registerConstructor('CurveTool', CurveTool);
     this.registerConstructor('XYZPerspectiveQuadView', XYZPerspectiveQuadView);
     this.registerConstructor('OrthoPlanesShaderInjector', OrthoPlanesShaderInjector);
     this.registerConstructor('QuadViewXYZOrthoPlanesLayers', QuadViewXYZOrthoPlanesLayers);
@@ -33,7 +54,10 @@ export default class ApplicationManager {
     this.registerConstructor('QuadViewCameraAxes', QuadViewCameraAxes);
     this.registerConstructor('LineSegmentTool', LineSegmentTool);
     this.registerConstructor('OrthoPlanesQuadViewLineSegment', OrthoPlanesQuadViewLineSegment);
-    this.registerConstructor('SpectrumPlot', SpectrumPlot);
+    this.registerConstructor('IntensityPlotWindow', IntensityPlotWindow);
+    this.registerConstructor('EEGSpectrumPlot', EEGSpectrumPlot);
+    this.registerConstructor('EEGFileLoader', EEGFileLoader);
+    // End Tool and Mediator Registers
   }
   /**
    * [create Build an application out of a JSON description]
@@ -70,14 +94,20 @@ export default class ApplicationManager {
     } = jsonDescription;
     const dependencies = {};
     const application = new Application(`${name} ${index}`);
-    const sceneObj = this.createFromConstructorName(scene, viewContainer);
-    const layoutObj = this.createFromConstructorName(layout, viewContainer, renderer);
+    const sceneObj = scene ? this.createFromConstructorName(scene, viewContainer) : null;
+    let layoutObj;
+    if (this.mapToConstructor(layout).prototype instanceof CanvasLayout) {
+      layoutObj = this.createFromConstructorName(layout, viewContainer, renderer);
+    } else {
+      layoutObj = this.createFromConstructorName(layout);
+    }
     dependencies.scene = sceneObj;
     application.setScene(sceneObj);
     dependencies.layout = layoutObj;
     application.setLayout(layoutObj);
     tools.forEach((toolMeta) => {
-      const toolObj = this.createFromConstructorName(toolMeta.tool, sceneObj, layoutObj);
+      const args = sceneObj ? [sceneObj, layoutObj] : [layoutObj];
+      const toolObj = this.createFromConstructorName(toolMeta.tool, ...args);
       dependencies[toolMeta.name] = toolObj;
       application.addTool(toolObj);
     });

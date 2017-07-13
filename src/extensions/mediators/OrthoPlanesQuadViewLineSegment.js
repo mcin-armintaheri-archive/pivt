@@ -11,8 +11,8 @@ const THREE = require('three');
  * @param  {SpectrumPlot} spectrumPlot
  */
 export default class OrthoPlanesLineSegmentTool {
-  constructor(scene, layout, materialManager, lineSegmentTool, spectrumPlot) {
-    spectrumPlot.setWindowTitle('Segment Intensity Plot');
+  constructor(scene, layout, materialManager, lineSegmentTool, intensityPlot) {
+    intensityPlot.setWindowTitle('Segment Intensity Plot');
     materialManager.onMaterialChange((_1, dimensions, mniVolume) => {
       lineSegmentTool.initialize(scene, layout.getBottomRight());
       const { x, y, z } = dimensions;
@@ -25,7 +25,7 @@ export default class OrthoPlanesLineSegmentTool {
         fromPos.add(offset);
         toPos.add(offset);
         const intensities = mniVolume.getSegmentSample(fromPos, toPos, 0);
-        spectrumPlot.updateSeries(intensities.colors[0], intensities.labels);
+        intensityPlot.updateSeries(intensities.colors[0], intensities.labels);
       });
     });
   }
