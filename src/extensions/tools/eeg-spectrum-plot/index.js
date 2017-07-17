@@ -10,9 +10,9 @@ class EEGPlotController {
     this.spectrumplot = new SpectrumPlot2(container, 150, 140, { decimals: 2 });
     const series = [...Array(100).keys()].map(() => Math.random(10));
     this.spectrum = this.spectrumplot.addSpectrum(
-      'Amplitude',
+      'Magnitude',
       series,
-      'rgba(0, 0, 0, 0.8)',
+      '#990000',
     );
     this.spectrumplot.showLegend(false);
     this.spectrumplot.showXLabels(false);
@@ -28,6 +28,16 @@ class EEGPlotController {
     if (callback instanceof Function) {
       this.onInitCallbacks.push(callback);
     }
+  }
+}
+
+class EEGPlotLegend {
+  constructor(spectrumplot) {
+    /* eslint-disable no-underscore-dangle */
+    this.toolComponent = {
+      name: 'eeg-plot-legend',
+      template: `<span style="color: #990000">${spectrumplot._chart.generateLegend()}</span>`,
+    };
   }
 }
 
@@ -77,6 +87,13 @@ export default class EEGSpectrumPlot {
       this.plotControllers.push(cell.controller);
       Object.assign(cell, c);
       this.layout.updateCell(cell);
+    });
+    this.plotControllers[0].onInitialize((plot) => {
+      this.layout.updateCell({
+        i: 4,
+        j: 2,
+        controller: new EEGPlotLegend(plot),
+      });
     });
   }
 }
