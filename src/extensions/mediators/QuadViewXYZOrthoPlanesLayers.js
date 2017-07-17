@@ -108,6 +108,9 @@ export default class QuadViewXYZLayers {
           cameraPosition: new THREE.Vector3(diagonal, 0, 0),
         },
       ];
+      planeCamConfigs.forEach((config) => {
+        config.viewport.setPan({ x: 0, y: 0 });
+      });
       this.aligners = planeCamConfigs.map(config => new PlaneCameraAligner(
         config.viewport,
         config.plane,
@@ -120,6 +123,7 @@ export default class QuadViewXYZLayers {
       });
 
       layout.getBottomRight().getTHREECamera().position.set(0, 10, 2 * diagonal);
+      layout.getBottomRight().resetControls(new THREE.Vector3(0, 10, 0));
       /*
         If the QuadViewCameraAxes tool is bundled with the application,
         create the axes for each orthographic camera.

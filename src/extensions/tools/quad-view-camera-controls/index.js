@@ -22,6 +22,9 @@ class CameraController {
     const { x, y } = pan;
     this.viewport.setPan({ x, y });
   }
+  getPanRef() {
+    return this.viewport.pan;
+  }
 }
 
 /**

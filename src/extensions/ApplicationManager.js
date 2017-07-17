@@ -26,6 +26,7 @@ import OrthoPlanesQuadViewLineSegment from './mediators/OrthoPlanesQuadViewLineS
 import IntensityPlotWindow from './tools/intensity-plot-window';
 import EEGSpectrumPlot from './tools/eeg-spectrum-plot';
 import EEGFileLoader from './tools/eeg-file-loader';
+import QuadViewPanner from './mediators/QuadViewPanner';
 // End Tool and Mediator Imports
 
 export default class ApplicationManager {
@@ -57,6 +58,7 @@ export default class ApplicationManager {
     this.registerConstructor('IntensityPlotWindow', IntensityPlotWindow);
     this.registerConstructor('EEGSpectrumPlot', EEGSpectrumPlot);
     this.registerConstructor('EEGFileLoader', EEGFileLoader);
+    this.registerConstructor('QuadViewPanner', QuadViewPanner);
     // End Tool and Mediator Registers
   }
   /**

@@ -53,5 +53,9 @@ export default {
       mediator: 'OrthoPlanesQuadViewLineSegment',
       dependencies: ['scene', 'layout', 'materialManager', 'lineSegmentTool', 'intensityPlot'],
     },
+    {
+      mediator: 'QuadViewPanner',
+      dependencies: ['layout', 'cameraParams'],
+    },
   ],
 };

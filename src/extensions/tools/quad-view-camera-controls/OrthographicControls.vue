@@ -63,7 +63,7 @@ export default {
   name: 'orthographic-controls',
   props: ['controller', 'title', 'camControls'],
   data() {
-    return { roll: 0, pan: { x: 0, y: 0 } };
+    return { roll: 0, pan: this.camControls.getPanRef() };
   },
 };
 </script>

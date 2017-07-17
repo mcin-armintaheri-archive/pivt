@@ -89,5 +89,18 @@ export default class Application {
     if (this.layout.dispose) {
       this.layout.dispose();
     }
+    this.mediators.forEach((mediator) => {
+      if (mediator.dispose) {
+        mediator.dispose();
+      }
+    });
+    this.tools.forEach((tool) => {
+      if (tool.dispose) {
+        tool.dispose();
+      }
+    });
+    if (this.scene && this.scene.dispose) {
+      this.scene.dispose();
+    }
   }
 }
