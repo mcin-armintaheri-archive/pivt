@@ -98,7 +98,17 @@ export default {
     },
     killApplication(event, application) {
       event.stopPropagation();
-      this.$emit('remove-application', application);
+      this.$confirm('Are you sure you want to remove this application?', 'Info', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        type: 'info',
+      }).then(() => {
+        this.$emit('remove-application', application);
+        this.$message({
+          type: 'success',
+          message: 'Application removed.',
+        });
+      }).catch(() => {});
     },
     startApplication(index) {
       this.$emit('start-application', index);
