@@ -41,7 +41,7 @@ export default class ViewPort {
     enableControlsKeys = false,
   ) {
     const rectangle = canvas.getBoundingClientRect();
-    this.enabled = true;
+    this.enabled = false;
     this.canvas = canvas;
     this.renderer = renderer;
     this.canvasRectangle = rectangle;
@@ -70,6 +70,7 @@ export default class ViewPort {
     switch (control) {
       case TRACKBALL: {
         this.controls = new TrackBallControls(this.camera, canvas);
+        this.controls.enabled = false;
         this.controls.rotateSpeed = 4.0;
         this.controls.dynamicDampingFactor = 1.0;
         if (!enableControlsKeys) {

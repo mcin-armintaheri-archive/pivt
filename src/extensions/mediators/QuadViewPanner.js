@@ -34,7 +34,7 @@ class ViewportPanner {
   zoomCamera(event) {
     if (this.viewport.mouseIntersects()) {
       const cam = this.viewport.getTHREECamera();
-      cam.zoom += (event.deltaY / 500);
+      cam.zoom += (-event.deltaY / 500);
       if (cam.zoom < 0.5) {
         cam.zoom = 0.5;
       }

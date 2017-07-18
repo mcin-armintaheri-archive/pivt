@@ -53,7 +53,7 @@ const APPLICATIONS = [BrainSlicer, EEGViewer];
 const appCount = {};
 
 export default {
-  name: 'cervo-scope',
+  name: 'visualizer',
   components: {
     sidebar: SideBar,
     threeview: ThreeView,
@@ -102,6 +102,7 @@ export default {
     },
     removeApplication(application) {
       application.dispose();
+      console.log(this.runningApplications);
       this.runningApplications = this.runningApplications.filter(a => a !== application);
     },
     startApplication(index) {

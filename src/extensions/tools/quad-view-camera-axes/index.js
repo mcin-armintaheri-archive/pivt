@@ -156,7 +156,7 @@ export default class QuadViewCameraAxes {
    * Destroy all axis systems
    */
   dispose() {
-    this.scene.remove(...this.cameraAxesList.map(axes => axes.getAxisSystem()));
+    this.scene.getTHREEScene().remove(...this.cameraAxesList.map(axes => axes.getAxisSystem()));
     this.cameraAxesList = [];
   }
   update() {
