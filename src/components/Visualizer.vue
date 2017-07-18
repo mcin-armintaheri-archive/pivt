@@ -102,7 +102,6 @@ export default {
     },
     removeApplication(application) {
       application.dispose();
-      console.log(this.runningApplications);
       this.runningApplications = this.runningApplications.filter(a => a !== application);
     },
     startApplication(index) {

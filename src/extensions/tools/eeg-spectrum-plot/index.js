@@ -1,4 +1,4 @@
-import { SpectrumPlot2 } from '../../../../../SpectrumPlot2/src/SpectrumPlot2';
+import { SpectrumPlot2 } from 'SpectrumPlot2';
 import EEGPlot from './EEGPlot';
 
 class EEGPlotController {
