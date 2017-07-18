@@ -130,14 +130,14 @@ export default class QuadViewXYZLayers {
        */
       if (quadviewCameraAxes) {
         const thickness = 1;
-        this.axisSystems = planeCamConfigs.map(config => quadviewCameraAxes.createAxes(
+        this.axisSystems = planeCamConfigs.map(config => quadviewCameraAxes.createProjectedAxes(
             config.viewport,
             config.plane,
             diagonal * 10,
             thickness,
             config.layer,
         ));
-        quadviewCameraAxes.createAxes(
+        quadviewCameraAxes.createFixedAxes(
           layout.getBottomRight(),
           new THREE.Vector3(0, 0, 0),
           diagonal * 10,
