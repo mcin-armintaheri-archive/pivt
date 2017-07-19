@@ -1,10 +1,13 @@
+import R from 'ramda';
 import Application from './Application';
-import CanvasLayout from './view-layout/canvas/CanvasLayout';
 
-// Begin Layout Imports
-import XYZPerspectiveQuadView from './view-layout/canvas/XYZPerspectiveQuadView';
-import CellGrid from './view-layout/vue/eeg-cells/';
-// End Layout Imports
+// Begin Page Imports
+import QuadViewOrthoPlanes from './pages/quad-view-ortho-planes';
+// End Page Imports
+
+// Begin CanvasLayout Imports
+import XYZPerspectiveQuadView from './view-layout/canvas3d/XYZPerspectiveQuadView';
+// End CanvasLayout Imports
 
 // Begin Scene Imports
 import OrthoPlanes from './scene/OrthoPlanes';
@@ -33,9 +36,12 @@ export default class ApplicationManager {
   constructor() {
     this.registry = {};
 
+    // Begin Page Registers
+    this.registerConstructor('QuadViewOrthoPlanes', QuadViewOrthoPlanes);
+    // End Page Registers
+
     // Begin Layout Registers
     this.registerConstructor('XYZPerspectiveQuadView', XYZPerspectiveQuadView);
-    this.registerConstructor('CellGrid', CellGrid);
     // End Layout Registers
 
     // Begin Scene Registers
@@ -65,58 +71,92 @@ export default class ApplicationManager {
    * [create Build an application out of a JSON description]
    * The description of the application is formatted as follows:
    * ExtensionJSON = {
-   *  'name': 'myNewVisualization', #The name is a camel-cased string.
-   *  'scene': 'OrthoPlane', #The name of the scene constructor.
-   *  'layout': 'XYZPerspectiveQuadView', #The name of the camera layout constructor.
-   *  'tools': [ #The tools that operate on the scene and layout
-   *    'CurveTool', #Update constrast of voxels sampled in the plane materials.
-   *    'PlaneShifter',  #Interact with the planes.
-   *    'OrthoPanner', #Pan the planes using orthographic cameras.
-   *    'ColorMap', #Show a colormap in the side bar.
+   *  'name': 'myNewVisualization', # Title of the application.
+   *  'page': { #configure the applications hosting component
+   *    name: 'mainPage',
+   *    controller: 'QuadViewOrthoPlanes',
+   *    canvas3ds: [{
+   *       name: 'view', # referenced by dependencies
+   *       layout: 'XYZPerspectiveQuadView', # layout's class.
+   *       scene: 'OrthoPlanes, # scene's class
+   *    }],
+   *  },
+   *  tools: [
+   *    {
+   *      name: 'contrast', # referenced by dependencies
+   *      tool: 'CurveTool', # controls the tool's state and ui.
+   *      dependencies: ['view'],
+   *    },
+   *   ...
    *  ],
    *  'mediators': [ #The mediators between the scene, layout, and tools.
    *    {
    *      'type': 'CurveToolMediator', #The curve tool's channel to the color map and scene.
-   *      'dependencies': ['scene', 'CurveTool', 'ColorMap'],
-   *    }
+   *      'dependencies': ['view', 'constrast'],
+   *    },
+   *  ...
    *  ],
    * }
-   * @param  {[DOMElement]} viewContainer [The DOM element that will host the
-   * canvas of the application's view.]
    * @param  {[JSON]} jsonDescription [JSON-serializable description of the application]
    * @return {[Application]} [A running instantiation of the application's description]
    */
-  create(index, viewContainer, renderer, jsonDescription) {
+  create(index, jsonDescription) {
+    /**
+     * The following setup does the following steps:
+     * - For each tool, wait for the canvas dependencies to load into the UI
+     * - Construct the tool when the canvas dependencies are loaded for that tool
+     * - For each mediator, wait for the canvas dependencies AND tool dependencies to load.
+     * - Construct the tool when the dependencies load.
+     * - Add all of the loaded tools to the application asynchronously.
+     * NOTE: ALL of the canvas dependencies for a certain tool must mount for the tool to load.
+     * TODO: Allow partially loaded dependencies.
+     */
     const {
       name,
-      scene,
-      layout,
+      page,
       tools,
       mediators,
     } = jsonDescription;
-    const dependencies = {};
+    let dependencies = {}; // Hash of promises that resolve to a loaded dependency
+    let canvas3ds = [];
     const application = new Application(`${name} ${index}`);
-    const sceneObj = scene ? this.createFromConstructorName(scene, viewContainer) : null;
-    let layoutObj;
-    if (this.mapToConstructor(layout).prototype instanceof CanvasLayout) {
-      layoutObj = this.createFromConstructorName(layout, viewContainer, renderer);
-    } else {
-      layoutObj = this.createFromConstructorName(layout);
+    if (page.canvas3ds instanceof Array) {
+      canvas3ds = page.canvas3ds;
     }
-    dependencies.scene = sceneObj;
-    application.setScene(sceneObj);
-    dependencies.layout = layoutObj;
-    application.setLayout(layoutObj);
+    const pageController = this.createFromConstructorName(page.controller);
+    dependencies[page.name] = Promise.resolve(pageController);
+    const lazyLoadCanvas3d = canvas3d => (
+      pageController.waitForCanvas3d(canvas3d.name).then(({ renderer, canvas }) => {
+        const canvas3dObj = {
+          name: canvas3d.name,
+          layout: this.createFromConstructorName(canvas3d.layout, renderer, canvas),
+          scene: this.createFromConstructorName(canvas3d.scene),
+        };
+        application.addCanvas3d(canvas3dObj);
+        return canvas3dObj;
+      })
+    );
+    const canvProms = R.fromPairs(canvas3ds.map(c => [c.name, lazyLoadCanvas3d(c)]));
+    dependencies = R.merge(dependencies, canvProms);
+    application.setPageController(pageController);
     tools.forEach((toolMeta) => {
-      const args = sceneObj ? [sceneObj, layoutObj] : [layoutObj];
-      const toolObj = this.createFromConstructorName(toolMeta.tool, ...args);
-      dependencies[toolMeta.name] = toolObj;
-      application.addTool(toolObj);
+      const deps = R.props(toolMeta.dependencies, dependencies).filter(R.identity);
+      const tool = Promise.all(deps)
+        .then(loadedDeps => this.createFromConstructorName(toolMeta.tool, ...loadedDeps))
+        .then((toolObj) => {
+          application.addTool(toolObj);
+          return toolObj;
+        });
+      dependencies[toolMeta.name] = tool;
     });
     mediators.forEach((medMeta) => {
-      const deps = medMeta.dependencies.map(d => dependencies[d]);
-      const mediatorObj = this.createFromConstructorName(medMeta.mediator, ...deps);
-      application.addMediator(mediatorObj);
+      const deps = R.props(medMeta.dependencies, dependencies).filter(R.identity);
+      Promise.all(deps)
+        .then(loadedDeps => this.createFromConstructorName(medMeta.mediator, ...loadedDeps))
+        .then((medObj) => {
+          application.addMediator(medObj);
+          return medObj;
+        });
     });
     return application;
   }
@@ -129,9 +169,7 @@ export default class ApplicationManager {
   mapToConstructor(constructorName) {
     const ctr = this.registry[constructorName];
     if (!ctr) {
-      // eslint-disable quotes
-      const err = `"${constructorName}" is not a registered tool or mediator constructor.`;
-      throw err;
+      throw new Error(`"${constructorName}" is not a registered tool or mediator constructor.`);
     }
     return ctr;
   }

@@ -10,11 +10,8 @@
           @open="startApplication"
         >
           <div class="button-container">
-            <el-button class="sidebar-button" v-if="threeMount" type="primary" @click="newApplication">
+            <el-button class="sidebar-button" type="primary" @click="newApplication">
               <i class="el-icon-plus"></i>&nbsp;&nbsp;&nbsp;New Application
-            </el-button>
-            <el-button class="sidebar-button" v-else type="primary" :loading="true">
-              Loading
             </el-button>
           </div>
           <div class="button-container">
@@ -92,9 +89,6 @@ export default {
     },
     newApplication() {
       this.$emit('new-application');
-    },
-    switchApplication(application) {
-      this.$emit('switch-application', application);
     },
     killApplication(event, application) {
       event.stopPropagation();

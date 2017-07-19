@@ -1,3 +1,5 @@
+import R from 'ramda';
+
 const THREE = require('three');
 
 /**
@@ -76,8 +78,9 @@ class PlaneCameraAligner {
  * @param  {OrthoPlanesParameters} planeParams
  * @param  {QuadViewCameraAxes} quadviewCameraAxes
  */
-export default class QuadViewXYZLayers {
-  constructor(scene, layout, materialManager, planeParams, quadviewCameraAxes) {
+export default class QuadViewXYZOrthoPlanesLayers {
+  constructor(view, materialManager, planeParams, quadviewCameraAxes) {
+    const { scene, layout } = view;
     this.orthoCameras = layout.getViewports().slice(0, 3).map(v => v.getTHREECamera());
     this.planesAreLoaded = false;
     this.threeScene = scene.getTHREEScene();
@@ -118,7 +121,7 @@ export default class QuadViewXYZLayers {
         config.layer,
         config.cameraPosition,
       ));
-      this.axisSystems.forEach((axes) => {
+      this.axisSystems.filter(R.identity).forEach((axes) => {
         axes.dispose();
       });
 

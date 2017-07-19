@@ -1,4 +1,4 @@
-import { SpectrumPlot2 } from '../../../../../SpectrumPlot2/src/SpectrumPlot2';
+import { SpectrumPlot2 } from 'SpectrumPlot2';
 import EEGPlot from './EEGPlot';
 
 class EEGPlotController {
@@ -42,12 +42,12 @@ class EEGPlotLegend {
 }
 
 export default class EEGSpectrumPlot {
-  constructor(layout) {
-    this.layout = layout;
+  constructor(page) {
+    this.page = page;
     this.initEEGPlots();
   }
   initEEGPlots() {
-    this.layout.updateDimensions(5, 5);
+    this.page.updateDimensions(5, 5);
     this.plotControllers = [];
     const cells = [
       { i: 1, j: 0 },
@@ -86,10 +86,10 @@ export default class EEGSpectrumPlot {
       });
       this.plotControllers.push(cell.controller);
       Object.assign(cell, c);
-      this.layout.updateCell(cell);
+      this.page.updateCell(cell);
     });
     this.plotControllers[0].onInitialize((plot) => {
-      this.layout.updateCell({
+      this.page.updateCell({
         i: 4,
         j: 2,
         controller: new EEGPlotLegend(plot),

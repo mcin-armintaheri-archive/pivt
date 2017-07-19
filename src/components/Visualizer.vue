@@ -1,20 +1,22 @@
 <template>
   <div class="container">
     <sidebar
-      v-bind:applications="runningApplications"
-      v-bind:three-mount="threeViewMountPoint !== null"
+      v-bind:applications="startedApplications"
       v-on:new-application="appSelectDialog = true"
       v-on:remove-application="removeApplication"
       v-on:start-application="startApplication"
       v-on:show-buffer-list="showBufferList = true"
     >
     </sidebar>
-    <floating-window-manager v-bind:applications="runningApplications">
+    <floating-window-manager v-bind:applications="startedApplications">
     </floating-window-manager>
-    <vue-component-view v-bind:applications="runningApplications">
-    </vue-component-view>
-    <threeview v-on:threeViewMounted="onThreeViewMounted">
-    </threeview>
+    <app-component
+      v-for="(application, idx) in startedApplications"
+      :style="`visibility: ${application.isRunning ? 'visible' : 'hidden'}`"
+      :key="idx"
+      :application="application"
+    >
+    </app-component>
     <el-dialog
       title="Select an application to run!"
       :visible.sync="appSelectDialog"
@@ -37,18 +39,17 @@
 <script>
 import SideBar from '@/components/SideBar';
 import ThreeView from '@/components/ThreeView';
-import VueComponentView from '@/components/VueComponentView';
+import AppComponent from '@/components/AppComponent';
 import ApplicationSelect from '@/components/ApplicationSelect';
 import BufferManagerWidget from '@/components/BufferManagerWidget';
 import AddBuffer from '@/components/AddBuffer';
 import FloatingWindowManager from '@/components/FloatingWindowManager';
 import ApplicationManager from '@/extensions/ApplicationManager';
 import BrainSlicer from '@/applications/BrainSlicer';
-import EEGViewer from '@/applications/EEGViewer';
 
 const appManager = new ApplicationManager();
 
-const APPLICATIONS = [BrainSlicer, EEGViewer];
+const APPLICATIONS = [BrainSlicer];
 
 const appCount = {};
 
@@ -57,7 +58,7 @@ export default {
   components: {
     sidebar: SideBar,
     threeview: ThreeView,
-    'vue-component-view': VueComponentView,
+    'app-component': AppComponent,
     'application-select': ApplicationSelect,
     'add-buffer': AddBuffer,
     'buffer-manager-widget': BufferManagerWidget,
@@ -65,9 +66,7 @@ export default {
   },
   data() {
     return {
-      threeViewMountPoint: null,
-      threeRenderer: null,
-      runningApplications: [],
+      startedApplications: [],
       appSelectDialog: false,
       showBufferList: false,
     };
@@ -83,30 +82,27 @@ export default {
       this.threeRenderer = renderer;
     },
     loadSelectedApplication(application) {
-      // TODO: make ApplicationManager a singleton.
       this.appSelectDialog = false;
       if (!appCount[application.name]) {
         appCount[application.name] = 0;
       }
       const app = appManager.create(
         appCount[application.name],
-        this.threeViewMountPoint,
-        this.threeRenderer,
         application,
       );
       appCount[application.name] += 1;
-      if (this.runningApplications.length === 0) {
+      if (this.startedApplications.length === 0) {
         app.run();
       }
-      this.runningApplications.push(app);
+      this.startedApplications.push(app);
     },
     removeApplication(application) {
       application.dispose();
-      this.runningApplications = this.runningApplications.filter(a => a !== application);
+      this.startedApplications = this.startedApplications.filter(a => a !== application);
     },
     startApplication(index) {
-      this.runningApplications.forEach((a) => { a.stop(); });
-      this.runningApplications[index].run();
+      this.startedApplications.forEach((a) => { a.stop(); });
+      this.startedApplications[index].run();
     },
   },
 };

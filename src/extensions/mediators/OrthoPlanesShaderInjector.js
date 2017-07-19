@@ -240,7 +240,7 @@ const FRAGMENT = `
  * @param       {PlanesMaterialManager} materialManager
  * @constructor
  */
-export default function OrthoPlaneShaderInjector(scene, layout, materialManager) {
+export default function OrthoPlaneShaderInjector(materialManager) {
   materialManager.onTexturesCreated((dimensions, sliceMatrixSize, textures) => {
     const material = new THREE.ShaderMaterial({
       side: THREE.DoubleSide,

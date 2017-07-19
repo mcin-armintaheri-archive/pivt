@@ -11,10 +11,11 @@ const THREE = require('three');
  * @param  {SpectrumPlot} spectrumPlot
  */
 export default class OrthoPlanesLineSegmentTool {
-  constructor(scene, layout, materialManager, lineSegmentTool, intensityPlot) {
+  constructor(view, materialManager, lineSegmentTool, intensityPlot) {
+    const { layout } = view;
     intensityPlot.setWindowTitle('Segment Intensity Plot');
     materialManager.onMaterialChange((_1, dimensions, mniVolume) => {
-      lineSegmentTool.initialize(scene, layout.getBottomRight());
+      lineSegmentTool.initialize(layout.getBottomRight());
       const { x, y, z } = dimensions;
       const offset = new THREE.Vector3(x / 2, y / 2, z / 2);
       lineSegmentTool.onSegmentChange((begin, end) => {

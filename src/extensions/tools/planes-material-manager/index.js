@@ -14,9 +14,9 @@ const THREE = require('three');
  * an MNI volume loaded into the list of file buffers.
  */
 export default class PlanesMaterialManager {
-  constructor(scene) {
+  constructor(view) {
     this.sidebarWidget = MaterialBufferLoader;
-    this.scene = scene;
+    this.scene = view.scene;
     this.materialChangeCallbacks = [];
     this.texturesCreatedCallbacks = [];
     this.volumeTextures = [];

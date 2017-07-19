@@ -8,13 +8,14 @@ import { SegmentDraw } from 'SegmentDraw';
  * @type {Array}
  */
 export default class LineSegmentTool {
-  constructor() {
+  constructor(view) {
+    this.scene = view.scene;
     this.segmentChangeCallbacks = [];
   }
-  initialize(scene, viewport) {
+  initialize(viewport) {
     this.segment = new SegmentDraw(
-      scene.getPlaneSystem(),
-      scene.getTHREEScene(),
+      this.scene.getPlaneSystem(),
+      this.scene.getTHREEScene(),
       viewport.getTHREECamera(),
       {
         mouse: viewport.getMousePosReference(),
@@ -26,7 +27,7 @@ export default class LineSegmentTool {
     this.segment.on('stopInteraction', () => {
       viewport.setEnabled(true);
     });
-    this.segment.setBoundingBox(scene.getBoundingBox());
+    this.segment.setBoundingBox(this.scene.getBoundingBox());
     this.segment.on('draw', (begin, end) => {
       this.segmentChangeCallbacks.forEach((f) => {
         f(begin, end);

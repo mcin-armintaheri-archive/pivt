@@ -32,9 +32,9 @@ class CameraController {
  * cameras in a quadview layout.
  */
 export default class QuadViewCameraControls {
-  constructor(scene, layout) {
+  constructor(view) {
     this.sidebarWidget = QuadViewCameraControlsWidget;
-    this.layout = layout;
+    this.layout = view.layout;
     this.topright = new CameraController(this.layout.getTopLeft());
     this.topleft = new CameraController(this.layout.getTopRight());
     this.bottomleft = new CameraController(this.layout.getBottomLeft());

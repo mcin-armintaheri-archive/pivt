@@ -62,9 +62,7 @@ export default class ViewPort {
         break;
       }
       default: {
-        // eslint-disable quotes
-        const err = `Camera type must be either ${ORTHOGRAPHIC} or ${PERSPECTIVE}, not "${type}"`;
-        throw err;
+        throw new Error(`Camera type must be either ${ORTHOGRAPHIC} or ${PERSPECTIVE}, not "${type}"`);
       }
     }
     switch (control) {
@@ -232,7 +230,7 @@ export default class ViewPort {
     const viewportHeightPX = height * this.viewport.height;
     const yOffset = this.viewport.height - this.viewport.bottom;
     target.set(
-       ((2 * (((x - (width * this.viewport.left))) / viewportWidthPX)) - 1),
+      ((2 * (((x - (width * this.viewport.left))) / viewportWidthPX)) - 1),
       -((2 * (((y - (height * yOffset))) / viewportHeightPX)) - 1),
     );
   }
@@ -294,13 +292,13 @@ export default class ViewPort {
     const { width, height } = this.canvasRectangle;
     this.renderer.setViewport(
       width * this.viewport.left,
-      height * this.viewport.bottom,
+      height * (this.viewport.height - this.viewport.bottom),
       width * this.viewport.width,
       height * this.viewport.height,
     );
     this.renderer.setScissor(
       width * this.viewport.left,
-      height * this.viewport.bottom,
+      height * (this.viewport.height - this.viewport.bottom),
       width * this.viewport.width,
       height * this.viewport.height,
     );

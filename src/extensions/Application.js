@@ -1,5 +1,5 @@
+import R from 'ramda';
 import UIDUtils from './UIDUtils';
-import CanvasLayout from './view-layout/canvas/CanvasLayout';
 
 /**
  * Application is used to hold the running tools and mediators described in a JSON description.
@@ -10,6 +10,8 @@ export default class Application {
   constructor(name) {
     this.uid = UIDUtils.getUid();
     this.name = name;
+    this.pageController = null;
+    this.canvas3ds = [];
     this.tools = [];
     this.mediators = [];
     this.isRunning = false;
@@ -20,11 +22,17 @@ export default class Application {
   getName() {
     return this.name;
   }
-  setScene(scene) {
-    this.scene = scene;
+  setPageController(page) {
+    this.pageController = page;
   }
-  setLayout(layout) {
-    this.layout = layout;
+  getPageController() {
+    return this.pageController;
+  }
+  addCanvas3d(canvas3d) {
+    this.canvas3ds.push(canvas3d);
+  }
+  getCanvas3ds() {
+    return this.canvas3ds;
   }
   addTool(tool) {
     this.tools.push(tool);
@@ -56,39 +64,38 @@ export default class Application {
         tool.update();
       }
     });
-    if (this.scene && this.scene.update) {
-      this.scene.update();
-    }
-    if (this.layout.render) {
-      if (this.scene && this.scene.getTHREEScene) {
-        this.layout.render(this.scene.getTHREEScene());
-      } else {
-        this.layout.render();
+    this.canvas3ds.forEach((canvas3d) => {
+      const { scene, layout } = canvas3d;
+      if (scene.update) {
+        scene.update();
       }
-    }
+      layout.render(scene.getTHREEScene());
+    });
     window.requestAnimationFrame(this.runApplicationLoop.bind(this));
   }
   run() {
     this.isRunning = true;
-    if (this.layout instanceof CanvasLayout) {
-      this.layout.addLayoutListeners();
-      this.layout.enableViewports(true);
-    }
+    R.pluck('layout', this.canvas3ds).forEach((layout) => {
+      layout.addLayoutListeners();
+    });
     this.runApplicationLoop();
   }
   stop() {
     this.isRunning = false;
-    if (this.layout instanceof CanvasLayout) {
-      this.layout.removeLayoutListeners();
-      this.layout.clearCanvas();
-      this.layout.enableViewports(false);
-    }
+    R.pluck('layout', this.canvas3ds).forEach((layout) => {
+      layout.removeLayoutListeners();
+      layout.clearCanvas();
+      layout.enableViewports(false);
+    });
   }
   dispose() {
     this.stop();
-    if (this.layout.dispose) {
-      this.layout.dispose();
-    }
+    this.canvas3ds.forEach((canvas3d) => {
+      if (canvas3d.scene.dispose) {
+        canvas3d.scene.dispose();
+      }
+      canvas3d.layout.dispose();
+    });
     this.mediators.forEach((mediator) => {
       if (mediator.dispose) {
         mediator.dispose();
@@ -99,8 +106,5 @@ export default class Application {
         tool.dispose();
       }
     });
-    if (this.scene && this.scene.dispose) {
-      this.scene.dispose();
-    }
   }
 }
