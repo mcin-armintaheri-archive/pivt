@@ -1,7 +1,6 @@
+import * as THREE from 'three';
 import { VERTEX, FRAGMENT } from './DashedShader';
 import QuadViewCameraAxesWidget from './QuadViewCameraAxesWidget';
-
-const THREE = require('three');
 
 /**
  * create the lines and colors of an XYZ axis system bounded in a sphere.
@@ -126,9 +125,9 @@ class CameraAxesFixed extends CameraAxes {
  * of a QuadView layout and a fixed axes sytem for the perspected view.
  */
 export default class QuadViewCameraAxes {
-  constructor(scene) {
+  constructor(view) {
     this.sidebarWidget = QuadViewCameraAxesWidget;
-    this.scene = scene;
+    this.scene = view.scene;
     this.cameraAxesList = [];
   }
   showAxes(boolean) {

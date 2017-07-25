@@ -48,14 +48,14 @@ class ViewportPanner {
 }
 
 export default class QuadViewPanner {
-  constructor(layout, quadViewCameraControls) {
-    this.layout = layout;
+  constructor(view, quadViewCameraControls) {
+    this.layout = view.layout;
     this.controls = quadViewCameraControls;
-    this.container = this.layout.container;
+    this.container = this.layout.canvas;
     const viewports = [
-      layout.getBottomLeft(),
-      layout.getTopLeft(),
-      layout.getTopRight(),
+      this.layout.getBottomLeft(),
+      this.layout.getTopLeft(),
+      this.layout.getTopRight(),
     ];
     this.panners = viewports.map(viewport => new ViewportPanner(
       viewport,

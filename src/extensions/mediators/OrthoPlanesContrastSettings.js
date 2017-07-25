@@ -1,4 +1,4 @@
-const THREE = require('three');
+import * as THREE from 'three';
 
 /**
  * Using the interpolated values of the CurveTool, update the material

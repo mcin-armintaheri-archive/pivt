@@ -1,37 +1,30 @@
-const THREE = require('three');
+import * as THREE from 'three';
 
 /**
  * Base class for all layouts. All mouse events and resize events
  * are handled in his layout. this is so all layouts can be made simple
  * and only need to fetch the mouse coordinates stored in the super class.
  */
-export default class Layout {
-  /**
+export default class Canvas3DLayout {
+  /** Initialize the layout into the container with the renderer.
    * @param  {[type]}  container        DOM element hosting the layout
    * @param  {[type]}  renderer         Possible renderer for threejs
    * @param  {Boolean} [context3d=true] Use 2D or 3D rendering
    */
-  constructor(container, renderer, context3d = true) {
-    this.ups = null;
+  constructor(renderer, canvas) {
     this.viewports = [];
-    this.container = container;
-    this.canvas = container.querySelector('.three-mount-canvas');
-    if (context3d) {
-      this.renderer = renderer;
-    } else {
-      this.context = this.canvas.getContext('2d');
-    }
-    container.appendChild(this.canvas);
+    this.renderer = renderer;
+    this.canvas = canvas;
     this.resizeCanvas();
-    if (!this.updateMousePosition) {
-      const err = 'Layout should implement the method "updateMouse"';
-      throw err;
-    }
+    // TODO: rxjs the events.
     this.mouseisdown = false;
     this.mousedownSuper = this.mouseDown.bind(this);
     this.mouseupSuper = this.mouseUp.bind(this);
     this.mousemoveSuper = this.mouseMove.bind(this);
     this.resizeSuper = this.resizeCanvas.bind(this);
+  }
+  getCanvas() {
+    return this.canvas;
   }
   addLayoutListeners() {
     this.canvas.addEventListener('mousedown', this.mousedownSuper);
@@ -69,7 +62,7 @@ export default class Layout {
     this.updateLastMouseUpPosition(x, y, width, height);
   }
   resizeCanvas() {
-    const { width, height } = this.container.getBoundingClientRect();
+    const { width, height } = this.canvas.getBoundingClientRect();
     if (this.renderer) {
       this.renderer.setSize(width, height);
     }
@@ -97,12 +90,6 @@ export default class Layout {
   }
   addViewports(...viewports) {
     this.viewports = this.viewports.concat(viewports);
-  }
-  enableViewports(boolean) {
-    this.viewports.forEach((v) => {
-      v.setEnabled(boolean);
-      v.setControlsEnabled(boolean);
-    });
   }
   updateMousePosition(x, y, width, height) {
     this.viewports.forEach((v) => {

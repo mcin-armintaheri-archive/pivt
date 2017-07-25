@@ -1,5 +1,4 @@
-const THREE = require('three');
-const TrackBallControls = require('three-trackballcontrols');
+import * as THREE from 'three';
 
 export const ORTHOGRAPHIC = 'ORTHOGRAPHIC';
 export const PERSPECTIVE = 'PERSPECTIVE';
@@ -25,7 +24,6 @@ export default class ViewPort {
    * @param {[String]} control [what type of control the camera should use.]
    * @param {[number]} near [near plane of camera]
    * @param {[number]} far [far plane of camera]
-   * @param {[boolean]} enableControlsKeys true if the viewport allow key controls
    */
   constructor(
     canvas,
@@ -35,10 +33,8 @@ export default class ViewPort {
     width,
     height,
     type,
-    control,
     near = 0.1,
     far = 6000,
-    enableControlsKeys = false,
   ) {
     const rectangle = canvas.getBoundingClientRect();
     this.enabled = false;
@@ -62,24 +58,7 @@ export default class ViewPort {
         break;
       }
       default: {
-        // eslint-disable quotes
-        const err = `Camera type must be either ${ORTHOGRAPHIC} or ${PERSPECTIVE}, not "${type}"`;
-        throw err;
-      }
-    }
-    switch (control) {
-      case TRACKBALL: {
-        this.controls = new TrackBallControls(this.camera, canvas);
-        this.controls.enabled = false;
-        this.controls.rotateSpeed = 4.0;
-        this.controls.dynamicDampingFactor = 1.0;
-        if (!enableControlsKeys) {
-          this.controls.keys = [];
-        }
-        break;
-      }
-      default: {
-        break;
+        throw new Error(`Camera type must be either ${ORTHOGRAPHIC} or ${PERSPECTIVE}, not "${type}"`);
       }
     }
     this.setNear(near);
@@ -91,12 +70,6 @@ export default class ViewPort {
    */
   getTHREECamera() {
     return this.camera;
-  }
-  /**
-   * Get the reference to the controls used by the camera by this viewport.
-   */
-  getTHREEControls() {
-    return this.controls;
   }
   /**
    * Get a reference to the mouse position local to the current viewport's center.
@@ -166,43 +139,8 @@ export default class ViewPort {
   setFar(far) {
     this.camera.far = far;
   }
-  /**
-   * enable the controls of the viewport.
-   * @param {boolean} boolean true to enable
-   */
-  setEnabled(boolean) {
-    this.enabled = boolean;
-  }
-  /**
-   * enable the threejs camera's controls directly.
-   * @param {boolean} boolean true to enable
-   */
-  setControlsEnabled(boolean) {
-    if (this.controls) {
-      this.controls.enabled = boolean;
-    }
-  }
   setClearColor(color) {
     this.clearColor = color;
-  }
-  /**
-   * Reset the camera's orientation to it's initial orientation plus
-   * any offset passed.
-   * @param {THREE.Vector3} offset positional offset of the camera's reset position.
-   */
-  resetControls(offset) {
-    if (this.controls) {
-      const pos = this.camera.position.clone();
-      pos.z = pos.length();
-      pos.x = 0;
-      pos.y = 0;
-      this.controls.reset();
-      if (offset instanceof THREE.Vector3) {
-        pos.add(offset);
-      }
-      this.camera.position.copy(pos);
-      this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-    }
   }
   updateCamera(scene) {
     this.canvasRectangle = this.canvas.getBoundingClientRect();
@@ -232,16 +170,22 @@ export default class ViewPort {
     const viewportHeightPX = height * this.viewport.height;
     const yOffset = this.viewport.height - this.viewport.bottom;
     target.set(
-       ((2 * (((x - (width * this.viewport.left))) / viewportWidthPX)) - 1),
+      ((2 * (((x - (width * this.viewport.left))) / viewportWidthPX)) - 1),
       -((2 * (((y - (height * yOffset))) / viewportHeightPX)) - 1),
     );
   }
   /**
-   * true of the mouse intersects this viewport.
+   * true if the mouse intersects this viewport.
    * @return {boolean}
    */
   mouseIntersects() {
     return mouseIntersectsViewport(this.mouse);
+  }
+  /**
+   * true if the last mouse down position intersects this viewport.
+   */
+  lastMouseDownIntersects() {
+    return mouseIntersectsViewport(this.lastMouseDown);
   }
   /**
    * Update the mouse position reference with the current local viewport position
@@ -264,13 +208,6 @@ export default class ViewPort {
    */
   updateLastMouseDownPosition(x, y, width, height) {
     this.getViewportMousePosition(x, y, width, height, this.lastMouseDown);
-    if (this.controls) {
-      if (this.controls.enabled && !mouseIntersectsViewport(this.lastMouseDown)) {
-        this.setControlsEnabled(false);
-      } else if (mouseIntersectsViewport(this.lastMouseDown)) {
-        this.setControlsEnabled(this.enabled);
-      }
-    }
   }
   /**
    * Update the lastMouseUp position reference with the current local viewport position
@@ -282,9 +219,6 @@ export default class ViewPort {
    */
   updateLastMouseUpPosition(x, y, width, height) {
     this.getViewportMousePosition(x, y, width, height, this.lastMouseUp);
-    if (mouseIntersectsViewport(this.lastMouseUp)) {
-      this.setControlsEnabled(true);
-    }
   }
   /**
    * Render the scene to the viewport using the camera associated with this viewport.
@@ -306,9 +240,6 @@ export default class ViewPort {
     );
     this.renderer.setScissorTest(true);
     this.renderer.setClearColor(this.clearColor, 1);
-    if (this.controls && this.controls.update) {
-      this.controls.update();
-    }
     this.renderer.render(scene, this.camera);
   }
 }

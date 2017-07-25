@@ -9,9 +9,9 @@ import OrthoPlanesParametersWidget from './OrthoPlanesParametersWidget';
  * viewports to realign their orientation to the scene.
  */
 export default class OrthoPlanesParameters {
-  constructor(scene) {
+  constructor(view) {
     this.sidebarWidget = OrthoPlanesParametersWidget;
-    this.scene = scene;
+    this.scene = view.scene;
     this.sceneUpdateCallbacks = [];
     this.rotationResetCallbacks = [];
   }

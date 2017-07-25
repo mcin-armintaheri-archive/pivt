@@ -6,7 +6,7 @@
     <div class="camera-inputs">
       <el-button
         type="primary"
-        @click="controller.resetTrackball()"
+        @click="controller.resetControls()"
       >
         Reset Orientation
       </el-button>

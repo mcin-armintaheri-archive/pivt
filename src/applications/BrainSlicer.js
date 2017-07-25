@@ -1,45 +1,64 @@
 export default {
   name: 'BrainSlicer',
-  scene: 'OrthoPlanes',
-  layout: 'XYZPerspectiveQuadView',
+  page: {
+    name: 'mainPage',
+    controller: 'QuadViewOrthoPlanes',
+    canvas3ds: [{
+      name: 'view',
+      layout: 'XYZPerspectiveQuadView',
+      scene: 'OrthoPlanes',
+    }],
+  },
   tools: [
     {
       name: 'quadviewCameraAxes',
       tool: 'QuadViewCameraAxes',
+      dependencies: ['view'],
     },
     {
       name: 'intensityPlot',
       tool: 'IntensityPlotWindow',
+      dependencies: ['view'],
     },
     {
       name: 'lineSegmentTool',
       tool: 'LineSegmentTool',
+      dependencies: ['view'],
     },
     {
       name: 'contrast',
       tool: 'CurveTool',
+      dependencies: ['view'],
     },
     {
       name: 'materialManager',
       tool: 'PlanesMaterialManager',
+      dependencies: ['view'],
     },
     {
       name: 'planeParams',
       tool: 'OrthoPlanesParameters',
+      dependencies: ['view'],
     },
     {
       name: 'cameraParams',
       tool: 'QuadViewCameraControls',
+      dependencies: ['view'],
+    },
+    {
+      name: 'trackball',
+      tool: 'QuadviewTrackballControls',
+      dependencies: ['view'],
     },
   ],
   mediators: [
     {
       mediator: 'OrthoPlanesShaderInjector',
-      dependencies: ['scene', 'layout', 'materialManager'],
+      dependencies: ['materialManager'],
     },
     {
       mediator: 'QuadViewXYZOrthoPlanesLayers',
-      dependencies: ['scene', 'layout', 'materialManager', 'planeParams', 'quadviewCameraAxes'],
+      dependencies: ['view', 'trackball', 'materialManager', 'planeParams', 'quadviewCameraAxes'],
     },
     {
       mediator: 'OrthoPlanesContrastSettings',
@@ -47,15 +66,19 @@ export default {
     },
     {
       mediator: 'QuadViewXYZOrthoPlanesShifter',
-      dependencies: ['scene', 'layout', 'materialManager', 'planeParams'],
+      dependencies: ['view', 'trackball', 'materialManager', 'planeParams'],
     },
     {
       mediator: 'OrthoPlanesQuadViewLineSegment',
-      dependencies: ['scene', 'layout', 'materialManager', 'lineSegmentTool', 'intensityPlot'],
+      dependencies: ['view', 'trackball', 'materialManager', 'lineSegmentTool', 'intensityPlot'],
     },
     {
       mediator: 'QuadViewPanner',
-      dependencies: ['layout', 'cameraParams'],
+      dependencies: ['view', 'cameraParams'],
+    },
+    {
+      mediator: 'QuadViewControlsReset',
+      dependencies: ['trackball', 'cameraParams'],
     },
   ],
 };

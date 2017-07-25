@@ -1,4 +1,4 @@
-const THREE = require('three');
+import * as THREE from 'three';
 
 /**
  * OrthoPlanes gives an API for modifying a threejs Scene containing 3 orthogonal
