@@ -3,6 +3,7 @@ import Application from './Application';
 
 // Begin Page Imports
 import QuadViewOrthoPlanes from './pages/quad-view-ortho-planes';
+import EEGViewer from './pages/eeg-viewer';
 // End Page Imports
 
 // Begin CanvasLayout Imports
@@ -44,6 +45,7 @@ export default class ApplicationManager {
 
     // Begin Layout Registers
     this.registerConstructor('XYZPerspectiveQuadView', XYZPerspectiveQuadView);
+    this.registerConstructor('EEGViewer', EEGViewer);
     // End Layout Registers
 
     // Begin Scene Registers

@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import CellGrid from '../general/CellGrid';
-import ToolComponent from '../general/ToolComponent';
+import CellGrid from '@/extensions/view-layout/general/CellGrid';
+import ToolComponent from '@/extensions/view-layout/general/ToolComponent';
 
 export default {
   name: 'eeg-cells',

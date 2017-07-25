@@ -45,11 +45,14 @@ import BufferManagerWidget from '@/components/BufferManagerWidget';
 import AddBuffer from '@/components/AddBuffer';
 import FloatingWindowManager from '@/components/FloatingWindowManager';
 import ApplicationManager from '@/extensions/ApplicationManager';
+
 import BrainSlicer from '@/applications/BrainSlicer';
+import EEGViewer from '@/applications/EEGViewer';
+
 
 const appManager = new ApplicationManager();
 
-const APPLICATIONS = [BrainSlicer];
+const APPLICATIONS = [BrainSlicer, EEGViewer];
 
 const appCount = {};
 

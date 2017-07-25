@@ -43,11 +43,11 @@ class EEGPlotLegend {
 
 export default class EEGSpectrumPlot {
   constructor(page) {
-    this.page = page;
+    this.cells = page.getFrequencyController();
     this.initEEGPlots();
   }
   initEEGPlots() {
-    this.page.updateDimensions(5, 5);
+    this.cells.updateDimensions(5, 5);
     this.plotControllers = [];
     const cells = [
       { i: 1, j: 0 },
@@ -86,10 +86,10 @@ export default class EEGSpectrumPlot {
       });
       this.plotControllers.push(cell.controller);
       Object.assign(cell, c);
-      this.page.updateCell(cell);
+      this.cells.updateCell(cell);
     });
     this.plotControllers[0].onInitialize((plot) => {
-      this.page.updateCell({
+      this.cells.updateCell({
         i: 4,
         j: 2,
         controller: new EEGPlotLegend(plot),
