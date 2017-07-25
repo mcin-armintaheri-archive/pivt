@@ -1,6 +1,6 @@
 import R from 'ramda';
 
-const THREE = require('three');
+import * as THREE from 'three';
 
 /**
  * PlaneCameraAligner associated a viewport with a particular plane in
@@ -79,7 +79,7 @@ class PlaneCameraAligner {
  * @param  {QuadViewCameraAxes} quadviewCameraAxes
  */
 export default class QuadViewXYZOrthoPlanesLayers {
-  constructor(view, materialManager, planeParams, quadviewCameraAxes) {
+  constructor(view, camControls, materialManager, planeParams, quadviewCameraAxes) {
     const { scene, layout } = view;
     this.orthoCameras = layout.getViewports().slice(0, 3).map(v => v.getTHREECamera());
     this.planesAreLoaded = false;
@@ -126,7 +126,7 @@ export default class QuadViewXYZOrthoPlanesLayers {
       });
 
       layout.getBottomRight().getTHREECamera().position.set(0, 10, 2 * diagonal);
-      layout.getBottomRight().resetControls(new THREE.Vector3(0, 10, 0));
+      camControls.resetControls(new THREE.Vector3(0, 10, 0));
       /*
         If the QuadViewCameraAxes tool is bundled with the application,
         create the axes for each orthographic camera.

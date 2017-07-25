@@ -12,7 +12,7 @@ export default class LineSegmentTool {
     this.scene = view.scene;
     this.segmentChangeCallbacks = [];
   }
-  initialize(viewport) {
+  initialize(viewport, camControls) {
     this.segment = new SegmentDraw(
       this.scene.getPlaneSystem(),
       this.scene.getTHREEScene(),
@@ -22,10 +22,10 @@ export default class LineSegmentTool {
       },
     );
     this.segment.on('startInteraction', () => {
-      viewport.setEnabled(false);
+      camControls.setEnabled(false);
     });
     this.segment.on('stopInteraction', () => {
-      viewport.setEnabled(true);
+      camControls.setEnabled(true);
     });
     this.segment.setBoundingBox(this.scene.getBoundingBox());
     this.segment.on('draw', (begin, end) => {

@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import {
   Image3DToMosaicFilter,
   Image3DGenericDecoder,
@@ -6,7 +7,6 @@ import { MessageBox } from 'element-ui';
 
 import MaterialBufferLoader from './MaterialBufferLoader';
 
-const THREE = require('three');
 
 /**
  * PlanesMaterialManager sets the material of the planes in the OrthoPlanes scene.

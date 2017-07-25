@@ -1,4 +1,4 @@
-const THREE = require('three');
+import * as THREE from 'three';
 
 /**
  * OrthoPlanesLineSegmentTool is a mediator that takes the begin and end
@@ -11,11 +11,10 @@ const THREE = require('three');
  * @param  {SpectrumPlot} spectrumPlot
  */
 export default class OrthoPlanesLineSegmentTool {
-  constructor(view, materialManager, lineSegmentTool, intensityPlot) {
-    const { layout } = view;
+  constructor(view, camControls, materialManager, lineSegmentTool, intensityPlot) {
     intensityPlot.setWindowTitle('Segment Intensity Plot');
     materialManager.onMaterialChange((_1, dimensions, mniVolume) => {
-      lineSegmentTool.initialize(layout.getBottomRight());
+      lineSegmentTool.initialize(view.layout.getBottomRight(), camControls);
       const { x, y, z } = dimensions;
       const offset = new THREE.Vector3(x / 2, y / 2, z / 2);
       lineSegmentTool.onSegmentChange((begin, end) => {

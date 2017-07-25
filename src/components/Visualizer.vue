@@ -1,17 +1,17 @@
 <template>
   <div class="container">
     <sidebar
-      v-bind:applications="startedApplications"
+      v-bind:applications="currentApplications"
       v-on:new-application="appSelectDialog = true"
       v-on:remove-application="removeApplication"
       v-on:start-application="startApplication"
       v-on:show-buffer-list="showBufferList = true"
     >
     </sidebar>
-    <floating-window-manager v-bind:applications="startedApplications">
+    <floating-window-manager v-bind:applications="currentApplications">
     </floating-window-manager>
     <app-component
-      v-for="(application, idx) in startedApplications"
+      v-for="(application, idx) in currentApplications"
       :style="`visibility: ${application.isRunning ? 'visible' : 'hidden'}`"
       :key="idx"
       :application="application"
@@ -66,7 +66,7 @@ export default {
   },
   data() {
     return {
-      startedApplications: [],
+      currentApplications: [],
       appSelectDialog: false,
       showBufferList: false,
     };
@@ -91,18 +91,18 @@ export default {
         application,
       );
       appCount[application.name] += 1;
-      if (this.startedApplications.length === 0) {
-        app.run();
+      if (this.currentApplications.length === 0) {
+        setTimeout(app.run.bind(app), 100); // Run the application after it loads.
       }
-      this.startedApplications.push(app);
+      this.currentApplications.push(app);
     },
     removeApplication(application) {
       application.dispose();
-      this.startedApplications = this.startedApplications.filter(a => a !== application);
+      this.currentApplications = this.currentApplications.filter(a => a !== application);
     },
     startApplication(index) {
-      this.startedApplications.forEach((a) => { a.stop(); });
-      this.startedApplications[index].run();
+      this.currentApplications.forEach((a) => { a.stop(); });
+      this.currentApplications[index].run();
     },
   },
 };

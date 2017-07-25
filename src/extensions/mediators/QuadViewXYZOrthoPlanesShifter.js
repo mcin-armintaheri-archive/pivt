@@ -1,5 +1,7 @@
 import { PlaneShifter } from 'PlaneShifter';
 
+/* eslint-disable no-param-reassign */
+
 /**
  * QuadViewXYZPlaneShifter uses the PlaneShifter package to bind the OrthoPlanes planes
  * into PlaneShifter and disable the perspective viewport with the user is attemping
@@ -11,7 +13,7 @@ import { PlaneShifter } from 'PlaneShifter';
  * @param       {OrthoPlanesParameters} planeParams
  * @constructor
  */
-export default function QuadViewXYZPlaneShifter(view, materialManager, planeParams) {
+export default function QuadViewXYZPlaneShifter(view, camControls, materialManager, planeParams) {
   const { scene, layout } = view;
   const perspCam = layout.getBottomRight();
   materialManager.onMaterialChange(() => {
@@ -23,10 +25,10 @@ export default function QuadViewXYZPlaneShifter(view, materialManager, planePara
       },
     );
     this.planeshifter.on('startInteraction', () => {
-      perspCam.setEnabled(false);
+      camControls.setEnabled(false);
     });
     this.planeshifter.on('stopInteraction', () => {
-      perspCam.setEnabled(true);
+      camControls.setEnabled(true);
       planeParams.updateFromScene();
     });
     this.planeshifter.setBoundingBox(scene.getBoundingBox());

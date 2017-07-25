@@ -1,6 +1,7 @@
+import * as THREE from 'three';
 import QuadViewCameraControlsWidget from './QuadViewCameraControlsWidget';
 
-const THREE = require('three');
+const OFFSET = new THREE.Vector3(0, 10, 0);
 
 /**
  * CameraController offers an application a sidebar widget for
@@ -39,12 +40,20 @@ export default class QuadViewCameraControls {
     this.topleft = new CameraController(this.layout.getTopRight());
     this.bottomleft = new CameraController(this.layout.getBottomLeft());
     this.bottomright = new CameraController(this.layout.getBottomRight());
+    this.resetControlsCallbacks = [];
   }
   /**
    * Reset the perspective camera and offset it in the y-direction slightly.
    */
-  resetTrackball() {
-    this.layout.getBottomRight().resetControls(new THREE.Vector3(0, 10, 0));
+  resetControls() {
+    this.resetControlsCallbacks.forEach((f) => {
+      f(OFFSET);
+    });
+  }
+  onResetControls(f) {
+    if (f instanceof Function) {
+      this.resetControlsCallbacks.push(f);
+    }
   }
   getLayout() {
     return this.layout;

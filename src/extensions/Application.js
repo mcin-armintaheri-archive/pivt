@@ -85,7 +85,6 @@ export default class Application {
     R.pluck('layout', this.canvas3ds).forEach((layout) => {
       layout.removeLayoutListeners();
       layout.clearCanvas();
-      layout.enableViewports(false);
     });
   }
   dispose() {

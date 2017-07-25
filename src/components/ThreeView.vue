@@ -5,7 +5,7 @@
 </template>
 
 <script>
-const THREE = require('three');
+import * as THREE from 'three';
 /**
  * When the three-view component is mounted, a threejs WebGLRenderer
  * is instantiated and the renderer and canvas is passed to its associated layout.
@@ -27,12 +27,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.three-mount {
-  height: 100vh;
-  width: 100vw;
-}
-.three-mount .three-mount-canvas {
-  height: 100%;
-  width: 100%;
+canvas.three-mount-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  background-color: #fff;
 }
 </style>

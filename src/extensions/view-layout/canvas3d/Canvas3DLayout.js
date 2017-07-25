@@ -1,4 +1,4 @@
-const THREE = require('three');
+import * as THREE from 'three';
 
 /**
  * Base class for all layouts. All mouse events and resize events
@@ -22,6 +22,9 @@ export default class Canvas3DLayout {
     this.mouseupSuper = this.mouseUp.bind(this);
     this.mousemoveSuper = this.mouseMove.bind(this);
     this.resizeSuper = this.resizeCanvas.bind(this);
+  }
+  getCanvas() {
+    return this.canvas;
   }
   addLayoutListeners() {
     this.canvas.addEventListener('mousedown', this.mousedownSuper);
@@ -87,12 +90,6 @@ export default class Canvas3DLayout {
   }
   addViewports(...viewports) {
     this.viewports = this.viewports.concat(viewports);
-  }
-  enableViewports(boolean) {
-    this.viewports.forEach((v) => {
-      v.setEnabled(boolean);
-      v.setControlsEnabled(boolean);
-    });
   }
   updateMousePosition(x, y, width, height) {
     this.viewports.forEach((v) => {

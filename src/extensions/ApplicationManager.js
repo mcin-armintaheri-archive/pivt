@@ -30,6 +30,8 @@ import IntensityPlotWindow from './tools/intensity-plot-window';
 import EEGSpectrumPlot from './tools/eeg-spectrum-plot';
 import EEGFileLoader from './tools/eeg-file-loader';
 import QuadViewPanner from './mediators/QuadViewPanner';
+import QuadviewTrackballControls from './tools/QuadViewTrackballControls';
+import QuadViewControlsReset from './mediators/QuadViewControlsReset';
 // End Tool and Mediator Imports
 
 export default class ApplicationManager {
@@ -65,6 +67,8 @@ export default class ApplicationManager {
     this.registerConstructor('EEGSpectrumPlot', EEGSpectrumPlot);
     this.registerConstructor('EEGFileLoader', EEGFileLoader);
     this.registerConstructor('QuadViewPanner', QuadViewPanner);
+    this.registerConstructor('QuadviewTrackballControls', QuadviewTrackballControls);
+    this.registerConstructor('QuadViewControlsReset', QuadViewControlsReset);
     // End Tool and Mediator Registers
   }
   /**

@@ -45,6 +45,11 @@ export default {
       tool: 'QuadViewCameraControls',
       dependencies: ['view'],
     },
+    {
+      name: 'trackball',
+      tool: 'QuadviewTrackballControls',
+      dependencies: ['view'],
+    },
   ],
   mediators: [
     {
@@ -53,7 +58,7 @@ export default {
     },
     {
       mediator: 'QuadViewXYZOrthoPlanesLayers',
-      dependencies: ['view', 'materialManager', 'planeParams', 'quadviewCameraAxes'],
+      dependencies: ['view', 'trackball', 'materialManager', 'planeParams', 'quadviewCameraAxes'],
     },
     {
       mediator: 'OrthoPlanesContrastSettings',
@@ -61,15 +66,19 @@ export default {
     },
     {
       mediator: 'QuadViewXYZOrthoPlanesShifter',
-      dependencies: ['view', 'materialManager', 'planeParams'],
+      dependencies: ['view', 'trackball', 'materialManager', 'planeParams'],
     },
     {
       mediator: 'OrthoPlanesQuadViewLineSegment',
-      dependencies: ['view', 'materialManager', 'lineSegmentTool', 'intensityPlot'],
+      dependencies: ['view', 'trackball', 'materialManager', 'lineSegmentTool', 'intensityPlot'],
     },
     {
       mediator: 'QuadViewPanner',
       dependencies: ['view', 'cameraParams'],
+    },
+    {
+      mediator: 'QuadViewControlsReset',
+      dependencies: ['trackball', 'cameraParams'],
     },
   ],
 };

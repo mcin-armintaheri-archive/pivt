@@ -1,7 +1,6 @@
+import * as THREE from 'three';
 import { VERTEX, FRAGMENT } from './DashedShader';
 import QuadViewCameraAxesWidget from './QuadViewCameraAxesWidget';
-
-const THREE = require('three');
 
 /**
  * create the lines and colors of an XYZ axis system bounded in a sphere.

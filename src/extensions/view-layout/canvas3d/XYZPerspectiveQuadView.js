@@ -1,7 +1,8 @@
-import ViewPort, { PERSPECTIVE, ORTHOGRAPHIC, TRACKBALL } from './ViewPort';
+import * as THREE from 'three';
+
+import ViewPort, { PERSPECTIVE, ORTHOGRAPHIC } from './ViewPort';
 import Canvas3DLayout from './Canvas3DLayout';
 
-const THREE = require('three');
 
 /**
  * A simple layout for placing 4 equal size viewports into the canvas.
@@ -44,7 +45,6 @@ export default class XYZPerspectiveQuadView extends Canvas3DLayout {
       0.5,
       0.5,
       PERSPECTIVE,
-      TRACKBALL,
     );
     // TODO: better colors for quadrants.
     this.topleft.setClearColor(new THREE.Color().setRGB(1.0, 0.0, 0.0));
