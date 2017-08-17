@@ -13,7 +13,7 @@
     <app-component
       v-for="(application, idx) in currentApplications"
       :style="`visibility: ${application.isRunning ? 'visible' : 'hidden'}`"
-      :key="idx"
+      :key="application.getName()"
       :application="application"
     >
     </app-component>
@@ -89,19 +89,23 @@ export default {
       if (!appCount[application.name]) {
         appCount[application.name] = 0;
       }
-      const app = appManager.create(
+      const { app, creationPromise } = appManager.create(
         appCount[application.name],
         application,
       );
       appCount[application.name] += 1;
       if (this.currentApplications.length === 0) {
-        setTimeout(app.run.bind(app), 100); // Run the application after it loads.
+        // Run the application after it loads.
+        creationPromise.then(() => app.run());
       }
       this.currentApplications.push(app);
     },
     removeApplication(application) {
       application.dispose();
       this.currentApplications = this.currentApplications.filter(a => a !== application);
+      if (this.currentApplications.length > 0) {
+        this.startApplication(0);
+      }
     },
     startApplication(index) {
       this.currentApplications.forEach((a) => { a.stop(); });

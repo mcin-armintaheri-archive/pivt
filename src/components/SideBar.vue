@@ -118,9 +118,7 @@ export default {
   pointer-events: none;
   z-index: 3;
   position: fixed;
-  min-width: 300px;
-  max-width: 500px;
-  width: 40%;
+  width: 470px;
   min-height: 100%;
 }
 .sidebar-layout {

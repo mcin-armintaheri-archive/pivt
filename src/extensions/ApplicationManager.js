@@ -155,16 +155,19 @@ export default class ApplicationManager {
         });
       dependencies[toolMeta.name] = tool;
     });
-    mediators.forEach((medMeta) => {
+    const mediatorPromises = mediators.map((medMeta) => {
       const deps = R.props(medMeta.dependencies, dependencies).filter(R.identity);
-      Promise.all(deps)
+      return Promise.all(deps)
         .then(loadedDeps => this.createFromConstructorName(medMeta.mediator, ...loadedDeps))
         .then((medObj) => {
           application.addMediator(medObj);
           return medObj;
         });
     });
-    return application;
+    return {
+      app: application,
+      creationPromise: Promise.all(mediatorPromises),
+    };
   }
   /**
    * [mapToConstructor Takes a constructor's name as a string and returns its true

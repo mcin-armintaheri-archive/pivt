@@ -31,7 +31,7 @@
       <div class="input-title">X Pan:</div>
       <el-input-number
         size="small"
-        v-model="pan.x"
+        v-model="viewport.pan.x"
       >
       </el-input-number>
     </div>
@@ -39,17 +39,10 @@
       <div class="input-title">Y Pan:</div>
       <el-input-number
         size="small"
-        v-model="pan.y"
+        v-model="viewport.pan.y"
       >
       </el-input-number>
     </div>
-    <el-button
-      class="roll-rotator"
-      type="primary"
-      @click="camControls.setPan(pan)"
-    >
-      Set Camera Pan
-    </el-button>
   </div>
 </template>
 
@@ -63,7 +56,7 @@ export default {
   name: 'orthographic-controls',
   props: ['controller', 'title', 'camControls'],
   data() {
-    return { roll: 0, pan: this.camControls.getPanRef() };
+    return { roll: 0, viewport: this.camControls.getViewport() };
   },
 };
 </script>
@@ -76,6 +69,7 @@ export default {
   flex-direction: column;
   align-items: center;
   background-color: #555;
+  padding-bottom: 20px;
 }
 .container .input-title {
   margin-bottom: 10px;

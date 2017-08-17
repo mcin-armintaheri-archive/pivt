@@ -9,7 +9,7 @@ import CurveToolWidget from './CurveToolWidget';
 export default class CurveTool {
   constructor() {
     this.sidebarWidget = CurveToolWidget;
-    this.pointMoveCallback = function empty() {};
+    this.pointMoveCallbacks = [];
     this.title = '';
   }
   /**
@@ -25,20 +25,27 @@ export default class CurveTool {
     this.spliner.add({ x: 1, y: 1, xLocked: true, safe: true });
     this.spliner.setBackgroundColor('#ffffff');
     this.spliner.draw();
-    let ctn = 0;
+    let locked = false;
     this.spliner.on('movePoint', (csObj) => {
-      ctn += 1;
-      if (ctn % 5 === 0) {
-        this.pointMoveCallback.bind(this)(csObj);
+      if (!locked) {
+        this.pointMoveCallbacks.forEach(f => f(csObj));
+        locked = true;
+        setTimeout(() => { locked = false; }, 100);
       }
     });
-    this.spliner.on('releasePoint', this.pointMoveCallback.bind(this));
-    this.spliner.on('pointAdded', this.pointMoveCallback.bind(this));
-    this.spliner.on('pointRemoved', this.pointMoveCallback.bind(this));
+    this.spliner.on('releasePoint', (csObj) => {
+      this.pointMoveCallbacks.forEach(f => f(csObj));
+    });
+    this.spliner.on('pointAdded', (csObj) => {
+      this.pointMoveCallbacks.forEach(f => f(csObj));
+    });
+    this.spliner.on('pointRemoved', (csObj) => {
+      this.pointMoveCallbacks.forEach(f => f(csObj));
+    });
   }
   onChange(callback) {
     if (callback instanceof Function) {
-      this.pointMoveCallback = callback;
+      this.pointMoveCallbacks.push(callback);
     }
   }
   getSpliner() {

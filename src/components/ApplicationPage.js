@@ -8,7 +8,9 @@ export default {
   props: ['application'],
   render(createElement) {
     const controller = this.application.pageController;
-    const page = controller.page;
-    return page ? createElement(page, { props: { controller } }) : null;
+    if (!controller.page) {
+      return null;
+    }
+    return createElement(controller.page, { props: { controller } });
   },
 };

@@ -16,7 +16,7 @@ export default class Page {
    * @return {Promise} Promise which gives the canvas and renderer to load into a canvas layout.
    */
   waitForCanvas3d(name) {
-    /* If the canvas hasen't mounted, return a promise which will resolve when the
+    /* If the canvas has not been mounted, return a promise which will resolve when the
      * canvas mounts. Otherwise return a promise with the resolved canvas and renderer.
      */
     if (!this.canvas3dPromises[name]) {
