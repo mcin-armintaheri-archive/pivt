@@ -53,30 +53,37 @@ export default {
   ],
   mediators: [
     {
+      name: 'shaderInjector',
       mediator: 'OrthoPlanesShaderInjector',
       dependencies: ['materialManager'],
     },
     {
+      name: 'planeLayers',
       mediator: 'QuadViewXYZOrthoPlanesLayers',
       dependencies: ['view', 'trackball', 'materialManager', 'planeParams', 'quadviewCameraAxes'],
     },
     {
+      name: 'constrastSettings',
       mediator: 'OrthoPlanesContrastSettings',
       dependencies: ['contrast', 'materialManager'],
     },
     {
+      name: 'planeShifter',
       mediator: 'QuadViewXYZOrthoPlanesShifter',
       dependencies: ['view', 'trackball', 'materialManager', 'planeParams'],
     },
     {
+      name: 'lineSegmentMediator',
       mediator: 'OrthoPlanesQuadViewLineSegment',
       dependencies: ['view', 'trackball', 'materialManager', 'lineSegmentTool', 'intensityPlot'],
     },
     {
+      name: 'viewPanner',
       mediator: 'QuadViewPanner',
       dependencies: ['view', 'cameraParams'],
     },
     {
+      name: 'cameraControlsReset',
       mediator: 'QuadViewControlsReset',
       dependencies: ['trackball', 'cameraParams'],
     },

@@ -35,42 +35,44 @@ import QuadviewTrackballControls from './tools/QuadViewTrackballControls';
 import QuadViewControlsReset from './mediators/QuadViewControlsReset';
 // End Tool and Mediator Imports
 
-export default class ApplicationManager {
+class ApplicationManager {
   constructor() {
     this.registry = {};
+    this.appCount = {};
+    this.currentApplications = [];
 
     // Begin Page Registers
-    this.registerConstructor('QuadViewOrthoPlanes', QuadViewOrthoPlanes);
+    this.registerConstructor(QuadViewOrthoPlanes);
     // End Page Registers
 
     // Begin Layout Registers
-    this.registerConstructor('XYZPerspectiveQuadView', XYZPerspectiveQuadView);
-    this.registerConstructor('EEGViewer', EEGViewer);
+    this.registerConstructor(XYZPerspectiveQuadView);
+    this.registerConstructor(EEGViewer);
     // End Layout Registers
 
     // Begin Scene Registers
-    this.registerConstructor('OrthoPlanes', OrthoPlanes);
+    this.registerConstructor(OrthoPlanes);
     // End Scene Registers
 
     // Begin Tool and Mediator Registers
-    this.registerConstructor('CurveTool', CurveTool);
-    this.registerConstructor('XYZPerspectiveQuadView', XYZPerspectiveQuadView);
-    this.registerConstructor('OrthoPlanesShaderInjector', OrthoPlanesShaderInjector);
-    this.registerConstructor('QuadViewXYZOrthoPlanesLayers', QuadViewXYZOrthoPlanesLayers);
-    this.registerConstructor('QuadViewXYZOrthoPlanesShifter', QuadViewXYZOrthoPlanesShifter);
-    this.registerConstructor('OrthoPlanesContrastSettings', OrthoPlanesContrastSettings);
-    this.registerConstructor('PlanesMaterialManager', PlanesMaterialManager);
-    this.registerConstructor('OrthoPlanesParameters', OrthoPlanesParameters);
-    this.registerConstructor('QuadViewCameraControls', QuadViewCameraControls);
-    this.registerConstructor('QuadViewCameraAxes', QuadViewCameraAxes);
-    this.registerConstructor('LineSegmentTool', LineSegmentTool);
-    this.registerConstructor('OrthoPlanesQuadViewLineSegment', OrthoPlanesQuadViewLineSegment);
-    this.registerConstructor('IntensityPlotWindow', IntensityPlotWindow);
-    this.registerConstructor('EEGSpectrumPlot', EEGSpectrumPlot);
-    this.registerConstructor('EEGFileLoader', EEGFileLoader);
-    this.registerConstructor('QuadViewPanner', QuadViewPanner);
-    this.registerConstructor('QuadviewTrackballControls', QuadviewTrackballControls);
-    this.registerConstructor('QuadViewControlsReset', QuadViewControlsReset);
+    this.registerConstructor(CurveTool);
+    this.registerConstructor(XYZPerspectiveQuadView);
+    this.registerConstructor(OrthoPlanesShaderInjector);
+    this.registerConstructor(QuadViewXYZOrthoPlanesLayers);
+    this.registerConstructor(QuadViewXYZOrthoPlanesShifter);
+    this.registerConstructor(OrthoPlanesContrastSettings);
+    this.registerConstructor(PlanesMaterialManager);
+    this.registerConstructor(OrthoPlanesParameters);
+    this.registerConstructor(QuadViewCameraControls);
+    this.registerConstructor(QuadViewCameraAxes);
+    this.registerConstructor(LineSegmentTool);
+    this.registerConstructor(OrthoPlanesQuadViewLineSegment);
+    this.registerConstructor(IntensityPlotWindow);
+    this.registerConstructor(EEGSpectrumPlot);
+    this.registerConstructor(EEGFileLoader);
+    this.registerConstructor(QuadViewPanner);
+    this.registerConstructor(QuadviewTrackballControls);
+    this.registerConstructor(QuadViewControlsReset);
     // End Tool and Mediator Registers
   }
   /**
@@ -130,6 +132,7 @@ export default class ApplicationManager {
       canvas3ds = page.canvas3ds;
     }
     const pageController = this.createFromConstructorName(page.controller);
+    pageController.name = page.name;
     dependencies[page.name] = Promise.resolve(pageController);
     const lazyLoadCanvas3d = canvas3d => (
       pageController.waitForCanvas3d(canvas3d.name).then(({ renderer, canvas }) => {
@@ -150,6 +153,7 @@ export default class ApplicationManager {
       const tool = Promise.all(deps)
         .then(loadedDeps => this.createFromConstructorName(toolMeta.tool, ...loadedDeps))
         .then((toolObj) => {
+          toolObj.name = toolMeta.name; // eslint-disable-line no-param-reassign
           application.addTool(toolObj);
           return toolObj;
         });
@@ -160,6 +164,7 @@ export default class ApplicationManager {
       return Promise.all(deps)
         .then(loadedDeps => this.createFromConstructorName(medMeta.mediator, ...loadedDeps))
         .then((medObj) => {
+          medObj.name = medMeta.name; // eslint-disable-line no-param-reassign
           application.addMediator(medObj);
           return medObj;
         });
@@ -168,6 +173,38 @@ export default class ApplicationManager {
       app: application,
       creationPromise: Promise.all(mediatorPromises),
     };
+  }
+  getApplication(index) {
+    return this.currentApplications[index];
+  }
+  getApplications() {
+    return this.currentApplications;
+  }
+  loadApplication(application) {
+    if (!this.appCount[application.name]) {
+      this.appCount[application.name] = 0;
+    }
+    const { app, creationPromise } = this.create(
+      this.appCount[application.name],
+      application,
+    );
+    this.appCount[application.name] += 1;
+    if (this.currentApplications.length === 0) {
+      // Run the application after it loads.
+      creationPromise.then(() => app.run());
+    }
+    this.currentApplications.push(app);
+  }
+  removeApplication(application) {
+    application.dispose();
+    this.currentApplications = this.currentApplications.filter(a => a !== application);
+    if (this.currentApplications.length > 0) {
+      this.startApplication(0);
+    }
+  }
+  startApplication(application) {
+    this.currentApplications.forEach((a) => { a.stop(); });
+    application.run();
   }
   /**
    * [mapToConstructor Takes a constructor's name as a string and returns its true
@@ -198,7 +235,14 @@ export default class ApplicationManager {
    * @param  {[String]} constructorName
    * @param  {[Function]} toolConstructor [The class constructor of the tool.]
    */
-  registerConstructor(constructorName, constructorFunction) {
-    this.registry[constructorName] = constructorFunction;
+  registerConstructor(constructorFunction) {
+    this.registry[constructorFunction.name] = constructorFunction;
   }
 }
+
+let instance;
+export default {
+  getInstance() {
+    return instance || (instance = new ApplicationManager());
+  },
+};

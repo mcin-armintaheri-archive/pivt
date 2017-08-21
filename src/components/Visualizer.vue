@@ -1,17 +1,19 @@
 <template>
   <div class="container">
     <sidebar
-      v-bind:applications="currentApplications"
+      v-bind:applications="appManager.currentApplications"
       v-on:new-application="appSelectDialog = true"
-      v-on:remove-application="removeApplication"
-      v-on:start-application="startApplication"
+      v-on:remove-application="removeSelectedApplication"
+      v-on:start-application="startSelectedApplication"
       v-on:show-buffer-list="showBufferList = true"
+      v-on:show-workspace-save="showWorkspaceSave = true"
+      v-on:show-workspace-load="$refs.loadInput.$el.click()"
     >
     </sidebar>
-    <floating-window-manager v-bind:applications="currentApplications">
+    <floating-window-manager v-bind:applications="appManager.currentApplications">
     </floating-window-manager>
     <app-component
-      v-for="(application, idx) in currentApplications"
+      v-for="(application, idx) in appManager.currentApplications"
       :style="`visibility: ${application.isRunning ? 'visible' : 'hidden'}`"
       :key="application.getName()"
       :application="application"
@@ -33,6 +35,9 @@
     </el-dialog>
     <add-buffer :show-dialog.sync="showBufferList">
     </add-buffer>
+    <save-workspace :show-dialog.sync="showWorkspaceSave">
+    </save-workspace>
+    <load-workspace ref="loadInput"></load-workspace>
   </div>
 </template>
 
@@ -43,6 +48,8 @@ import AppComponent from '@/components/AppComponent';
 import ApplicationSelect from '@/components/ApplicationSelect';
 import BufferManagerWidget from '@/components/BufferManagerWidget';
 import AddBuffer from '@/components/AddBuffer';
+import SaveWorkspace from '@/components/SaveWorkspace';
+import LoadWorkspace from '@/components/LoadWorkspace';
 import FloatingWindowManager from '@/components/FloatingWindowManager';
 import ApplicationManager from '@/extensions/ApplicationManager';
 
@@ -50,11 +57,9 @@ import BrainSlicer from '@/applications/BrainSlicer';
 import EEGViewer from '@/applications/EEGViewer';
 
 
-const appManager = new ApplicationManager();
+const appManager = ApplicationManager.getInstance();
 
 const APPLICATIONS = [BrainSlicer, EEGViewer];
-
-const appCount = {};
 
 export default {
   name: 'visualizer',
@@ -64,14 +69,17 @@ export default {
     'app-component': AppComponent,
     'application-select': ApplicationSelect,
     'add-buffer': AddBuffer,
+    'save-workspace': SaveWorkspace,
+    'load-workspace': LoadWorkspace,
     'buffer-manager-widget': BufferManagerWidget,
     'floating-window-manager': FloatingWindowManager,
   },
   data() {
     return {
-      currentApplications: [],
+      appManager,
       appSelectDialog: false,
       showBufferList: false,
+      showWorkspaceSave: false,
     };
   },
   computed: {
@@ -80,36 +88,18 @@ export default {
     },
   },
   methods: {
-    onThreeViewMounted({ element, renderer }) {
-      this.threeViewMountPoint = element;
-      this.threeRenderer = renderer;
-    },
     loadSelectedApplication(application) {
       this.appSelectDialog = false;
-      if (!appCount[application.name]) {
-        appCount[application.name] = 0;
-      }
-      const { app, creationPromise } = appManager.create(
-        appCount[application.name],
-        application,
-      );
-      appCount[application.name] += 1;
-      if (this.currentApplications.length === 0) {
-        // Run the application after it loads.
-        creationPromise.then(() => app.run());
-      }
-      this.currentApplications.push(app);
+      appManager.loadApplication(application);
     },
-    removeApplication(application) {
-      application.dispose();
-      this.currentApplications = this.currentApplications.filter(a => a !== application);
-      if (this.currentApplications.length > 0) {
-        this.startApplication(0);
+    removeSelectedApplication(application) {
+      appManager.removeApplication(application);
+      if (appManager.getApplications().length > 0) {
+        appManager.startApplication(appManager.getApplication(0));
       }
     },
-    startApplication(index) {
-      this.currentApplications.forEach((a) => { a.stop(); });
-      this.currentApplications[index].run();
+    startSelectedApplication(index) {
+      appManager.startApplication(appManager.getApplication(index));
     },
   },
 };

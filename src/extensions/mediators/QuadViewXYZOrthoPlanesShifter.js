@@ -13,7 +13,12 @@ import { PlaneShifter } from 'PlaneShifter';
  * @param       {OrthoPlanesParameters} planeParams
  * @constructor
  */
-export default function QuadViewXYZPlaneShifter(view, camControls, materialManager, planeParams) {
+export default function QuadViewXYZOrthoPlanesShifter(
+  view,
+  camControls,
+  materialManager,
+  planeParams,
+) {
   const { scene, layout } = view;
   const perspCam = layout.getBottomRight();
   materialManager.onMaterialChange(() => {

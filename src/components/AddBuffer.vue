@@ -61,11 +61,12 @@ export default {
     addFile(input) {
       // TODO: Kind of specific to add a volume for a general buffer adder.
       this.addBufferLoading = true;
-      buffermanager.loadBuffer(input.files[0], () => {
-        this.addBufferLoading = false;
-        /* eslint-disable no-param-reassign */
-        input.value = '';
-      });
+      buffermanager.loadBuffer(input.files[0])
+        .then(() => {
+          this.addBufferLoading = false;
+          /* eslint-disable no-param-reassign */
+          input.value = '';
+        });
     },
   },
 };

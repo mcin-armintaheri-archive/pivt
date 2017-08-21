@@ -8,7 +8,7 @@ import SpectrumPlotSidebarWidget from './SpectrumPlotSidebarWidget';
  * in drawn into the floating window using SpectrumPlot2.
  * @type {[type]}
  */
-export default class SpectrumPlot {
+export default class IntensityPlotWindow {
   constructor() {
     this.sidebarWidget = SpectrumPlotSidebarWidget;
     this.windowConfig = {

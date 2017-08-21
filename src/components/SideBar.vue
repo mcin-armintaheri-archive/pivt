@@ -19,6 +19,14 @@
               <i class="el-icon-upload2"></i>&nbsp;&nbsp;&nbsp;File Buffer List
             </el-button>
           </div>
+          <div class="button-container">
+            <el-button class="sidebar-button" type="primary" @click="$emit('show-workspace-load')">
+              <icon name="upload"></icon>&nbsp;&nbsp;&nbsp;Load Workspace<br />(Ctrl+O)
+            </el-button>
+            <el-button class="sidebar-button" type="primary" @click="$emit('show-workspace-save')">
+              <icon name="download"></icon>&nbsp;&nbsp;&nbsp;Save Workspace<br />(Ctrl+S)
+            </el-button>
+          </div>
           <div class="app-menu-scroll">
             <el-submenu
               v-for="(application, idx) in applications"
@@ -72,6 +80,17 @@ export default {
     'application-sidebar-widgets': ApplicationSidebarWidgets,
   },
   props: ['applications', 'three-mount'],
+  mounted() {
+    window.addEventListener('keydown', (event) => {
+      if (event.ctrlKey || event.metaKey) {
+        if (String.fromCharCode(event.which).toLowerCase() === 's') {
+          this.$emit('show-workspace-save');
+          event.preventDefault();
+        }
+      }
+      return false;
+    });
+  },
   data() {
     return { toggled: true };
   },
@@ -114,6 +133,9 @@ export default {
 <!-- TODO: use dropshadow to give "on top" look -->
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.workspace-input {
+  display: none;
+}
 .sidebar-container {
   pointer-events: none;
   z-index: 3;
@@ -131,7 +153,7 @@ export default {
   height: 100%;
 }
 .app-menu-scroll {
-  height: calc(100vh - 200px);
+  height: calc(100vh - 285px);
   overflow-y: auto;
 }
 .sidebar-hide {

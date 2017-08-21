@@ -7,7 +7,7 @@ import * as THREE from 'three';
  * @param       {PlanesMaterialManager} materialManager
  * @constructor
  */
-export default function OrthoPlaneContrastSettings(curvetool, materialManager) {
+export default function OrthoPlanesContrastSettings(curvetool, materialManager) {
   curvetool.setTitle('Contrast');
   curvetool.onChange((csObj) => {
     const planeMaterial = materialManager.getPlaneMaterial();

@@ -27,8 +27,8 @@ class ViewportPanner {
   }
   panCamera(event) {
     const zoom = this.viewport.getTHREECamera().zoom;
-    const x = -((event.clientX - this.mousedownpos.x) / zoom) + this.mousedownpan.x;
-    const y = ((event.clientY - this.mousedownpos.y) / zoom) + this.mousedownpan.y;
+    const x = ((event.clientX - this.mousedownpos.x) / zoom) + this.mousedownpan.x;
+    const y = -((event.clientY - this.mousedownpos.y) / zoom) + this.mousedownpan.y;
     this.viewport.setPan({ x, y });
   }
   zoomCamera(event) {

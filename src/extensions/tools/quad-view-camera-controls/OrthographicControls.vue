@@ -31,7 +31,7 @@
       <div class="input-title">X Pan:</div>
       <el-input-number
         size="small"
-        v-model="viewport.pan.x"
+        v-model="inputPanX"
       >
       </el-input-number>
     </div>
@@ -39,7 +39,7 @@
       <div class="input-title">Y Pan:</div>
       <el-input-number
         size="small"
-        v-model="viewport.pan.y"
+        v-model="inputPanY"
       >
       </el-input-number>
     </div>
@@ -56,7 +56,28 @@ export default {
   name: 'orthographic-controls',
   props: ['controller', 'title', 'camControls'],
   data() {
-    return { roll: 0, viewport: this.camControls.getViewport() };
+    return {
+      roll: 0,
+      viewportPan: this.camControls.getViewport().pan,
+    };
+  },
+  computed: {
+    inputPanX: {
+      get() {
+        return this.viewportPan.x;
+      },
+      set(x) {
+        this.camControls.getViewport().setPan({ x });
+      },
+    },
+    inputPanY: {
+      get() {
+        return this.viewportPan.y;
+      },
+      set(y) {
+        this.camControls.getViewport().setPan({ y });
+      },
+    },
   },
 };
 </script>

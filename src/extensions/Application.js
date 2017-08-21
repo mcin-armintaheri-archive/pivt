@@ -47,6 +47,56 @@ export default class Application {
     return this.mediators;
   }
   /**
+   * Serialize the state of the application into a JSON format.
+   * @return {JSON}
+   */
+  serialize() {
+    const serializeItem = (item) => {
+      if (item.serialize instanceof Function) {
+        return item.serialize();
+      }
+      return null;
+    };
+    const serializeTool = tool => ({
+      name: tool.name,
+      tool: tool.constructor.name,
+      data: serializeItem(tool),
+    });
+    const serializeMediator = mediator => ({
+      name: mediator.name,
+      mediator: mediator.constructor.name,
+      data: serializeItem(mediator),
+    });
+    const serializeCanvas3D = canvas3d => ({
+      name: canvas3d.name,
+      layout: {
+        controller: canvas3d.layout.constructor.name,
+        data: serializeItem(canvas3d.layout),
+      },
+      scene: {
+        controller: canvas3d.scene.constructor.name,
+        data: serializeItem(canvas3d.scene),
+      },
+    });
+    return {
+      name: this.getName(),
+      page: {
+        name: this.pageController.name,
+        controller: this.pageController.constructor.name,
+        data: serializeItem(this.pageController),
+        canvas3ds: this.canvas3ds
+          .map(serializeCanvas3D)
+          .filter(R.compose(R.not, R.isNil, R.prop('data'))),
+      },
+      tools: this.tools
+        .map(serializeTool)
+        .filter(R.compose(R.not, R.isNil, R.prop('data'))),
+      mediators: this.mediators
+        .map(serializeMediator)
+        .filter(R.compose(R.not, R.isNil, R.prop('data'))),
+    };
+  }
+  /**
    * First update the mediators, then the tools, then the scene, then
    * user the layout to render the scene.
    */

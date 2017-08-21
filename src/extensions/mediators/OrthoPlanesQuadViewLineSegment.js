@@ -10,7 +10,7 @@ import * as THREE from 'three';
  * @param  {LineSegmentTool} lineSegmentTool
  * @param  {SpectrumPlot} spectrumPlot
  */
-export default class OrthoPlanesLineSegmentTool {
+export default class OrthoPlanesQuadViewLineSegment {
   constructor(view, camControls, materialManager, lineSegmentTool, intensityPlot) {
     intensityPlot.setWindowTitle('Segment Intensity Plot');
     materialManager.onMaterialChange((_1, dimensions, mniVolume) => {

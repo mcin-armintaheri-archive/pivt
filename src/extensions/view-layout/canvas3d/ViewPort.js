@@ -86,7 +86,7 @@ export default class ViewPort {
   getCameraAxes() {
     const camera = this.getTHREECamera();
     const zDir = camera.getWorldDirection().multiplyScalar(-1.0);
-    const yDir = camera.up.clone();
+    const yDir = camera.up.clone().multiplyScalar(-1.0);
     const xDir = new THREE.Vector3().crossVectors(yDir, zDir);
     return { xDir, yDir, zDir };
   }
@@ -116,11 +116,13 @@ export default class ViewPort {
     camera.position.add(posOffset);
   }
   getPan() {
-    return this.pan;
+    const { x, y } = this.pan;
+    return { x, y };
   }
   setPan(pan) {
     this.inversePan();
-    this.pan = pan;
+    this.pan.x = pan.x !== undefined ? pan.x : this.pan.x;
+    this.pan.y = pan.y !== undefined ? pan.y : this.pan.y;
     this.applyPan();
   }
   /**

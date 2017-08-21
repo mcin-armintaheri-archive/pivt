@@ -16,7 +16,7 @@ class EEGCellController {
   }
 }
 
-export default class QuadViewOrthoPlanes extends Page {
+export default class EEGViewer extends Page {
   constructor() {
     super([]);
     this.page = EEGViewerPage;
