@@ -1,4 +1,4 @@
-# cervoscope
+# PIVT 
 
 > An extensible volumetric visualization tool.
 
