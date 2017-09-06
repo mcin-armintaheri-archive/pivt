@@ -7,6 +7,10 @@ import { MessageBox } from 'element-ui';
 
 import MaterialBufferLoader from './MaterialBufferLoader';
 
+import BufferManager from '../../BufferManager';
+
+const bufferManager = BufferManager.getInstance();
+
 
 /**
  * PlanesMaterialManager sets the material of the planes in the OrthoPlanes scene.
@@ -61,83 +65,97 @@ export default class PlanesMaterialManager {
    * @param  {Object}   bufferMeta bufferMeta holding the volume data.
    * @param  {Function} callback   completion/failure callback.
    */
-  createTextureFromBuffer(bufferMeta, callback) {
-    const { buffer, name } = bufferMeta;
+  createTextureFromBuffer(bufferMeta) {
+    const { buffer, name, checksum } = bufferMeta;
     const decoder = new Image3DGenericDecoder();
-    decoder.addInput(buffer);
-    decoder.update();
-    if (!decoder.getNumberOfOutputs()) {
-      MessageBox.alert(`Cannot decode ${name} into a buffer.`, 'Decoding Error', {
-        confirmButtonText: 'OK',
-      });
-      callback();
-      return;
-    }
-    const mniVol = decoder.getOutput();
-    if (!mniVol) {
-      MessageBox.alert(`Cannot decode ${name} into a buffer.`, 'Decoding Error', {
-        confirmButtonText: 'OK',
-      });
-      callback();
-      return;
-    }
-    const mosaicFilter = new Image3DToMosaicFilter();
-    // genericDecoder ouputs a pixpipe.MniVolume, which iherit pixpipe.Image3D
-    // making it compatible with pixpipe.Image3DToMosaicFilter
-    mosaicFilter.addInput(mniVol);
-    // which axis do we want the picture of?
-    const space = 'zspace';
-    mosaicFilter.setMetadata('axis', space);
+    return new Promise((resolve) => {
+      decoder.addInput(buffer);
+      decoder.update();
+      if (!decoder.getNumberOfOutputs()) {
+        MessageBox.alert(`Cannot decode ${name} into a buffer.`, 'Decoding Error', {
+          confirmButtonText: 'OK',
+        });
+        resolve();
+        return;
+      }
+      const mniVol = decoder.getOutput();
+      if (!mniVol) {
+        MessageBox.alert(`Cannot decode ${name} into a buffer.`, 'Decoding Error', {
+          confirmButtonText: 'OK',
+        });
+        resolve();
+        return;
+      }
+      const mosaicFilter = new Image3DToMosaicFilter();
+      // genericDecoder ouputs a pixpipe.MniVolume, which iherit pixpipe.Image3D
+      // making it compatible with pixpipe.Image3DToMosaicFilter
+      mosaicFilter.addInput(mniVol);
+      // which axis do we want the picture of?
+      const space = 'zspace';
+      mosaicFilter.setMetadata('axis', space);
 
-    // if time series, take it all
-    mosaicFilter.setMetadata('time', -1);
-    // run the filter
-    mosaicFilter.update();
-    if (!mosaicFilter.getNumberOfOutputs()) {
-      MessageBox.alert('Could not turn decoded buffer into mosiac textures.', 'Texture Error', {
-        confirmButtonText: 'OK',
-      });
-      callback();
-      return;
-    }
-    // display the output in multiple canvas if needed
-    this.volumeTextures = [];
-    for (let nbOut = 0; nbOut < mosaicFilter.getNumberOfOutputs(); nbOut += 1) {
-      const outputMosaic = mosaicFilter.getOutput(nbOut);
-      outputMosaic.setMetadata('min', mniVol.getMetadata('voxel_min'));
-      outputMosaic.setMetadata('max', mniVol.getMetadata('voxel_max'));
-      const data = outputMosaic.getDataAsUInt8Array();
-      const texture = new THREE.DataTexture(
-        data,
-        outputMosaic.getWidth(),
-        outputMosaic.getHeight(),
-        THREE.LuminanceFormat,
-        THREE.UnsignedByteType,
+      // if time series, take it all
+      mosaicFilter.setMetadata('time', -1);
+      // run the filter
+      mosaicFilter.update();
+      if (!mosaicFilter.getNumberOfOutputs()) {
+        MessageBox.alert('Could not turn decoded buffer into mosiac textures.', 'Texture Error', {
+          confirmButtonText: 'OK',
+        });
+        resolve();
+        return;
+      }
+      // display the output in multiple canvas if needed
+      this.volumeTextures = [];
+      for (let nbOut = 0; nbOut < mosaicFilter.getNumberOfOutputs(); nbOut += 1) {
+        const outputMosaic = mosaicFilter.getOutput(nbOut);
+        outputMosaic.setMetadata('min', mniVol.getMetadata('voxel_min'));
+        outputMosaic.setMetadata('max', mniVol.getMetadata('voxel_max'));
+        const data = outputMosaic.getDataAsUInt8Array();
+        const texture = new THREE.DataTexture(
+          data,
+          outputMosaic.getWidth(),
+          outputMosaic.getHeight(),
+          THREE.LuminanceFormat,
+          THREE.UnsignedByteType,
+        );
+        texture.needsUpdate = true;
+        this.volumeTextures.push(texture);
+      }
+      const sliceMatrixSize = {};
+      sliceMatrixSize.x = mosaicFilter.getMetadata('gridWidth');
+      sliceMatrixSize.y = mosaicFilter.getMetadata('gridHeight');
+      this.dimensions = {};
+      this.dimensions.x = mniVol.getMetadata('xspace').space_length;
+      this.dimensions.y = mniVol.getMetadata('yspace').space_length;
+      this.dimensions.z = mniVol.getMetadata('zspace').space_length;
+      this.dimensions.t = mniVol.getTimeLength();
+      const { x, y, z } = this.dimensions;
+      this.dimensions.diagonal = Math.sqrt((x * x) + (y * y) + (z * z));
+      this.scene.setBoundingBox(
+        new THREE.Box3(
+          new THREE.Vector3(-x / 2, -y / 2, -z / 2),
+          new THREE.Vector3(x / 2, y / 2, z / 2),
+        ),
       );
-      texture.needsUpdate = true;
-      this.volumeTextures.push(texture);
-    }
-    const sliceMatrixSize = {};
-    sliceMatrixSize.x = mosaicFilter.getMetadata('gridWidth');
-    sliceMatrixSize.y = mosaicFilter.getMetadata('gridHeight');
-    this.dimensions = {};
-    this.dimensions.x = mniVol.getMetadata('xspace').space_length;
-    this.dimensions.y = mniVol.getMetadata('yspace').space_length;
-    this.dimensions.z = mniVol.getMetadata('zspace').space_length;
-    this.dimensions.t = mniVol.getTimeLength();
-    const { x, y, z } = this.dimensions;
-    this.dimensions.diagonal = Math.sqrt((x * x) + (y * y) + (z * z));
-    this.scene.setBoundingBox(
-      new THREE.Box3(
-        new THREE.Vector3(-x / 2, -y / 2, -z / 2),
-        new THREE.Vector3(x / 2, y / 2, z / 2),
-      ),
-    );
-    this.mniVolume = mniVol;
-    this.texturesCreatedCallbacks.forEach((f) => {
-      f(this.dimensions, sliceMatrixSize, this.volumeTextures);
+      this.mniVolume = mniVol;
+      this.texturesCreatedCallbacks.forEach((f) => {
+        f(this.dimensions, sliceMatrixSize, this.volumeTextures);
+      });
+      this.bufferChecksum = checksum;
+      resolve();
     });
-    callback();
+  }
+  serialize() {
+    return { checksum: this.bufferChecksum };
+  }
+  deserialize(json) {
+    console.log(json);
+    const buffer = bufferManager.getByChecksum(json.checksum);
+    if (buffer) {
+      return this.createTextureFromBuffer(buffer);
+    }
+    return Promise.resolve();
   }
   onTexturesCreated(callback) {
     if (callback instanceof Function) {

@@ -32,4 +32,24 @@ export default class OrthoPlanesParameters {
   onRotationReset(callback) {
     this.rotationResetCallbacks.push(callback);
   }
+  serialize() {
+    const serialized = {};
+    { // serialize position
+      const { x, y, z } = this.scene.getPlaneSystem().position;
+      serialized.position = { x, y, z };
+    }
+    { // serialize rotation
+      const { x, y, z } = this.scene.getPlaneSystem().rotation;
+      serialized.rotation = { x, y, z };
+    }
+    return serialized;
+  }
+  deserialize(json) {
+    const { position, rotation } = json;
+    const system = this.scene.getPlaneSystem();
+    system.position.set(position.x, position.y, position.z);
+    system.rotation.set(rotation.x, rotation.y, rotation.z);
+    // TODO: use vue set/get
+    this.updateFromScene();
+  }
 }

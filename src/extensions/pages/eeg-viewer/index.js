@@ -16,7 +16,7 @@ class EEGCellController {
   }
 }
 
-export default class EEGViewer extends Page {
+export default class EEGViewerView extends Page {
   constructor() {
     super([]);
     this.page = EEGViewerPage;

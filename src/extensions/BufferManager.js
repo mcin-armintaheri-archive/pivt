@@ -30,12 +30,20 @@ class BufferManager {
   getBuffer(uid) {
     return this.buffers[uid];
   }
+  getByChecksum(checksum) {
+    return R.values(this.buffers).find(b => b.checksum === checksum);
+  }
   /**
    * Given an object with the metadata of a buffer, add it to the
    * set of currently loaded buffers.
    * @param {Object} bufferMeta object holding the metadata and data of the buffer.
    */
   addBuffer(bufferMeta) {
+    const existingBuffer = R.values(this.buffers)
+      .find(b => b.checksum === bufferMeta.checksum);
+    if (existingBuffer) {
+      return existingBuffer.uid;
+    }
     const uid = UIDUtils.getUid();
     this.buffers[uid] = R.assoc('uid', uid, bufferMeta);
     this.bufferLoadCallbacks.forEach((f) => {
@@ -75,18 +83,23 @@ class BufferManager {
    * @return {JSON}
    */
   serialize(buffers) { // eslint-disable-line class-methods-use-this
-    const bufferMetas = R.project(['name', 'checksum'], buffers);
-    const data = R.pluck('buffer', buffers);
+    const bufferMetas = {
+      type: 'buffers',
+      bufferInfo: R.project(['name', 'checksum'], buffers),
+    };
+    const data = R.pluck('buffer', buffers).map(b => new Uint8Array(b));
     return { _metadata: bufferMetas, _data: data };
   }
   /**
    * Add the buffers serialized inside a JSON value returned from serialize(buffers).
    * @param {JSON} buffersJSON JSON value return from serialize(buffers)
    */
-  unserialize(buffersJSON) {
+  deserialize(buffersJSON) {
     const { _metadata, _data } = buffersJSON;
-    const buffers = R.zipWith(R.assoc('buffer'), _data, _metadata);
-    buffers
+    const buffers = R.zipWith(R.assoc('buffer'), _data, _metadata.bufferInfo);
+    /* eslint-disable no-param-reassign */
+    buffers.forEach((b) => { b.buffer = b.buffer.buffer; }); // replace Uint8Array with ArrayBuffer;
+    buffers // add size to buffer meta data and add to the buffer list.
       .map(b => R.assoc('size', b.buffer.byteLength, b))
       .forEach(this.addBuffer.bind(this));
   }

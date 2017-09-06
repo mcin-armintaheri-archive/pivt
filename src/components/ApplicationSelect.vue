@@ -3,7 +3,7 @@
     <application-select-item
       class="app-select-item"
       v-for="option in options"
-      :key="option.name"
+      :key="option.type"
       v-bind:option="option"
       v-on:click.native="selectItem(option)"
     >

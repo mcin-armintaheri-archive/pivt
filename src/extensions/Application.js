@@ -7,9 +7,10 @@ import UIDUtils from './UIDUtils';
  * in the order they are described in an applications JSON description.
  */
 export default class Application {
-  constructor(name) {
+  constructor(name, type) {
     this.uid = UIDUtils.getUid();
     this.name = name;
+    this.type = type;
     this.pageController = null;
     this.canvas3ds = [];
     this.tools = [];
@@ -21,6 +22,12 @@ export default class Application {
   }
   getName() {
     return this.name;
+  }
+  setName(name) {
+    this.name = name;
+  }
+  getType() {
+    return this.type;
   }
   setPageController(page) {
     this.pageController = page;
@@ -79,6 +86,7 @@ export default class Application {
       },
     });
     return {
+      type: this.getType(),
       name: this.getName(),
       page: {
         name: this.pageController.name,
@@ -95,6 +103,66 @@ export default class Application {
         .map(serializeMediator)
         .filter(R.compose(R.not, R.isNil, R.prop('data'))),
     };
+  }
+  /**
+   * Deserialize the state of the application from a JSON format.
+   * @param {JSON}
+   * @return {Application}
+   */
+  deserialize(serialized) {
+    const {
+      name,
+      page,
+      tools,
+      mediators,
+    } = serialized;
+    this.setName(name);
+    const ps = [];
+    if (page && this.pageController.deserialize instanceof Function) {
+      const prom = this.pageController.deserialize(page);
+      if (prom instanceof Promise) {
+        ps.push(prom);
+      }
+    }
+    const canvas3ds = page.canvas3ds;
+    if (canvas3ds instanceof Array) {
+      canvas3ds.forEach((c3d) => {
+        this.canvas3ds.filter(c => c.name === c3d.name).forEach((c) => {
+          if (c3d.data && c.deserialize instanceof Function) {
+            const prom = c.deserialize(c3d.data);
+            if (prom instanceof Promise) {
+              ps.push(prom);
+            }
+          }
+        });
+      });
+    }
+    if (tools instanceof Array) {
+      tools.forEach((toolJSON) => {
+        this.tools.filter(t => t.name === toolJSON.name).forEach((t) => {
+          if (toolJSON.data && t.deserialize instanceof Function) {
+            console.log(toolJSON);
+            const prom = t.deserialize(toolJSON.data);
+            if (prom instanceof Promise) {
+              ps.push(prom);
+            }
+          }
+        });
+      });
+    }
+    if (mediators instanceof Array) {
+      mediators.forEach((mediatorJSON) => {
+        this.mediators.filter(m => m.name === mediatorJSON.name).forEach((m) => {
+          if (mediatorJSON.data && m.deserialize instanceof Function) {
+            const prom = m.deserialize(mediatorJSON.data);
+            if (prom instanceof Promise) {
+              ps.push(prom);
+            }
+          }
+        });
+      });
+    }
+    return Promise.all(ps);
   }
   /**
    * First update the mediators, then the tools, then the scene, then

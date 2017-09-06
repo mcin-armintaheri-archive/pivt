@@ -36,7 +36,10 @@
               <template slot="title">
                 <div class="app-collapse">
                   <div>
-                    {{ application.getName() }}
+                    <span class="app-name">{{ application.getName() }}</span>
+                    <span class="edit-button" @click="editAppName($event, application)">
+                      <icon name="pencil"></icon>
+                    </span>
                   </div>
                   <div class="app-collapse-controls">
                     <el-button type="primary" @click="killApplication($event, application)">
@@ -103,6 +106,15 @@ export default {
     },
   },
   methods: {
+    editAppName(event, application) {
+      event.stopPropagation();
+      this.$prompt('Enter a name for the running application.', 'Info', {
+        confirmButtonText: 'Done',
+        cancelButtonText: 'Cancel',
+      }).then((res) => {
+        application.setName(res.value);
+      }).catch(() => {});
+    },
     toggleSideBar() {
       this.toggled = !this.toggled;
     },
@@ -187,5 +199,16 @@ export default {
 }
 .app-collapse-controls {
   margin-right: 20px;
+}
+.app-name {
+  margin-right: 10px;
+}
+.edit-button {
+  border-radius: 5px;
+  padding: 4px 8px;
+  padding-top: 10px;
+}
+.edit-button:hover {
+  background-color: #678;
 }
 </style>

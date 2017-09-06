@@ -25,7 +25,7 @@
       :close-on-press-escape.boolean="false"
       :close-on-click-modal.boolean="false"
     >
-    <h2><icon name="spinner" spin></icon> Loading</h2>
+      <h2><icon name="spinner" spin></icon> Loading</h2>
     </el-dialog>
   </div>
 </template>
@@ -62,12 +62,8 @@ export default {
       this.showMaterialAdd = false;
       this.showLoading = true;
       setTimeout(() => {
-        this.controller.createTextureFromBuffer(
-          buffermanager.getBuffer(uid),
-          () => {
-            this.showLoading = false;
-          },
-        );
+        this.controller.createTextureFromBuffer(buffermanager.getBuffer(uid))
+          .then(() => { this.showLoading = false; });
       }, 100); // Timeout for the ui to show loading modal.
     },
   },

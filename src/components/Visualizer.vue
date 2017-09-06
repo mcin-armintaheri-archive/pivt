@@ -7,7 +7,7 @@
       v-on:start-application="startSelectedApplication"
       v-on:show-buffer-list="showBufferList = true"
       v-on:show-workspace-save="showWorkspaceSave = true"
-      v-on:show-workspace-load="$refs.loadInput.$el.click()"
+      v-on:show-workspace-load="$refs.loadInput.$el.querySelector('.add-file-input').click()"
     >
     </sidebar>
     <floating-window-manager v-bind:applications="appManager.currentApplications">
@@ -15,7 +15,7 @@
     <app-component
       v-for="(application, idx) in appManager.currentApplications"
       :style="`visibility: ${application.isRunning ? 'visible' : 'hidden'}`"
-      :key="application.getName()"
+      :key="application.uid"
       :application="application"
     >
     </app-component>
@@ -53,13 +53,7 @@ import LoadWorkspace from '@/components/LoadWorkspace';
 import FloatingWindowManager from '@/components/FloatingWindowManager';
 import ApplicationManager from '@/extensions/ApplicationManager';
 
-import BrainSlicer from '@/applications/BrainSlicer';
-import EEGViewer from '@/applications/EEGViewer';
-
-
 const appManager = ApplicationManager.getInstance();
-
-const APPLICATIONS = [BrainSlicer, EEGViewer];
 
 export default {
   name: 'visualizer',
@@ -84,7 +78,7 @@ export default {
   },
   computed: {
     applications() {
-      return APPLICATIONS;
+      return ApplicationManager.APPLICATION_TYPES;
     },
   },
   methods: {

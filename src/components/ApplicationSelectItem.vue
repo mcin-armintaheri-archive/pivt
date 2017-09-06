@@ -1,7 +1,7 @@
 
 <template>
   <div class="app-option">
-    {{ this.option.name }}
+    {{ this.option.type }}
   </div>
 </template>
 

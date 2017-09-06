@@ -1,5 +1,5 @@
 export default {
-  name: 'EEGViewer',
+  type: 'EEGViewer',
   page: {
     name: 'mainPage',
     controller: 'EEGViewer',

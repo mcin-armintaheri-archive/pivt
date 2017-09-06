@@ -1,9 +1,15 @@
 import R from 'ramda';
+
+// Applications
+import BrainSlicer from '@/applications/BrainSlicer';
+import EEGViewer from '@/applications/EEGViewer';
+
+
 import Application from './Application';
 
 // Begin Page Imports
 import QuadViewOrthoPlanes from './pages/quad-view-ortho-planes';
-import EEGViewer from './pages/eeg-viewer';
+import EEGViewerView from './pages/eeg-viewer';
 // End Page Imports
 
 // Begin CanvasLayout Imports
@@ -47,7 +53,7 @@ class ApplicationManager {
 
     // Begin Layout Registers
     this.registerConstructor(XYZPerspectiveQuadView);
-    this.registerConstructor(EEGViewer);
+    this.registerConstructor(EEGViewerView);
     // End Layout Registers
 
     // Begin Scene Registers
@@ -120,14 +126,14 @@ class ApplicationManager {
      * TODO: Allow partially loaded dependencies.
      */
     const {
-      name,
+      type,
       page,
       tools,
       mediators,
     } = jsonDescription;
     let dependencies = {}; // Hash of promises that resolve to a loaded dependency
     let canvas3ds = [];
-    const application = new Application(`${name} ${index}`);
+    const application = new Application(`${type} ${index}`, type);
     if (page.canvas3ds instanceof Array) {
       canvas3ds = page.canvas3ds;
     }
@@ -181,19 +187,20 @@ class ApplicationManager {
     return this.currentApplications;
   }
   loadApplication(application) {
-    if (!this.appCount[application.name]) {
-      this.appCount[application.name] = 0;
+    if (!this.appCount[application.type]) {
+      this.appCount[application.type] = 0;
     }
     const { app, creationPromise } = this.create(
-      this.appCount[application.name],
+      this.appCount[application.type],
       application,
     );
-    this.appCount[application.name] += 1;
+    this.appCount[application.type] += 1;
     if (this.currentApplications.length === 0) {
       // Run the application after it loads.
       creationPromise.then(() => app.run());
     }
     this.currentApplications.push(app);
+    return { app, creationPromise };
   }
   removeApplication(application) {
     application.dispose();
@@ -245,4 +252,5 @@ export default {
   getInstance() {
     return instance || (instance = new ApplicationManager());
   },
+  APPLICATION_TYPES: [BrainSlicer, EEGViewer],
 };

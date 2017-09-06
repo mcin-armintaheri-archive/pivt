@@ -1,5 +1,5 @@
 export default {
-  name: 'BrainSlicer',
+  type: 'BrainSlicer',
   page: {
     name: 'mainPage',
     controller: 'QuadViewOrthoPlanes',
@@ -10,6 +10,11 @@ export default {
     }],
   },
   tools: [
+    {
+      name: 'materialManager',
+      tool: 'PlanesMaterialManager',
+      dependencies: ['view'],
+    },
     {
       name: 'quadviewCameraAxes',
       tool: 'QuadViewCameraAxes',
@@ -28,11 +33,6 @@ export default {
     {
       name: 'contrast',
       tool: 'CurveTool',
-      dependencies: ['view'],
-    },
-    {
-      name: 'materialManager',
-      tool: 'PlanesMaterialManager',
       dependencies: ['view'],
     },
     {

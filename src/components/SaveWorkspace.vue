@@ -26,11 +26,13 @@
         <el-button @click="saveWorkspace">Save</el-button>
         <el-button @click="showWorkspaceSave = false">Cancel</el-button>
       </span>
+      <a class="workspace-download"></a>
     </el-dialog>
 </template>
 
 <script>
 import R from 'ramda';
+import { PixBinEncoder } from 'pixbincodec';
 import ApplicationManager from '@/extensions/ApplicationManager';
 import BufferManager from '@/extensions/BufferManager';
 
@@ -53,10 +55,44 @@ export default {
   },
   methods: {
     saveWorkspace() {
-      const apps = R.values(this.checkedApps).map(a => a.serialize());
+      const apps = {
+        _metadata: { type: 'applications' },
+        _data: R.values(this.checkedApps).map(a => a.serialize()),
+      };
+      console.log(apps);
       const buffers = bufferManager.serialize(R.values(this.checkedBuffers));
       this.showWorkspaceSave = false;
-      return { apps, buffers };
+      const encoder = new PixBinEncoder();
+      encoder.setOption('madeWith', 'PIVT');
+      encoder.addInput(apps);
+      encoder.addInput(buffers);
+      encoder.run();
+      const workspaceBuffer = encoder.getOutput();
+      const link = this.$el.querySelector('.workspace-download');
+      const blob = new Blob([workspaceBuffer], { type: 'octet/stream' });
+      const url = window.URL.createObjectURL(blob);
+      link.href = url;
+      this.$prompt('Enter a file name', 'Save Workspace', {
+        confirmButtonText: 'Done',
+        cancelButtonText: 'Cancel',
+      }).then((res) => {
+        const filename = res.value;
+        if (filename.match(/^.*\.pixb/)) {
+          link.download = filename;
+        } else {
+          link.download = `${filename}.pixb`;
+        }
+        link.click();
+        this.$message({
+          type: 'success',
+          message: 'Workspace saved!',
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'warning',
+          message: 'Workspace saving cancelled',
+        });
+      });
     },
     checkboxChangeApp(app, event) {
       if (event.target.checked) {
@@ -86,6 +122,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.workspace-download {
+  display: none;
+}
 .item-checkbox-group {
   display: flex;
   flex-direction: column;
