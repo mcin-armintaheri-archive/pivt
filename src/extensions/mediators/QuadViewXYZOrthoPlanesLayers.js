@@ -2,6 +2,8 @@ import R from 'ramda';
 
 import * as THREE from 'three';
 
+const OFFSET = new THREE.Vector3(0, 10, 0);
+
 /**
  * PlaneCameraAligner associated a viewport with a particular plane in
  * OrthoPlanes. The aligner makes the camera in the viewport rotate and move with the
@@ -89,6 +91,9 @@ export default class QuadViewXYZOrthoPlanesLayers {
     this.axisSystems = [];
     planeParams.onRotationReset(this.resetCameraUps.bind(this));
     materialManager.onMaterialChange((material, dimensions) => {
+      planeParams.setPlaneRot(0, 0, 0);
+      planeParams.setPlanePos(0, 0, 0);
+      this.resetCameraUps();
       const { diagonal } = dimensions;
       this.threeScene.updateMatrixWorld(true);
       const planeCamConfigs = [
@@ -126,7 +131,7 @@ export default class QuadViewXYZOrthoPlanesLayers {
       });
 
       layout.getBottomRight().getTHREECamera().position.set(0, 10, 2 * diagonal);
-      camControls.resetControls(new THREE.Vector3(0, 10, 0));
+      camControls.resetControls(OFFSET);
       /*
         If the QuadViewCameraAxes tool is bundled with the application,
         create the axes for each orthographic camera.

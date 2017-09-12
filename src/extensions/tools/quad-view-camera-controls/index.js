@@ -1,7 +1,5 @@
-import * as THREE from 'three';
 import QuadViewCameraControlsWidget from './QuadViewCameraControlsWidget';
 
-const OFFSET = new THREE.Vector3(0, 10, 0);
 
 /**
  * CameraController offers an application a sidebar widget for
@@ -47,7 +45,7 @@ export default class QuadViewCameraControls {
    */
   resetControls() {
     this.resetControlsCallbacks.forEach((f) => {
-      f(OFFSET);
+      f();
     });
   }
   onResetControls(f) {
