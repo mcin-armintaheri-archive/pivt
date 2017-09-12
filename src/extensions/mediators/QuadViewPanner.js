@@ -1,3 +1,5 @@
+import R from 'ramda';
+
 class ViewportPanner {
   constructor(viewport, container, controls) {
     this.viewport = viewport;
@@ -14,6 +16,9 @@ class ViewportPanner {
     this.container.addEventListener('mouseup', this.listeners.mouseup);
     this.container.addEventListener('mousedown', this.listeners.mousedown);
     this.container.addEventListener('wheel', this.listeners.wheel);
+  }
+  getViewport() {
+    return this.viewport;
   }
   mouseUp() {
     this.container.removeEventListener('mousemove', this.listeners.mousemove);
@@ -41,7 +46,7 @@ class ViewportPanner {
     }
   }
   dispose() {
-    Object.keys(this.listeners).forEach((key) => {
+    R.keys(this.listeners).forEach((key) => {
       this.container.removeEventListener(key, this.listeners[key]);
     });
   }
@@ -66,6 +71,18 @@ export default class QuadViewPanner {
   dispose() {
     this.panners.forEach((panner) => {
       panner.dispose();
+    });
+  }
+  serialize() {
+    return this.panners.map(p => ({
+      pan: p.getViewport().getPan(),
+      zoom: p.getViewport().getTHREECamera().zoom,
+    }));
+  }
+  deserialize(json) {
+    json.forEach((serializedPanner, i) => {
+      this.panners[i].getViewport().setPan(serializedPanner.pan);
+      this.panners[i].getViewport().getTHREECamera().zoom = serializedPanner.zoom;
     });
   }
 }
