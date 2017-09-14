@@ -44,7 +44,18 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [
+          resolve('src'),
+          resolve('test'),
+          resolve('node_modules/pixpipejs'),
+          resolve('node_modules/codecutils'),
+          resolve('node_modules/SpectrumPlot2'),
+          resolve('node_modules/pixbincodec'),
+          resolve('node_modules/CanvasSpliner'),
+          resolve('node_modules/PlaneShifter'),
+          resolve('node_modules/SegmentDraw'),
+          resolve('node_modules/qeegmodfile'),
+        ]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
