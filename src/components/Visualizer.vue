@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import R from 'ramda';
+
 import SideBar from '@/components/SideBar';
 import ThreeView from '@/components/ThreeView';
 import AppComponent from '@/components/AppComponent';
@@ -52,6 +54,7 @@ import SaveWorkspace from '@/components/SaveWorkspace';
 import LoadWorkspace from '@/components/LoadWorkspace';
 import FloatingWindowManager from '@/components/FloatingWindowManager';
 import ApplicationManager from '@/extensions/ApplicationManager';
+import BufferManager from '@/extensions/BufferManager';
 
 const appManager = ApplicationManager.getInstance();
 
@@ -68,6 +71,11 @@ export default {
     'buffer-manager-widget': BufferManagerWidget,
     'floating-window-manager': FloatingWindowManager,
   },
+  mounted() {
+    if (window.initializationHandler instanceof Function) {
+      window.initializationHandler(ApplicationManager, BufferManager);
+    }
+  },
   data() {
     return {
       appManager,
@@ -78,7 +86,7 @@ export default {
   },
   computed: {
     applications() {
-      return ApplicationManager.APPLICATION_TYPES;
+      return R.values(ApplicationManager.APPLICATION_TYPES);
     },
   },
   methods: {

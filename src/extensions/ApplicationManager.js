@@ -252,5 +252,5 @@ export default {
   getInstance() {
     return instance || (instance = new ApplicationManager());
   },
-  APPLICATION_TYPES: [BrainSlicer, EEGViewer],
+  APPLICATION_TYPES: { BrainSlicer, EEGViewer },
 };

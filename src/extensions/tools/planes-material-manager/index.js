@@ -150,7 +150,6 @@ export default class PlanesMaterialManager {
     return { checksum: this.bufferChecksum };
   }
   deserialize(json) {
-    console.log(json);
     const buffer = bufferManager.getByChecksum(json.checksum);
     if (buffer) {
       return this.createTextureFromBuffer(buffer);

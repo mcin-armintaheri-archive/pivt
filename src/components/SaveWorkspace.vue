@@ -59,7 +59,6 @@ export default {
         _metadata: { type: 'applications' },
         _data: R.values(this.checkedApps).map(a => a.serialize()),
       };
-      console.log(apps);
       const buffers = bufferManager.serialize(R.values(this.checkedBuffers));
       this.showWorkspaceSave = false;
       const encoder = new PixBinEncoder();

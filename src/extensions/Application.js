@@ -141,7 +141,6 @@ export default class Application {
       tools.forEach((toolJSON) => {
         this.tools.filter(t => t.name === toolJSON.name).forEach((t) => {
           if (toolJSON.data && t.deserialize instanceof Function) {
-            console.log(toolJSON);
             const prom = t.deserialize(toolJSON.data);
             if (prom instanceof Promise) {
               ps.push(prom);
