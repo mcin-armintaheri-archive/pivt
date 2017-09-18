@@ -124,18 +124,20 @@ export default class Application {
         ps.push(prom);
       }
     }
-    const canvas3ds = page.canvas3ds;
-    if (canvas3ds instanceof Array) {
-      canvas3ds.forEach((c3d) => {
-        this.canvas3ds.filter(c => c.name === c3d.name).forEach((c) => {
-          if (c3d.data && c.deserialize instanceof Function) {
-            const prom = c.deserialize(c3d.data);
-            if (prom instanceof Promise) {
-              ps.push(prom);
+    if (page) {
+      const canvas3ds = page.canvas3ds;
+      if (canvas3ds instanceof Array) {
+        canvas3ds.forEach((c3d) => {
+          this.canvas3ds.filter(c => c.name === c3d.name).forEach((c) => {
+            if (c3d.data && c.deserialize instanceof Function) {
+              const prom = c.deserialize(c3d.data);
+              if (prom instanceof Promise) {
+                ps.push(prom);
+              }
             }
-          }
+          });
         });
-      });
+      }
     }
     if (tools instanceof Array) {
       tools.forEach((toolJSON) => {
