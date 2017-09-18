@@ -69,7 +69,7 @@ export default {
     'save-workspace': SaveWorkspace,
     'load-workspace': LoadWorkspace,
     'buffer-manager-widget': BufferManagerWidget,
-    'floating-window-manager': FloatingWindowManager,
+    'floating-window-manager': FloatingWindowManager
   },
   mounted() {
     if (window.initializationHandler instanceof Function) {
@@ -81,13 +81,13 @@ export default {
       appManager,
       appSelectDialog: false,
       showBufferList: false,
-      showWorkspaceSave: false,
+      showWorkspaceSave: false
     };
   },
   computed: {
     applications() {
       return R.values(ApplicationManager.APPLICATION_TYPES);
-    },
+    }
   },
   methods: {
     loadSelectedApplication(application) {
@@ -102,8 +102,8 @@ export default {
     },
     startSelectedApplication(index) {
       appManager.startApplication(appManager.getApplication(index));
-    },
-  },
+    }
+  }
 };
 </script>
 

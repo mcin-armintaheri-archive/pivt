@@ -25,7 +25,7 @@ export default {
   props: ['controller', 'title'],
   data() {
     return {};
-  },
+  }
 };
 </script>
 

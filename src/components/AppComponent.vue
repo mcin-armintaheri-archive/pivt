@@ -11,9 +11,9 @@ import ApplicationPage from '@/components/ApplicationPage';
 export default {
   name: 'app-component',
   components: {
-    'application-page': ApplicationPage,
+    'application-page': ApplicationPage
   },
-  props: ['application'],
+  props: ['application']
 };
 </script>
 

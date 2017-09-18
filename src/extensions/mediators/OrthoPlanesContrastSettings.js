@@ -18,7 +18,7 @@ export default function OrthoPlanesContrastSettings(curvetool, materialManager) 
         ys.length,
         1,
         THREE.LuminanceFormat,
-        THREE.FloatType,
+        THREE.FloatType
       );
       texture.needsUpdate = true;
       planeMaterial.uniforms.curveTexture.value = texture;

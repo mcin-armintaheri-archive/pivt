@@ -50,14 +50,14 @@ export default {
       appChecklist: [],
       checkedApps: {},
       bufferChecklist: [],
-      checkedBuffers: {},
+      checkedBuffers: {}
     };
   },
   methods: {
     saveWorkspace() {
       const apps = {
         _metadata: { type: 'applications' },
-        _data: R.values(this.checkedApps).map(a => a.serialize()),
+        _data: R.values(this.checkedApps).map(a => a.serialize())
       };
       const buffers = bufferManager.serialize(R.values(this.checkedBuffers));
       this.showWorkspaceSave = false;
@@ -73,7 +73,7 @@ export default {
       link.href = url;
       this.$prompt('Enter a file name', 'Save Workspace', {
         confirmButtonText: 'Done',
-        cancelButtonText: 'Cancel',
+        cancelButtonText: 'Cancel'
       }).then((res) => {
         const filename = res.value;
         if (filename.match(/^.*\.pixb/)) {
@@ -84,12 +84,12 @@ export default {
         link.click();
         this.$message({
           type: 'success',
-          message: 'Workspace saved!',
+          message: 'Workspace saved!'
         });
       }).catch(() => {
         this.$message({
           type: 'warning',
-          message: 'Workspace saving cancelled',
+          message: 'Workspace saving cancelled'
         });
       });
     },
@@ -106,7 +106,7 @@ export default {
         return;
       }
       delete this.checkedBuffers[buffer.checksum];
-    },
+    }
   },
   watch: {
     showDialog() {
@@ -114,8 +114,8 @@ export default {
     },
     showWorkspaceSave() {
       this.$emit('update:showDialog', this.showWorkspaceSave);
-    },
-  },
+    }
+  }
 };
 </script>
 

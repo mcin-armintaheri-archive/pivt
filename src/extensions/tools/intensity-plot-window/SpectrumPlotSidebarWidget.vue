@@ -21,8 +21,8 @@ export default {
     openPlotWindow() {
       this.controller.windowConfig.open = true;
       setTimeout(this.controller.redrawPlot.bind(this.controller), 50);
-    },
-  },
+    }
+  }
 };
 </script>
 

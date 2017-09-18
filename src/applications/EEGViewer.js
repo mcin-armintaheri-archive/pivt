@@ -3,19 +3,19 @@ export default {
   page: {
     name: 'mainPage',
     controller: 'EEGViewer',
-    canvas3ds: [],
+    canvas3ds: []
   },
   tools: [
     {
       name: 'eegPlots',
       tool: 'EEGSpectrumPlot',
-      dependencies: ['mainPage'],
+      dependencies: ['mainPage']
     },
     {
       name: 'eegFileLoader',
       tool: 'EEGFileLoader',
-      dependencies: ['mainPage'],
-    },
+      dependencies: ['mainPage']
+    }
   ],
-  mediators: [],
+  mediators: []
 };

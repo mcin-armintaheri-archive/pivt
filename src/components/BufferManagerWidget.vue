@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      loadedBuffers: buffermanager.getBufferList(),
+      loadedBuffers: buffermanager.getBufferList()
     };
   },
   computed: {
@@ -49,9 +49,9 @@ export default {
       return this.loadedBuffers.map(buffer => ({
         filename: buffer.name,
         size: filesize(buffer.size).human(),
-        uid: buffer.uid,
+        uid: buffer.uid
       }));
-    },
+    }
   },
   methods: {
     /**
@@ -61,8 +61,8 @@ export default {
      */
     selectBuffer(row) {
       this.$emit('select-buffer', row.uid);
-    },
-  },
+    }
+  }
 };
 </script>
 

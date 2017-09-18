@@ -10,5 +10,5 @@ export default {
     const props = { controller: this.widgetController };
     const sidebarEl = this.widgetController.sidebarWidget;
     return sidebarEl ? createElement(sidebarEl, { props }) : null;
-  },
+  }
 };

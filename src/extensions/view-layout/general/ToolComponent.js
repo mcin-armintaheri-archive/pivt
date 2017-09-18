@@ -5,5 +5,5 @@ export default {
     const el = this.controller.toolComponent;
     const props = { controller: this.controller };
     return el ? createElement(el, { props }) : null;
-  },
+  }
 };

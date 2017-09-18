@@ -9,7 +9,7 @@ export default {
   props: ['controller'],
   mounted() {
     this.controller.initialize(this.$el);
-  },
+  }
 };
 </script>
 

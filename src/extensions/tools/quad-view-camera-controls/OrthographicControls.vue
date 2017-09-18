@@ -58,7 +58,7 @@ export default {
   data() {
     return {
       roll: 0,
-      viewportPan: this.camControls.getViewport().pan,
+      viewportPan: this.camControls.getViewport().pan
     };
   },
   computed: {
@@ -68,7 +68,7 @@ export default {
       },
       set(x) {
         this.camControls.getViewport().setPan({ x });
-      },
+      }
     },
     inputPanY: {
       get() {
@@ -76,9 +76,9 @@ export default {
       },
       set(y) {
         this.camControls.getViewport().setPan({ y });
-      },
-    },
-  },
+      }
+    }
+  }
 };
 </script>
 

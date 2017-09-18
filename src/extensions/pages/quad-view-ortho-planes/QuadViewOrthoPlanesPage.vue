@@ -12,9 +12,9 @@ import ThreeView from '@/components/ThreeView';
 export default {
   name: 'quad-view-ortho-planes-page',
   components: {
-    'three-view': ThreeView,
+    'three-view': ThreeView
   },
-  props: ['controller'],
+  props: ['controller']
 };
 </script>
 

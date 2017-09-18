@@ -25,9 +25,9 @@ export default {
   name: 'eeg-cells',
   components: {
     'cell-grid': CellGrid,
-    'tool-component': ToolComponent,
+    'tool-component': ToolComponent
   },
-  props: ['controller'],
+  props: ['controller']
 };
 </script>
 

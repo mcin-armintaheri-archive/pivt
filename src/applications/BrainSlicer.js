@@ -6,86 +6,86 @@ export default {
     canvas3ds: [{
       name: 'view',
       layout: 'XYZPerspectiveQuadView',
-      scene: 'OrthoPlanes',
-    }],
+      scene: 'OrthoPlanes'
+    }]
   },
   tools: [
     {
       name: 'materialManager',
       tool: 'PlanesMaterialManager',
-      dependencies: ['view'],
+      dependencies: ['view']
     },
     {
       name: 'quadviewCameraAxes',
       tool: 'QuadViewCameraAxes',
-      dependencies: ['view'],
+      dependencies: ['view']
     },
     {
       name: 'intensityPlot',
       tool: 'IntensityPlotWindow',
-      dependencies: ['view'],
+      dependencies: ['view']
     },
     {
       name: 'lineSegmentTool',
       tool: 'LineSegmentTool',
-      dependencies: ['view'],
+      dependencies: ['view']
     },
     {
       name: 'contrast',
       tool: 'CurveTool',
-      dependencies: ['view'],
+      dependencies: ['view']
     },
     {
       name: 'planeParams',
       tool: 'OrthoPlanesParameters',
-      dependencies: ['view'],
+      dependencies: ['view']
     },
     {
       name: 'cameraParams',
       tool: 'QuadViewCameraControls',
-      dependencies: ['view'],
+      dependencies: ['view']
     },
     {
       name: 'trackball',
       tool: 'QuadviewTrackballControls',
-      dependencies: ['view'],
-    },
+      dependencies: ['view']
+    }
   ],
   mediators: [
     {
       name: 'shaderInjector',
       mediator: 'OrthoPlanesShaderInjector',
-      dependencies: ['materialManager'],
+      dependencies: ['materialManager']
     },
     {
       name: 'planeLayers',
       mediator: 'QuadViewXYZOrthoPlanesLayers',
-      dependencies: ['view', 'trackball', 'materialManager', 'planeParams', 'quadviewCameraAxes'],
+      dependencies: ['view', 'trackball', 'materialManager', 'planeParams', 'quadviewCameraAxes']
     },
     {
       name: 'constrastSettings',
       mediator: 'OrthoPlanesContrastSettings',
-      dependencies: ['contrast', 'materialManager'],
+      dependencies: ['contrast', 'materialManager']
     },
     {
       name: 'planeShifter',
       mediator: 'QuadViewXYZOrthoPlanesShifter',
-      dependencies: ['view', 'trackball', 'materialManager', 'planeParams'],
+      dependencies: ['view', 'trackball', 'materialManager', 'planeParams']
     },
     {
       name: 'lineSegmentMediator',
       mediator: 'OrthoPlanesQuadViewLineSegment',
-      dependencies: ['view', 'trackball', 'materialManager', 'lineSegmentTool', 'intensityPlot'],
+      dependencies: ['view', 'trackball', 'materialManager', 'lineSegmentTool', 'intensityPlot']
     },
     {
       name: 'viewPanner',
       mediator: 'QuadViewPanner',
-      dependencies: ['view', 'cameraParams'],
+      dependencies: ['view', 'cameraParams']
     },
     {
       name: 'cameraControlsReset',
       mediator: 'QuadViewControlsReset',
-      dependencies: ['trackball', 'cameraParams'],
-    },
-  ],
+      dependencies: ['trackball', 'cameraParams']
+    }
+  ]
 };

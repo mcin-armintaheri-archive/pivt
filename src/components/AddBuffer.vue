@@ -31,14 +31,14 @@ const buffermanager = BufferManager.getInstance();
 export default {
   name: 'add-buffer',
   components: {
-    'buffer-manager-widget': BufferManagerWidget,
+    'buffer-manager-widget': BufferManagerWidget
   },
   props: ['showDialog'],
   data() {
     return {
       fileInput: null,
       showBufferList: this.showDialog,
-      addBufferLoading: false,
+      addBufferLoading: false
     };
   },
   /* If showDialog changes, update showBufferList.
@@ -50,7 +50,7 @@ export default {
     },
     showBufferList() {
       this.$emit('update:showDialog', this.showBufferList);
-    },
+    }
   },
   methods: {
     /**
@@ -67,8 +67,8 @@ export default {
           /* eslint-disable no-param-reassign */
           input.value = '';
         });
-    },
-  },
+    }
+  }
 };
 </script>
 

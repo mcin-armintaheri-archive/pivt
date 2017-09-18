@@ -18,8 +18,8 @@ export default class LineSegmentTool {
       this.scene.getTHREEScene(),
       viewport.getTHREECamera(),
       {
-        mouse: viewport.getMousePosReference(),
-      },
+        mouse: viewport.getMousePosReference()
+      }
     );
     this.segment.on('startInteraction', () => {
       camControls.setEnabled(false);

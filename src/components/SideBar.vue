@@ -80,7 +80,7 @@ export default {
   name: 'sidebar',
   components: {
     'sidebar-widget': SidebarWidget,
-    'application-sidebar-widgets': ApplicationSidebarWidgets,
+    'application-sidebar-widgets': ApplicationSidebarWidgets
   },
   props: ['applications', 'three-mount'],
   mounted() {
@@ -101,16 +101,16 @@ export default {
     sidebarShow() {
       return {
         'sidebar-menu': true,
-        'sidebar-hide': !this.toggled,
+        'sidebar-hide': !this.toggled
       };
-    },
+    }
   },
   methods: {
     editAppName(event, application) {
       event.stopPropagation();
       this.$prompt('Enter a name for the running application.', 'Info', {
         confirmButtonText: 'Done',
-        cancelButtonText: 'Cancel',
+        cancelButtonText: 'Cancel'
       }).then((res) => {
         application.setName(res.value);
       }).catch(() => {});
@@ -126,19 +126,19 @@ export default {
       this.$confirm('Are you sure you want to remove this application?', 'Info', {
         confirmButtonText: 'Yes',
         cancelButtonText: 'No',
-        type: 'info',
+        type: 'info'
       }).then(() => {
         this.$emit('remove-application', application);
         this.$message({
           type: 'success',
-          message: 'Application removed.',
+          message: 'Application removed.'
         });
       }).catch(() => {});
     },
     startApplication(index) {
       this.$emit('start-application', index);
-    },
-  },
+    }
+  }
 };
 </script>
 

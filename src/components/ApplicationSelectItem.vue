@@ -12,7 +12,7 @@
  */
 export default {
   name: 'application-select-item',
-  props: ['option'],
+  props: ['option']
 };
 </script>
 

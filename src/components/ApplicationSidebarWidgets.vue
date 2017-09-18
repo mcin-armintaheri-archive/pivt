@@ -28,12 +28,12 @@ import SidebarWidget from '@/components/SidebarWidget';
 export default {
   name: 'application-sidebar-widgets',
   components: {
-    'sidebar-widget': SidebarWidget,
+    'sidebar-widget': SidebarWidget
   },
   props: ['application', 'appIndex'],
   data() {
     return {};
-  },
+  }
 };
 </script>
 

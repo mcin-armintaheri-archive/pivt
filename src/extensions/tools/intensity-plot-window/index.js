@@ -15,7 +15,7 @@ export default class IntensityPlotWindow {
       widget: SpectrumPlotWindow,
       title: '',
       openPosition: { x: 0.6, y: 0.02, viewportCoords: true },
-      open: false,
+      open: false
     };
     this.series = new Array(0);
   }
@@ -24,7 +24,7 @@ export default class IntensityPlotWindow {
     this.spectrum = this.spectrumplot.addSpectrum(
       'Intensity',
       this.series,
-      'rgba(0, 0, 0, 0.8)',
+      'rgba(0, 0, 0, 0.8)'
     );
     this.spectrumplot.setLabels();
     this.spectrumplot.draw();

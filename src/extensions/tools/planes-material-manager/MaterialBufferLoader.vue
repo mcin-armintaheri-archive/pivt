@@ -44,12 +44,12 @@ export default {
   name: 'material-buffer-loader',
   props: ['controller'],
   components: {
-    'buffer-manager-widget': BufferManagerWidget,
+    'buffer-manager-widget': BufferManagerWidget
   },
   data() {
     return {
       showMaterialAdd: false,
-      showLoading: false,
+      showLoading: false
     };
   },
   methods: {
@@ -65,8 +65,8 @@ export default {
         this.controller.createTextureFromBuffer(buffermanager.getBuffer(uid))
           .then(() => { this.showLoading = false; });
       }, 100); // Timeout for the ui to show loading modal.
-    },
-  },
+    }
+  }
 };
 </script>
 

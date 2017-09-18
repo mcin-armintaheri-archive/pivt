@@ -11,7 +11,7 @@ class ViewportPanner {
       mouseup: this.mouseUp.bind(this),
       mousedown: this.mouseDown.bind(this),
       mousemove: this.panCamera.bind(this),
-      wheel: this.zoomCamera.bind(this),
+      wheel: this.zoomCamera.bind(this)
     };
     this.container.addEventListener('mouseup', this.listeners.mouseup);
     this.container.addEventListener('mousedown', this.listeners.mousedown);
@@ -60,12 +60,12 @@ export default class QuadViewPanner {
     const viewports = [
       this.layout.getBottomLeft(),
       this.layout.getTopLeft(),
-      this.layout.getTopRight(),
+      this.layout.getTopRight()
     ];
     this.panners = viewports.map(viewport => new ViewportPanner(
       viewport,
       this.container,
-      this.controls,
+      this.controls
     ));
   }
   dispose() {
@@ -76,7 +76,7 @@ export default class QuadViewPanner {
   serialize() {
     return this.panners.map(p => ({
       pan: p.getViewport().getPan(),
-      zoom: p.getViewport().getTHREECamera().zoom,
+      zoom: p.getViewport().getTHREECamera().zoom
     }));
   }
   deserialize(json) {

@@ -129,7 +129,7 @@ class ApplicationManager {
       type,
       page,
       tools,
-      mediators,
+      mediators
     } = jsonDescription;
     let dependencies = {}; // Hash of promises that resolve to a loaded dependency
     let canvas3ds = [];
@@ -145,7 +145,7 @@ class ApplicationManager {
         const canvas3dObj = {
           name: canvas3d.name,
           layout: this.createFromConstructorName(canvas3d.layout, renderer, canvas),
-          scene: this.createFromConstructorName(canvas3d.scene),
+          scene: this.createFromConstructorName(canvas3d.scene)
         };
         application.addCanvas3d(canvas3dObj);
         return canvas3dObj;
@@ -177,7 +177,7 @@ class ApplicationManager {
     });
     return {
       app: application,
-      creationPromise: Promise.all(mediatorPromises),
+      creationPromise: Promise.all(mediatorPromises)
     };
   }
   getApplication(index) {
@@ -192,7 +192,7 @@ class ApplicationManager {
     }
     const { app, creationPromise } = this.create(
       this.appCount[application.type],
-      application,
+      application
     );
     this.appCount[application.type] += 1;
     if (this.currentApplications.length === 0) {
@@ -252,5 +252,5 @@ export default {
   getInstance() {
     return instance || (instance = new ApplicationManager());
   },
-  APPLICATION_TYPES: { BrainSlicer, EEGViewer },
+  APPLICATION_TYPES: { BrainSlicer, EEGViewer }
 };

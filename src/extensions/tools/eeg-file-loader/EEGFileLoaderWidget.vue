@@ -38,13 +38,13 @@ const bufferManager = BufferManager.getInstance();
 export default {
   name: 'eeg-file-loader-widget',
   components: {
-    'buffer-manager-widget': BufferManagerWidget,
+    'buffer-manager-widget': BufferManagerWidget
   },
   props: ['controller'],
   data() {
     return {
       showAdd: false,
-      showLoading: false,
+      showLoading: false
     };
   },
   methods: {
@@ -55,8 +55,8 @@ export default {
           this.showLoading = false;
         });
       }, 50);
-    },
-  },
+    }
+  }
 };
 </script>
 

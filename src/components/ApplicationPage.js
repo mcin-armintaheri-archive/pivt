@@ -12,5 +12,5 @@ export default {
       return null;
     }
     return createElement(controller.page, { props: { controller } });
-  },
+  }
 };

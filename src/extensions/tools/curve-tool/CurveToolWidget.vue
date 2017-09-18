@@ -47,8 +47,8 @@ export default {
       );
       this.controller.getSpliner().setSplineType(type);
       this.controller.getSpliner().draw();
-    },
-  },
+    }
+  }
 };
 </script>
 

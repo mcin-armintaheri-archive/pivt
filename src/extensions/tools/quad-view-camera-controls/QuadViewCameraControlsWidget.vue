@@ -47,12 +47,12 @@ export default {
   name: 'quad-view-camera-controls',
   components: {
     'orthographic-controls': OrthographicControls,
-    'perspective-controls': PerspectiveControls,
+    'perspective-controls': PerspectiveControls
   },
   props: ['controller'],
   data() {
     return {};
-  },
+  }
 };
 </script>
 

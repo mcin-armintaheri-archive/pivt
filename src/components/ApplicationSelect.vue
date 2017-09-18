@@ -21,14 +21,14 @@ import ApplicationSelectItem from '@/components/ApplicationSelectItem';
 export default {
   name: 'application-select',
   components: {
-    applicationSelectItem: ApplicationSelectItem,
+    applicationSelectItem: ApplicationSelectItem
   },
   props: ['options'],
   methods: {
     selectItem(option) {
       this.$emit('applicationSelect', option);
-    },
-  },
+    }
+  }
 };
 </script>
 

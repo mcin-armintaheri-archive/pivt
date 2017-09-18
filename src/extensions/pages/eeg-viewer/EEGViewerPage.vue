@@ -14,9 +14,9 @@ import EEGCells from './EEGCells';
 export default {
   name: 'eeg-viewer',
   components: {
-    'eeg-cells': EEGCells,
+    'eeg-cells': EEGCells
   },
-  props: ['controller'],
+  props: ['controller']
 };
 </script>
 

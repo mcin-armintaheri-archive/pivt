@@ -1,7 +1,10 @@
-var path = require('path')
-var utils = require('./utils')
-var config = require('../config')
-var vueLoaderConfig = require('./vue-loader.conf')
+var path = require('path');
+var utils = require('./utils');
+var config = require('../config');
+var vueLoaderConfig = require('./vue-loader.conf');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ClosureCompilerPlugin = require('webpack-closure-compiler');
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -28,6 +31,16 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(css|scss)$/,
+        use: [{
+          loader: "style-loader" // creates style nodes from JS strings
+        }, {
+          loader: "css-loader" // translates CSS into CommonJS
+        }, {
+          loader: "sass-loader" // compiles Sass to CSS
+        }]
+      },
+      {
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
         enforce: 'pre',
@@ -43,19 +56,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-        include: [
-          resolve('src'),
-          resolve('test'),
-          resolve('node_modules/pixpipejs'),
-          resolve('node_modules/codecutils'),
-          resolve('node_modules/SpectrumPlot2'),
-          resolve('node_modules/pixbincodec'),
-          resolve('node_modules/CanvasSpliner'),
-          resolve('node_modules/PlaneShifter'),
-          resolve('node_modules/SegmentDraw'),
-          resolve('node_modules/qeegmodfile'),
-        ]
+        loader: 'rollup-loader',
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -74,5 +75,19 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new ExtractTextPlugin({
+      filename: utils.assetsPath('css/[name].css')
+    }),
+    new HtmlWebpackPlugin({
+      filename: process.env.NODE_ENV === 'testing'
+        ? 'index.html'
+        : config.build.index,
+      template: 'index.html',
+      inject: true,
+      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+      chunksSortMode: 'dependency'
+    })
+  ]
 }

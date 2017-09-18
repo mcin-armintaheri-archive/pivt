@@ -71,7 +71,7 @@ class BufferManager {
           name: file.name,
           size: file.size,
           buffer,
-          checksum: this.getMetadata('checksums')[0],
+          checksum: this.getMetadata('checksums')[0]
         });
         resolve(uid);
       });
@@ -85,7 +85,7 @@ class BufferManager {
   serialize(buffers) { // eslint-disable-line class-methods-use-this
     const bufferMetas = {
       type: 'buffers',
-      bufferInfo: R.project(['name', 'checksum'], buffers),
+      bufferInfo: R.project(['name', 'checksum'], buffers)
     };
     const data = R.pluck('buffer', buffers).map(b => new Uint8Array(b));
     return { _metadata: bufferMetas, _data: data };
@@ -126,5 +126,5 @@ let instance = null;
 export default {
   getInstance() {
     return instance || (instance = new BufferManager());
-  },
+  }
 };

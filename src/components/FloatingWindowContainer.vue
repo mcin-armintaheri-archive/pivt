@@ -47,7 +47,7 @@ const initialOpenPosition = (openPosition) => {
 export default {
   name: 'floating-window-container',
   components: {
-    'floating-window-widget': FloatingWindowWidget,
+    'floating-window-widget': FloatingWindowWidget
   },
   props: ['window-controller'],
   data() {
@@ -110,8 +110,8 @@ export default {
       event.stopPropagation();
       this.windowController.windowConfig.open = false;
       this.windowPos = initialOpenPosition(this.windowController.windowConfig.openPosition);
-    },
-  },
+    }
+  }
 };
 </script>
 

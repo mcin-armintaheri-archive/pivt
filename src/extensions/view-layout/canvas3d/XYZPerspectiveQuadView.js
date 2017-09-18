@@ -17,7 +17,7 @@ export default class XYZPerspectiveQuadView extends Canvas3DLayout {
       0.5,
       0.5,
       0.5,
-      ORTHOGRAPHIC,
+      ORTHOGRAPHIC
     );
     this.topright = new ViewPort(
       this.canvas,
@@ -26,7 +26,7 @@ export default class XYZPerspectiveQuadView extends Canvas3DLayout {
       0.5,
       0.5,
       0.5,
-      ORTHOGRAPHIC,
+      ORTHOGRAPHIC
     );
     this.bottomleft = new ViewPort(
       this.canvas,
@@ -35,7 +35,7 @@ export default class XYZPerspectiveQuadView extends Canvas3DLayout {
       0.0,
       0.5,
       0.5,
-      ORTHOGRAPHIC,
+      ORTHOGRAPHIC
     );
     this.bottomright = new ViewPort(
       this.canvas,
@@ -44,7 +44,7 @@ export default class XYZPerspectiveQuadView extends Canvas3DLayout {
       0.0,
       0.5,
       0.5,
-      PERSPECTIVE,
+      PERSPECTIVE
     );
     // TODO: better colors for quadrants.
     this.topleft.setClearColor(new THREE.Color().setRGB(1.0, 0.0, 0.0));
@@ -55,7 +55,7 @@ export default class XYZPerspectiveQuadView extends Canvas3DLayout {
       this.topleft,
       this.topright,
       this.bottomleft,
-      this.bottomright,
+      this.bottomright
     );
   }
   getTopLeft() {

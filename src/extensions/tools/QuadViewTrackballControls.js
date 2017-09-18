@@ -9,7 +9,7 @@ export default class QuadviewTrackballControls {
     this.camera = this.viewport.getTHREECamera();
     this.controls = new TrackBallControls(
       this.camera,
-      layout.getCanvas(),
+      layout.getCanvas()
     );
     window.controls = this.controls;
     this.controls.enabled = false;

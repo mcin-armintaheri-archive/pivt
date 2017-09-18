@@ -87,13 +87,13 @@ export default {
             this.showLoading = false;
             this.$message({
               type: 'success',
-              message: 'Successfully loaded workspace!',
+              message: 'Successfully loaded workspace!'
             });
           });
         }, 100);
       };
-    },
-  },
+    }
+  }
 };
 </script>
 

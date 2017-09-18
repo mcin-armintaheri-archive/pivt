@@ -25,8 +25,8 @@ export default {
     toggleAxes() {
       this.show = !this.show;
       this.controller.showAxes(this.show);
-    },
-  },
+    }
+  }
 };
 </script>
 

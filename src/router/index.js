@@ -9,7 +9,7 @@ export default new Router({
     {
       path: '/',
       name: 'Visualizer',
-      component: Visualizer,
-    },
-  ],
+      component: Visualizer
+    }
+  ]
 });

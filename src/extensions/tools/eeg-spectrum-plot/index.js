@@ -12,7 +12,7 @@ class EEGPlotController {
     this.spectrum = this.spectrumplot.addSpectrum(
       'Magnitude',
       series,
-      '#990000',
+      '#990000'
     );
     this.spectrumplot.showLegend(false);
     this.spectrumplot.showXLabels(false);
@@ -36,7 +36,7 @@ class EEGPlotLegend {
     /* eslint-disable no-underscore-dangle */
     this.toolComponent = {
       name: 'eeg-plot-legend',
-      template: `<span style="color: #990000">${spectrumplot._chart.generateLegend()}</span>`,
+      template: `<span style="color: #990000">${spectrumplot._chart.generateLegend()}</span>`
     };
   }
 }
@@ -68,7 +68,7 @@ export default class EEGSpectrumPlot {
       { i: 4, j: 3 },
       { i: 1, j: 4 },
       { i: 2, j: 4 },
-      { i: 3, j: 4 },
+      { i: 3, j: 4 }
     ];
     cells.forEach((c) => {
       const cell = { controller: new EEGPlotController() };
@@ -92,7 +92,7 @@ export default class EEGSpectrumPlot {
       this.cells.updateCell({
         i: 4,
         j: 2,
-        controller: new EEGPlotLegend(plot),
+        controller: new EEGPlotLegend(plot)
       });
     });
   }

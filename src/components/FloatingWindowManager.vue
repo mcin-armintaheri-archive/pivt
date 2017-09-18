@@ -34,12 +34,12 @@ import FloatingWindowContainer from '@/components/FloatingWindowContainer';
 export default {
   name: 'floating-window-manager',
   components: {
-    'floating-window-container': FloatingWindowContainer,
+    'floating-window-container': FloatingWindowContainer
   },
   props: ['applications'],
   data() {
     return { dragging: false };
-  },
+  }
 };
 </script>
 

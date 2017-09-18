@@ -251,67 +251,67 @@ export default function OrthoPlanesShaderInjector(materialManager) {
         // the textures
         nbOfTextureUsed: {
           type: 'i',
-          value: textures.length,
+          value: textures.length
         },
         // the number of slice per row
         nbSlicePerRow: {
           type: 'f',
-          value: sliceMatrixSize.x,
+          value: sliceMatrixSize.x
         },
         // the number of slice per column
         nbSlicePerCol: {
           type: 'f',
-          value: sliceMatrixSize.y,
+          value: sliceMatrixSize.y
         },
         // the number of slice in total
         nbSliceTotal: {
           type: 'f',
-          value: dimensions.z,  // because along zspace
+          value: dimensions.z  // because along zspace
         },
         // xspace length
         xspaceLength: {
           type: 'f',
-          value: dimensions.x,
+          value: dimensions.x
         },
         // yspace length
         yspaceLength: {
           type: 'f',
-          value: dimensions.y,
+          value: dimensions.y
         },
         // zspace length
         zspaceLength: {
           type: 'f',
-          value: dimensions.z,
+          value: dimensions.z
         },
         timespaceLength: {  // the number of time samples if it's a timeseries
           type: 'i',
-          value: dimensions.t,
+          value: dimensions.t
         },
         timeIndex: {
           type: 'i',
-          value: 0,
+          value: 0
         },
         forcedAlpha: {
           type: 'f',
-          value: 1.0,
+          value: 1.0
         },
         textures: {
           type: 't',
-          value: textures,
+          value: textures
         },
         trilinearInterpol: {
           type: 'b',
-          value: false,
+          value: false
         },
         curveTexture: {
           type: 't',
-          value: null,
+          value: null
         },
         enableCurve: {
           type: 'b',
-          value: false,
-        },
-      },
+          value: false
+        }
+      }
     });
     materialManager.setShaderMaterial(material, dimensions);
   });

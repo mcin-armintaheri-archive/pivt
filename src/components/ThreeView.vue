@@ -21,7 +21,7 @@ export default {
     renderer.setClearColor(new THREE.Color().setRGB(1.0, 1.0, 1.0));
     renderer.clear(true, true, true);
     this.controller.resolveCanvas3d(this.name, renderer, canvas);
-  },
+  }
 };
 </script>
 

@@ -10,29 +10,29 @@ import QuadViewCameraAxesWidget from './QuadViewCameraAxesWidget';
 function createXYZLines(radius) {
   const xLine = new THREE.LineCurve3(
     new THREE.Vector3(-radius, 0, 0),
-    new THREE.Vector3(radius, 0, 0),
+    new THREE.Vector3(radius, 0, 0)
   );
   const yLine = new THREE.LineCurve3(
     new THREE.Vector3(0, -radius, 0),
-    new THREE.Vector3(0, radius, 0),
+    new THREE.Vector3(0, radius, 0)
   );
   const zLine = new THREE.LineCurve3(
     new THREE.Vector3(0, 0, -radius),
-    new THREE.Vector3(0, 0, radius),
+    new THREE.Vector3(0, 0, radius)
   );
   return [
     {
       path: xLine,
-      color: { r: 0, g: 1, b: 1 },
+      color: { r: 0, g: 1, b: 1 }
     },
     {
       path: yLine,
-      color: { r: 1, g: 0, b: 1 },
+      color: { r: 1, g: 0, b: 1 }
     },
     {
       path: zLine,
-      color: { r: 1, g: 1, b: 0 },
-    },
+      color: { r: 1, g: 1, b: 0 }
+    }
   ];
 }
 
@@ -55,22 +55,22 @@ class CameraAxes {
         uniforms: {
           r: {
             type: 'f',
-            value: line.color.r,
+            value: line.color.r
           },
           g: {
             type: 'f',
-            value: line.color.g,
+            value: line.color.g
           },
           b: {
             type: 'f',
-            value: line.color.b,
+            value: line.color.b
           },
           dashLength: {
             type: 'f',
-            value: dashLength,
-          },
-        },
-      }),
+            value: dashLength
+          }
+        }
+      })
     )));
     this.system.layers.set(layer);
     this.system.children.forEach((child) => {
@@ -106,7 +106,7 @@ class CameraAxesProjected extends CameraAxes {
     const camera = this.viewport.getTHREECamera();
     this.projPlane.setFromNormalAndCoplanarPoint(
       camera.getWorldDirection().multiplyScalar(-1.0),
-      this.target.position,
+      this.target.position
     );
     const axesPos = this.projPlane.projectPoint(camera.position);
     this.system.position.copy(axesPos);
@@ -151,7 +151,7 @@ export default class QuadViewCameraAxes {
       size,
       thickness,
       layer,
-      dashLength,
+      dashLength
     );
     this.scene.getTHREEScene().add(cameraAxes.getAxisSystem());
     this.cameraAxesList.push(cameraAxes);
@@ -172,7 +172,7 @@ export default class QuadViewCameraAxes {
       size,
       thickness,
       layer,
-      dashLength,
+      dashLength
     );
     this.scene.getTHREEScene().add(cameraAxes.getAxisSystem());
     this.cameraAxesList.push(cameraAxes);

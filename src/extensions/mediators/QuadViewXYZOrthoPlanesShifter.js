@@ -17,7 +17,7 @@ export default function QuadViewXYZOrthoPlanesShifter(
   view,
   camControls,
   materialManager,
-  planeParams,
+  planeParams
 ) {
   const { scene, layout } = view;
   const perspCam = layout.getBottomRight();
@@ -26,8 +26,8 @@ export default function QuadViewXYZOrthoPlanesShifter(
       scene.getPlaneSystem(),
       perspCam.getTHREECamera(),
       {
-        mouse: perspCam.getMousePosReference(),
-      },
+        mouse: perspCam.getMousePosReference()
+      }
     );
     this.planeshifter.on('startInteraction', () => {
       camControls.setEnabled(false);

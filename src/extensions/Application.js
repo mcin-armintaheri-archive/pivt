@@ -67,23 +67,23 @@ export default class Application {
     const serializeTool = tool => ({
       name: tool.name,
       tool: tool.constructor.name,
-      data: serializeItem(tool),
+      data: serializeItem(tool)
     });
     const serializeMediator = mediator => ({
       name: mediator.name,
       mediator: mediator.constructor.name,
-      data: serializeItem(mediator),
+      data: serializeItem(mediator)
     });
     const serializeCanvas3D = canvas3d => ({
       name: canvas3d.name,
       layout: {
         controller: canvas3d.layout.constructor.name,
-        data: serializeItem(canvas3d.layout),
+        data: serializeItem(canvas3d.layout)
       },
       scene: {
         controller: canvas3d.scene.constructor.name,
-        data: serializeItem(canvas3d.scene),
-      },
+        data: serializeItem(canvas3d.scene)
+      }
     });
     return {
       type: this.getType(),
@@ -94,14 +94,14 @@ export default class Application {
         data: serializeItem(this.pageController),
         canvas3ds: this.canvas3ds
           .map(serializeCanvas3D)
-          .filter(R.compose(R.not, R.isNil, R.prop('data'))),
+          .filter(R.compose(R.not, R.isNil, R.prop('data')))
       },
       tools: this.tools
         .map(serializeTool)
         .filter(R.compose(R.not, R.isNil, R.prop('data'))),
       mediators: this.mediators
         .map(serializeMediator)
-        .filter(R.compose(R.not, R.isNil, R.prop('data'))),
+        .filter(R.compose(R.not, R.isNil, R.prop('data')))
     };
   }
   /**
@@ -114,7 +114,7 @@ export default class Application {
       name,
       page,
       tools,
-      mediators,
+      mediators
     } = serialized;
     this.setName(name);
     const ps = [];

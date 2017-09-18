@@ -34,7 +34,7 @@ export default class ViewPort {
     height,
     type,
     near = 0.1,
-    far = 6000,
+    far = 6000
   ) {
     const rectangle = canvas.getBoundingClientRect();
     this.enabled = false;
@@ -111,7 +111,7 @@ export default class ViewPort {
     const { xDir, yDir } = this.getCameraAxes();
     const posOffset = new THREE.Vector3().addVectors(
       xDir.multiplyScalar(x),
-      yDir.multiplyScalar(y),
+      yDir.multiplyScalar(y)
     );
     camera.position.add(posOffset);
   }
@@ -173,7 +173,7 @@ export default class ViewPort {
     const yOffset = this.viewport.height - this.viewport.bottom;
     target.set(
       ((2 * (((x - (width * this.viewport.left))) / viewportWidthPX)) - 1),
-      -((2 * (((y - (height * yOffset))) / viewportHeightPX)) - 1),
+      -((2 * (((y - (height * yOffset))) / viewportHeightPX)) - 1)
     );
   }
   /**
@@ -232,13 +232,13 @@ export default class ViewPort {
       width * this.viewport.left,
       height * this.viewport.bottom,
       width * this.viewport.width,
-      height * this.viewport.height,
+      height * this.viewport.height
     );
     this.renderer.setScissor(
       width * this.viewport.left,
       height * this.viewport.bottom,
       width * this.viewport.width,
-      height * this.viewport.height,
+      height * this.viewport.height
     );
     this.renderer.setScissorTest(true);
     this.renderer.setClearColor(this.clearColor, 1);

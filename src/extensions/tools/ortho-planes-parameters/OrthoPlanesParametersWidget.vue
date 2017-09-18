@@ -80,7 +80,7 @@ export default {
   data() {
     return {
       pos: { x: 0, y: 0, z: 0 },
-      rot: { x: 0, y: 0, z: 0 },
+      rot: { x: 0, y: 0, z: 0 }
     };
   },
   methods: {
@@ -110,8 +110,8 @@ export default {
     resetPlaneRot() {
       this.updatePlaneRot({ x: 0, y: 0, z: 0 });
       this.controller.rotationResetCallbacks.forEach(f => f());
-    },
-  },
+    }
+  }
 };
 </script>
 

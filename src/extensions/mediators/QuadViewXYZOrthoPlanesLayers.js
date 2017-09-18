@@ -101,20 +101,20 @@ export default class QuadViewXYZOrthoPlanesLayers {
           viewport: layout.getBottomLeft(),
           plane: scene.getXY(),
           layer: 1,
-          cameraPosition: new THREE.Vector3(0, 0, diagonal),
+          cameraPosition: new THREE.Vector3(0, 0, diagonal)
         },
         {
           viewport: layout.getTopLeft(),
           plane: scene.getXZ(),
           layer: 2,
-          cameraPosition: new THREE.Vector3(0, diagonal, 0),
+          cameraPosition: new THREE.Vector3(0, diagonal, 0)
         },
         {
           viewport: layout.getTopRight(),
           plane: scene.getYZ(),
           layer: 3,
-          cameraPosition: new THREE.Vector3(diagonal, 0, 0),
-        },
+          cameraPosition: new THREE.Vector3(diagonal, 0, 0)
+        }
       ];
       planeCamConfigs.forEach((config) => {
         config.viewport.setPan({ x: 0, y: 0 });
@@ -124,7 +124,7 @@ export default class QuadViewXYZOrthoPlanesLayers {
         config.plane,
         scene.getPlaneSystem(),
         config.layer,
-        config.cameraPosition,
+        config.cameraPosition
       ));
       this.axisSystems.filter(R.identity).forEach((axes) => {
         axes.dispose();
@@ -143,14 +143,14 @@ export default class QuadViewXYZOrthoPlanesLayers {
             config.plane,
             diagonal * 10,
             thickness,
-            config.layer,
+            config.layer
         ));
         quadviewCameraAxes.createFixedAxes(
           layout.getBottomRight(),
           new THREE.Vector3(0, 0, 0),
           diagonal * 10,
           thickness,
-          0,
+          0
         );
       }
       this.planesAreLoaded = true;

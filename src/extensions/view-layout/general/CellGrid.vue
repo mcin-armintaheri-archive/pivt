@@ -23,8 +23,8 @@ export default {
     },
     colindices() {
       return [...Array(Number(this.columns)).keys()];
-    },
-  },
+    }
+  }
 };
 </script>
 

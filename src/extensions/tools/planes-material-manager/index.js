@@ -73,7 +73,7 @@ export default class PlanesMaterialManager {
       decoder.update();
       if (!decoder.getNumberOfOutputs()) {
         MessageBox.alert(`Cannot decode ${name} into a buffer.`, 'Decoding Error', {
-          confirmButtonText: 'OK',
+          confirmButtonText: 'OK'
         });
         resolve();
         return;
@@ -81,7 +81,7 @@ export default class PlanesMaterialManager {
       const mniVol = decoder.getOutput();
       if (!mniVol) {
         MessageBox.alert(`Cannot decode ${name} into a buffer.`, 'Decoding Error', {
-          confirmButtonText: 'OK',
+          confirmButtonText: 'OK'
         });
         resolve();
         return;
@@ -100,7 +100,7 @@ export default class PlanesMaterialManager {
       mosaicFilter.update();
       if (!mosaicFilter.getNumberOfOutputs()) {
         MessageBox.alert('Could not turn decoded buffer into mosiac textures.', 'Texture Error', {
-          confirmButtonText: 'OK',
+          confirmButtonText: 'OK'
         });
         resolve();
         return;
@@ -117,7 +117,7 @@ export default class PlanesMaterialManager {
           outputMosaic.getWidth(),
           outputMosaic.getHeight(),
           THREE.LuminanceFormat,
-          THREE.UnsignedByteType,
+          THREE.UnsignedByteType
         );
         texture.needsUpdate = true;
         this.volumeTextures.push(texture);
@@ -135,8 +135,8 @@ export default class PlanesMaterialManager {
       this.scene.setBoundingBox(
         new THREE.Box3(
           new THREE.Vector3(-x / 2, -y / 2, -z / 2),
-          new THREE.Vector3(x / 2, y / 2, z / 2),
-        ),
+          new THREE.Vector3(x / 2, y / 2, z / 2)
+        )
       );
       this.mniVolume = mniVol;
       this.texturesCreatedCallbacks.forEach((f) => {
