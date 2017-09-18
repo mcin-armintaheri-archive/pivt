@@ -73,7 +73,7 @@ export default {
   },
   mounted() {
     if (window.initializationHandler instanceof Function) {
-      window.initializationHandler(ApplicationManager, BufferManager);
+      window.initializationHandler(ApplicationManager, BufferManager, this.$message);
     }
   },
   data() {
