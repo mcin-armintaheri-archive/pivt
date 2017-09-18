@@ -75,8 +75,7 @@ export default {
         this.showLoading = true;
         setTimeout(() => {
           const appProms = data.applications._data.map((appJSON) => {
-            const appType = ApplicationManager.APPLICATION_TYPES
-              .find(a => a.type === appJSON.type);
+            const appType = ApplicationManager.APPLICATION_TYPES[appJSON.type];
             if (!appType) {
               throw new Error(`${appJSON.type} is not a defined application type.`);
             }

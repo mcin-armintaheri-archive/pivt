@@ -46,6 +46,7 @@ class ApplicationManager {
     this.registry = {};
     this.appCount = {};
     this.currentApplications = [];
+    window.appManager = this;
 
     // Begin Page Registers
     this.registerConstructor(QuadViewOrthoPlanes);

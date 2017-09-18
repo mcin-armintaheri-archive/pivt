@@ -1,6 +1,7 @@
 import R from 'ramda';
 import {
   FileToArrayBufferReader,
+  UrlToArrayBufferReader,
 } from 'pixpipejs';
 
 import UIDUtils from './UIDUtils';
@@ -13,7 +14,7 @@ class BufferManager {
   constructor() {
     this.buffers = {};
     this.bufferLoadCallbacks = [];
-    window.bm = this;
+    window.bufferManager = this;
   }
   /**
    * Get the list of currently loaded buffers.
@@ -73,6 +74,22 @@ class BufferManager {
           buffer,
           checksum: this.getMetadata('checksums')[0]
         });
+        resolve(uid);
+      });
+    });
+  }
+  loadBufferAjax(url) {
+    const url2buf = new UrlToArrayBufferReader();
+    url2buf.addInput(url);
+    url2buf.update();
+    const loader = this;
+    return new Promise((resolve) => {
+      url2buf.on('ready', function bufferReady() {
+        const buffer = this.getOutput();
+        const name = this.getMetadata('filenames')[0];
+        const size = buffer.byteLength;
+        const checksum = this.getMetadata('checksums')[0];
+        const uid = loader.addBuffer({ name, size, buffer, checksum });
         resolve(uid);
       });
     });
