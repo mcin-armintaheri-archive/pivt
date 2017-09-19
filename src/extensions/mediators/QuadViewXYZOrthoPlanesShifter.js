@@ -30,10 +30,10 @@ export default function QuadViewXYZOrthoPlanesShifter(
       }
     );
     this.planeshifter.on('startInteraction', () => {
-      camControls.setEnabled(false);
+      camControls.getTrackballControls().setEnabled(false);
     });
     this.planeshifter.on('stopInteraction', () => {
-      camControls.setEnabled(true);
+      camControls.getTrackballControls().setEnabled(true);
       planeParams.updateFromScene();
     });
     this.planeshifter.setBoundingBox(scene.getBoundingBox());

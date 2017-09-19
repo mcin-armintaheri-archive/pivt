@@ -21,25 +21,27 @@ import OrthoPlanes from './scene/OrthoPlanes';
 // End Scene Imports
 
 
-// Begin Tool and Mediator Imports
+// Begin Tool Imports
 import CurveTool from './tools/curve-tool/';
+import PlanesMaterialManager from './tools/planes-material-manager';
+import OrthoPlanesParameters from './tools/ortho-planes-parameters';
+import QuadViewCameraParameters from './tools/quad-view-camera-parameters';
+import QuadViewCameraControls from './tools/quad-view-camera-controls';
+import QuadViewCameraAxes from './tools/quad-view-camera-axes';
+import LineSegmentTool from './tools/line-segment-tool';
+import IntensityPlotWindow from './tools/intensity-plot-window';
+import EEGSpectrumPlot from './tools/eeg-spectrum-plot';
+import EEGFileLoader from './tools/eeg-file-loader';
+// End Tool Imports
+
+// Begin Mediator Imports
+import QuadViewControlsReset from './mediators/QuadViewControlsReset';
+import OrthoPlanesQuadViewLineSegment from './mediators/OrthoPlanesQuadViewLineSegment';
 import OrthoPlanesShaderInjector from './mediators/OrthoPlanesShaderInjector';
 import QuadViewXYZOrthoPlanesLayers from './mediators/QuadViewXYZOrthoPlanesLayers';
 import QuadViewXYZOrthoPlanesShifter from './mediators/QuadViewXYZOrthoPlanesShifter';
 import OrthoPlanesContrastSettings from './mediators/OrthoPlanesContrastSettings';
-import PlanesMaterialManager from './tools/planes-material-manager';
-import OrthoPlanesParameters from './tools/ortho-planes-parameters';
-import QuadViewCameraControls from './tools/quad-view-camera-controls';
-import QuadViewCameraAxes from './tools/quad-view-camera-axes';
-import LineSegmentTool from './tools/line-segment-tool';
-import OrthoPlanesQuadViewLineSegment from './mediators/OrthoPlanesQuadViewLineSegment';
-import IntensityPlotWindow from './tools/intensity-plot-window';
-import EEGSpectrumPlot from './tools/eeg-spectrum-plot';
-import EEGFileLoader from './tools/eeg-file-loader';
-import QuadViewPanner from './mediators/QuadViewPanner';
-import QuadviewTrackballControls from './tools/QuadViewTrackballControls';
-import QuadViewControlsReset from './mediators/QuadViewControlsReset';
-// End Tool and Mediator Imports
+// End Mediator Imports
 
 class ApplicationManager {
   constructor() {
@@ -61,26 +63,27 @@ class ApplicationManager {
     this.registerConstructor(OrthoPlanes);
     // End Scene Registers
 
-    // Begin Tool and Mediator Registers
+    // Begin Tool Registers
     this.registerConstructor(CurveTool);
-    this.registerConstructor(XYZPerspectiveQuadView);
+    this.registerConstructor(PlanesMaterialManager);
+    this.registerConstructor(OrthoPlanesParameters);
+    this.registerConstructor(QuadViewCameraParameters);
+    this.registerConstructor(QuadViewCameraControls);
+    this.registerConstructor(QuadViewCameraAxes);
+    this.registerConstructor(LineSegmentTool);
+    this.registerConstructor(IntensityPlotWindow);
+    this.registerConstructor(EEGSpectrumPlot);
+    this.registerConstructor(EEGFileLoader);
+    // End Tool Registers
+
+    // Begin Mediator Registers
+    this.registerConstructor(QuadViewControlsReset);
+    this.registerConstructor(OrthoPlanesQuadViewLineSegment);
     this.registerConstructor(OrthoPlanesShaderInjector);
     this.registerConstructor(QuadViewXYZOrthoPlanesLayers);
     this.registerConstructor(QuadViewXYZOrthoPlanesShifter);
     this.registerConstructor(OrthoPlanesContrastSettings);
-    this.registerConstructor(PlanesMaterialManager);
-    this.registerConstructor(OrthoPlanesParameters);
-    this.registerConstructor(QuadViewCameraControls);
-    this.registerConstructor(QuadViewCameraAxes);
-    this.registerConstructor(LineSegmentTool);
-    this.registerConstructor(OrthoPlanesQuadViewLineSegment);
-    this.registerConstructor(IntensityPlotWindow);
-    this.registerConstructor(EEGSpectrumPlot);
-    this.registerConstructor(EEGFileLoader);
-    this.registerConstructor(QuadViewPanner);
-    this.registerConstructor(QuadviewTrackballControls);
-    this.registerConstructor(QuadViewControlsReset);
-    // End Tool and Mediator Registers
+    // End Mediator Registers
   }
   /**
    * [create Build an application out of a JSON description]

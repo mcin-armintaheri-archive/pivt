@@ -42,12 +42,12 @@ export default {
     },
     {
       name: 'cameraParams',
-      tool: 'QuadViewCameraControls',
+      tool: 'QuadViewCameraParameters',
       dependencies: ['view']
     },
     {
-      name: 'trackball',
-      tool: 'QuadviewTrackballControls',
+      name: 'cameraControls',
+      tool: 'QuadViewCameraControls',
       dependencies: ['view']
     }
   ],
@@ -60,7 +60,7 @@ export default {
     {
       name: 'planeLayers',
       mediator: 'QuadViewXYZOrthoPlanesLayers',
-      dependencies: ['view', 'trackball', 'materialManager', 'planeParams', 'quadviewCameraAxes']
+      dependencies: ['view', 'materialManager', 'cameraControls', 'planeParams', 'quadviewCameraAxes']
     },
     {
       name: 'constrastSettings',
@@ -70,22 +70,17 @@ export default {
     {
       name: 'planeShifter',
       mediator: 'QuadViewXYZOrthoPlanesShifter',
-      dependencies: ['view', 'trackball', 'materialManager', 'planeParams']
+      dependencies: ['view', 'cameraControls', 'materialManager', 'planeParams']
     },
     {
       name: 'lineSegmentMediator',
       mediator: 'OrthoPlanesQuadViewLineSegment',
-      dependencies: ['view', 'trackball', 'materialManager', 'lineSegmentTool', 'intensityPlot']
-    },
-    {
-      name: 'viewPanner',
-      mediator: 'QuadViewPanner',
-      dependencies: ['view', 'cameraParams']
+      dependencies: ['view', 'cameraControls', 'materialManager', 'lineSegmentTool', 'intensityPlot']
     },
     {
       name: 'cameraControlsReset',
       mediator: 'QuadViewControlsReset',
-      dependencies: ['trackball', 'cameraParams']
+      dependencies: ['cameraControls', 'cameraParams']
     }
   ]
 };

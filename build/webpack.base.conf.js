@@ -2,6 +2,7 @@ var path = require('path');
 var utils = require('./utils');
 var config = require('../config');
 var vueLoaderConfig = require('./vue-loader.conf');
+var buble = require('rollup-plugin-buble');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ClosureCompilerPlugin = require('webpack-closure-compiler');
@@ -47,7 +48,8 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'rollup-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [resolve('src'), resolve('test')],
+        options: { plugins: [ buble() ] }
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

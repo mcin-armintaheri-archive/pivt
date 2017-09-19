@@ -22,10 +22,10 @@ export default class LineSegmentTool {
       }
     );
     this.segment.on('startInteraction', () => {
-      camControls.setEnabled(false);
+      camControls.getTrackballControls().setEnabled(false);
     });
     this.segment.on('stopInteraction', () => {
-      camControls.setEnabled(true);
+      camControls.getTrackballControls().setEnabled(true);
     });
     this.segment.setBoundingBox(this.scene.getBoundingBox());
     this.segment.on('draw', (begin, end) => {

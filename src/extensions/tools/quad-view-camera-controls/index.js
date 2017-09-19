@@ -1,71 +1,46 @@
-import QuadViewCameraControlsWidget from './QuadViewCameraControlsWidget';
+import * as THREE from 'three';
+import ViewportCameraControls from './ViewportCameraControls';
+import TrackballControls from './TrackballControls';
 
-
-/**
- * CameraController offers an application a sidebar widget for
- * orienting a camera in a certain viewport layout.
- * @type {[type]}
- */
-class CameraController {
-  constructor(viewport) {
-    this.viewport = viewport;
-  }
-  rollBy(angle, isRad = false) {
-    let angRad = angle;
-    if (!isRad) {
-      angRad = Math.PI * (angRad / 180);
-    }
-    this.viewport.rollBy(angRad);
-  }
-  setPan(pan) {
-    const { x, y } = pan;
-    this.viewport.setPan({ x, y });
-  }
-  getViewport() {
-    return this.viewport;
-  }
-}
-
-/**
- * QuadViewCameraControls offers the application controls to orient all the
- * cameras in a quadview layout.
- */
 export default class QuadViewCameraControls {
   constructor(view) {
-    this.sidebarWidget = QuadViewCameraControlsWidget;
-    this.layout = view.layout;
-    this.topright = new CameraController(this.layout.getTopLeft());
-    this.topleft = new CameraController(this.layout.getTopRight());
-    this.bottomleft = new CameraController(this.layout.getBottomLeft());
-    this.bottomright = new CameraController(this.layout.getBottomRight());
-    this.resetControlsCallbacks = [];
+    const { layout } = view;
+    const viewports = [
+      layout.getBottomLeft(),
+      layout.getTopLeft(),
+      layout.getTopRight(),
+      layout.getBottomRight()
+    ];
+    this.controls = viewports.slice(0, 3)
+      .map(v => new ViewportCameraControls(v, layout.canvas));
+    this.controls.push(new TrackballControls(viewports[3], layout.canvas));
   }
-  /**
-   * Reset the perspective camera and offset it in the y-direction slightly.
-   */
-  resetControls() {
-    this.resetControlsCallbacks.forEach((f) => {
-      f();
+  getTrackballControls() {
+    return this.controls[3];
+  }
+  getOrthoControls() {
+    return this.controls.slice(0, 3);
+  }
+  dispose() {
+    this.controls.forEach((control) => { control.dispose(); });
+  }
+  serialize() {
+    const serializedControls = this.controls.map(p => ({
+      pan: p.getViewport().getPan(),
+      zoom: p.getViewport().getTHREECamera().zoom
+    }));
+    const { x, y, z } = this.controls[3].getViewport().getTHREECamera().position;
+    serializedControls[3].pos = { x, y, z };
+    return serializedControls;
+  }
+  deserialize(json) {
+    json.forEach((serializedPanner, i) => {
+      this.panners[i].getViewport().setPan(serializedPanner.pan);
+      this.panners[i].getViewport().getTHREECamera().zoom = serializedPanner.zoom;
     });
-  }
-  onResetControls(f) {
-    if (f instanceof Function) {
-      this.resetControlsCallbacks.push(f);
-    }
-  }
-  getLayout() {
-    return this.layout;
-  }
-  getTopLeft() {
-    return this.topleft;
-  }
-  getTopRight() {
-    return this.topright;
-  }
-  getBottomLeft() {
-    return this.bottomleft;
-  }
-  getBottomRight() {
-    return this.bottomright;
+    const { x, y, z } = json[3].pos;
+    const perspCam = this.controls[3].getViewport().getTHREECamera();
+    perspCam.position = new THREE.Vector3(x, y, z);
+    perspCam.lookAt(new THREE.Vector3(0, 0, 0));
   }
 }

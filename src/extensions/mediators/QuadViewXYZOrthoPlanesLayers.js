@@ -2,8 +2,6 @@ import R from 'ramda';
 
 import * as THREE from 'three';
 
-const OFFSET = new THREE.Vector3(0, 10, 0);
-
 /**
  * PlaneCameraAligner associated a viewport with a particular plane in
  * OrthoPlanes. The aligner makes the camera in the viewport rotate and move with the
@@ -81,7 +79,7 @@ class PlaneCameraAligner {
  * @param  {QuadViewCameraAxes} quadviewCameraAxes
  */
 export default class QuadViewXYZOrthoPlanesLayers {
-  constructor(view, camControls, materialManager, planeParams, quadviewCameraAxes) {
+  constructor(view, materialManager, camControls, planeParams, quadviewCameraAxes) {
     const { scene, layout } = view;
     this.orthoCameras = layout.getViewports().slice(0, 3).map(v => v.getTHREECamera());
     this.planesAreLoaded = false;
@@ -95,25 +93,26 @@ export default class QuadViewXYZOrthoPlanesLayers {
       planeParams.setPlanePos(0, 0, 0);
       this.resetCameraUps();
       const { diagonal } = dimensions;
+      const camRadius = diagonal * 0.5;
       this.threeScene.updateMatrixWorld(true);
       const planeCamConfigs = [
         {
           viewport: layout.getBottomLeft(),
           plane: scene.getXY(),
           layer: 1,
-          cameraPosition: new THREE.Vector3(0, 0, diagonal)
+          cameraPosition: new THREE.Vector3(0, 0, camRadius)
         },
         {
           viewport: layout.getTopLeft(),
           plane: scene.getXZ(),
           layer: 2,
-          cameraPosition: new THREE.Vector3(0, diagonal, 0)
+          cameraPosition: new THREE.Vector3(0, camRadius, 0)
         },
         {
           viewport: layout.getTopRight(),
           plane: scene.getYZ(),
           layer: 3,
-          cameraPosition: new THREE.Vector3(diagonal, 0, 0)
+          cameraPosition: new THREE.Vector3(camRadius, 0, 0)
         }
       ];
       planeCamConfigs.forEach((config) => {
@@ -129,9 +128,8 @@ export default class QuadViewXYZOrthoPlanesLayers {
       this.axisSystems.filter(R.identity).forEach((axes) => {
         axes.dispose();
       });
-
-      layout.getBottomRight().getTHREECamera().position.set(0, 10, 2 * diagonal);
-      camControls.resetControls(OFFSET);
+      camControls.getTrackballControls().setResetPosition(0, 10, diagonal);
+      camControls.getTrackballControls().resetControls();
       /*
         If the QuadViewCameraAxes tool is bundled with the application,
         create the axes for each orthographic camera.

@@ -85,9 +85,9 @@ export default class ViewPort {
    */
   getCameraAxes() {
     const camera = this.getTHREECamera();
-    const zDir = camera.getWorldDirection().multiplyScalar(-1.0);
-    const yDir = camera.up.clone().multiplyScalar(-1.0);
-    const xDir = new THREE.Vector3().crossVectors(yDir, zDir);
+    const zDir = camera.getWorldDirection().multiplyScalar(-1).normalize();
+    const yDir = camera.up.clone().normalize();
+    const xDir = new THREE.Vector3().crossVectors(yDir, zDir).normalize();
     return { xDir, yDir, zDir };
   }
   /**
@@ -95,20 +95,20 @@ export default class ViewPort {
    * the camera's position and orientation without needing to worry about
    * arbitrary panning.
    */
-  inversePan() {
+  inversePan(axes) {
     const camera = this.getTHREECamera();
     const { x, y } = this.getPan();
-    const { xDir, yDir } = this.getCameraAxes();
+    const { xDir, yDir } = axes || this.getCameraAxes();
     camera.position.sub(xDir.multiplyScalar(x)).sub(yDir.multiplyScalar(y));
   }
   /**
    * Apply the current pan offset of the camera. Useful after transforming
    * the camera's position and orientation
    */
-  applyPan() {
+  applyPan(axes) {
     const camera = this.getTHREECamera();
     const { x, y } = this.getPan();
-    const { xDir, yDir } = this.getCameraAxes();
+    const { xDir, yDir } = axes || this.getCameraAxes();
     const posOffset = new THREE.Vector3().addVectors(
       xDir.multiplyScalar(x),
       yDir.multiplyScalar(y)
