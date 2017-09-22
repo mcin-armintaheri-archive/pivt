@@ -51,6 +51,7 @@ export default class TrackballControls extends ViewportCameraControls {
   }
   resetControls() {
     const cam = this.getViewport().getTHREECamera();
+    this.getViewport().setPan({ x: 0, y: 0 });
     cam.position.copy(this.resetPosition);
     cam.up.set(0, 1, 0);
     cam.lookAt(ZERO);

@@ -2,6 +2,8 @@ import R from 'ramda';
 
 import * as THREE from 'three';
 
+const ZERO = new THREE.Vector3(0, 0, 0);
+
 /**
  * PlaneCameraAligner associated a viewport with a particular plane in
  * OrthoPlanes. The aligner makes the camera in the viewport rotate and move with the
@@ -84,6 +86,7 @@ export default class QuadViewXYZOrthoPlanesLayers {
     this.orthoCameras = layout.getViewports().slice(0, 3).map(v => v.getTHREECamera());
     this.planesAreLoaded = false;
     this.threeScene = scene.getTHREEScene();
+    this.planeSystem = scene.getPlaneSystem();
     this.threeScene.add(...this.orthoCameras);
     this.aligners = [];
     this.axisSystems = [];
@@ -106,13 +109,13 @@ export default class QuadViewXYZOrthoPlanesLayers {
           viewport: layout.getTopLeft(),
           plane: scene.getXZ(),
           layer: 2,
-          cameraPosition: new THREE.Vector3(0, camRadius, 0)
+          cameraPosition: new THREE.Vector3(0, -camRadius, 0)
         },
         {
           viewport: layout.getTopRight(),
           plane: scene.getYZ(),
           layer: 3,
-          cameraPosition: new THREE.Vector3(camRadius, 0, 0)
+          cameraPosition: new THREE.Vector3(-camRadius, 0, 0)
         }
       ];
       planeCamConfigs.forEach((config) => {
@@ -121,7 +124,7 @@ export default class QuadViewXYZOrthoPlanesLayers {
       this.aligners = planeCamConfigs.map(config => new PlaneCameraAligner(
         config.viewport,
         config.plane,
-        scene.getPlaneSystem(),
+        this.planeSystem,
         config.layer,
         config.cameraPosition
       ));
@@ -136,19 +139,19 @@ export default class QuadViewXYZOrthoPlanesLayers {
        */
       if (quadviewCameraAxes) {
         const thickness = 1;
-        this.axisSystems = planeCamConfigs.map(config => quadviewCameraAxes.createProjectedAxes(
-            config.viewport,
-            config.plane,
-            diagonal * 10,
-            thickness,
-            config.layer
-        ));
-        quadviewCameraAxes.createFixedAxes(
+        quadviewCameraAxes.createParentedAxes(
           layout.getBottomRight(),
-          new THREE.Vector3(0, 0, 0),
+          this.planeSystem,
           diagonal * 10,
           thickness,
-          0
+          [0, 1, 2, 3]
+        );
+        quadviewCameraAxes.createFixedAxes(
+          layout.getBottomRight(),
+          ZERO,
+          diagonal * 10,
+          thickness,
+          [0, 1, 2, 3]
         );
       }
       this.planesAreLoaded = true;

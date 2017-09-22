@@ -21,7 +21,7 @@ export default class ViewportCameraControls extends ViewportEventHandler {
   }
   mouseWheelAction(deltaY) {
     const cam = this.viewport.getTHREECamera();
-    cam.zoom += -(deltaY * cam.zoom) / 200;
+    cam.zoom += -(deltaY * cam.zoom) / 600;
     if (cam.zoom < 0.5) {
       cam.zoom = 0.5;
     }

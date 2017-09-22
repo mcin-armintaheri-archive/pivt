@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { VERTEX, FRAGMENT } from './DashedShader';
 import QuadViewCameraAxesWidget from './QuadViewCameraAxesWidget';
 
+const ZERO = new THREE.Vector3(0, 0, 0);
+
 /**
  * create the lines and colors of an XYZ axis system bounded in a sphere.
  * @param  {Number} radius bounding sphere radius.
@@ -42,7 +44,7 @@ function createXYZLines(radius) {
  * If the target is a THREE.Vector3 the axes are simply placed at that position.
  */
 class CameraAxes {
-  constructor(viewport, size, thickness, layer, dashLength) {
+  constructor(viewport, size, thickness, layers, dashLength) {
     this.viewport = viewport;
     this.system = new THREE.Object3D();
     this.system.add(...createXYZLines(size / 2).map(line => new THREE.Mesh(
@@ -72,9 +74,13 @@ class CameraAxes {
         }
       })
     )));
-    this.system.layers.set(layer);
+    const firstLayer = layers[0] === undefined ? 0 : layers[0];
+    const restLayers = layers.slice(1, layers.length);
+    this.system.layers.set(firstLayer);
+    restLayers.forEach((l) => { this.system.layers.enable(l); });
     this.system.children.forEach((child) => {
-      child.layers.set(layer);
+      child.layers.set(firstLayer);
+      restLayers.forEach((l) => { child.layers.enable(l); });
     });
   }
   getAxisSystem() {
@@ -144,13 +150,13 @@ export default class QuadViewCameraAxes {
    * @param  {Number} [layer=0] scene layer for filtering to cameras
    * @param  {Number} [dashLength=10] length of axes dashes in negative direction.
    */
-  createProjectedAxes(viewport, target, size, thickness, layer = 0, dashLength = 10) {
+  createProjectedAxes(viewport, target, size, thickness, layers = [0], dashLength = 10) {
     const cameraAxes = new CameraAxesProjected(
       viewport,
       target,
       size,
       thickness,
-      layer,
+      layers,
       dashLength
     );
     this.scene.getTHREEScene().add(cameraAxes.getAxisSystem());
@@ -165,16 +171,28 @@ export default class QuadViewCameraAxes {
    * @param  {Number} [layer=0] scene layer for filtering to cameras
    * @param  {Number} [dashLength=10] length of axes dashes in negative direction.
    */
-  createFixedAxes(viewport, position, size, thickness, layer = 0, dashLength = 10) {
+  createFixedAxes(viewport, position, size, thickness, layers = [0], dashLength = 10) {
     const cameraAxes = new CameraAxesFixed(
       viewport,
       position,
       size,
       thickness,
-      layer,
+      layers,
       dashLength
     );
     this.scene.getTHREEScene().add(cameraAxes.getAxisSystem());
+    this.cameraAxesList.push(cameraAxes);
+  }
+  createParentedAxes(viewport, target, size, thickness, layers = [0], dashLength = 10) {
+    const cameraAxes = new CameraAxesFixed(
+      viewport,
+      ZERO,
+      size,
+      thickness,
+      layers,
+      dashLength
+    );
+    target.add(cameraAxes.getAxisSystem());
     this.cameraAxesList.push(cameraAxes);
   }
   /**
