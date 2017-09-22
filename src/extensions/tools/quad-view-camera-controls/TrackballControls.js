@@ -15,15 +15,23 @@ export default class TrackballControls extends ViewportCameraControls {
     this.dQuat = new THREE.Quaternion();
     this.resetControls();
   }
-  mouseUpAction() {
+  mouseUpAction(x, y, clickCode) {
+    const propagation = super.mouseUpAction(x, y, clickCode);
+    if (!propagation) {
+      return false;
+    }
     this.lastMouse = null;
+    return true;
   }
   mouseMoveAction(x, y, clickCode) {
-    super.mouseMoveAction(x, y, clickCode);
+    const propagation = super.mouseMoveAction(x, y, clickCode);
+    if (!propagation) {
+      return false;
+    }
     if (this.enabled && clickCode === 0) {
       if (!this.lastMouse) {
         this.lastMouse = { x, y };
-        return;
+        return true;
       }
       const viewport = this.getViewport();
       const cam = viewport.getTHREECamera();
@@ -45,6 +53,7 @@ export default class TrackballControls extends ViewportCameraControls {
       viewport.applyPan();
       this.lastMouse = { x, y };
     }
+    return true;
   }
   setResetPosition(x, y, z) {
     this.resetPosition.set(x, y, z);

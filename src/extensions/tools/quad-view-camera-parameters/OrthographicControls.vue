@@ -4,30 +4,6 @@
       {{ this.title }}
     </div>
     <div class="labeled-input">
-      <div class="input-title">Roll:</div>
-      <el-input-number
-        size="small"
-        v-model="roll"
-      >
-      </el-input-number>
-    </div>
-    <div class="roll-buttons">
-      <el-button
-        class="roll-rotator"
-        type="primary"
-        @click="camControls.rollBy(roll)"
-      >
-        Roll
-      </el-button>
-      <el-button
-        class="roll-rotator"
-        type="primary"
-        @click="camControls.rollBy(-roll)"
-      >
-        Unroll
-      </el-button>
-    </div>
-    <div class="labeled-input">
       <div class="input-title">X Pan:</div>
       <el-input-number
         size="small"
@@ -43,6 +19,13 @@
       >
       </el-input-number>
     </div>
+    <el-button
+      class="pan-reset"
+      type="primary"
+      @click="resetPan"
+    >
+    Reset Pan
+    </el-button>
   </div>
 </template>
 
@@ -78,6 +61,12 @@ export default {
         this.camControls.getViewport().setPan({ y });
       }
     }
+  },
+  methods: {
+    resetPan() {
+      this.inputPanX = 0;
+      this.inputPanY = 0;
+    }
   }
 };
 </script>
@@ -104,5 +93,8 @@ export default {
 }
 .labeled-input {
   margin: 1px 1px;
+}
+.pan-reset {
+  margin-top: 5px;
 }
 </style>

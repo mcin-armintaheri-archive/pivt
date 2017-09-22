@@ -2,8 +2,6 @@ import R from 'ramda';
 
 import * as THREE from 'three';
 
-const ZERO = new THREE.Vector3(0, 0, 0);
-
 /**
  * PlaneCameraAligner associated a viewport with a particular plane in
  * OrthoPlanes. The aligner makes the camera in the viewport rotate and move with the
@@ -69,6 +67,34 @@ class PlaneCameraAligner {
   }
 }
 
+
+class OrthoViewPlaneShifter {
+  constructor(plane, camControls, planeSystem, boundingBox) {
+    const viewport = camControls.getViewport();
+    const mouse = viewport.getMousePosReference();
+    const cam = viewport.getTHREECamera();
+    const rayCaster = new THREE.Raycaster();
+    let shiftMode = false;
+    const movePlanesToMouse = (x, y, clickCode) => {
+      if (clickCode === 0 && shiftMode) {
+        rayCaster.setFromCamera(mouse, cam);
+        const intersections = rayCaster.intersectObjects([plane]);
+        if (intersections.length > 0 && boundingBox.containsPoint(intersections[0].point)) {
+          planeSystem.position.copy(intersections[0].point);
+        }
+      }
+    };
+    camControls.withAction('mouseDownAction', (s, x, y, clickCode) => {
+      shiftMode = true;
+      movePlanesToMouse(x, y, clickCode);
+    });
+    camControls.withAction('mouseMoveAction', (_, x, y, clickCode) => {
+      movePlanesToMouse(x, y, clickCode);
+    });
+    camControls.withAction('mouseUpAction', () => { shiftMode = false; });
+  }
+}
+
 /**
  * QuadViewXYZLayers forces the orthographic cameras to only view the planes and axes
  * they are associated with. It also defines the associations themselves. When the
@@ -98,21 +124,25 @@ export default class QuadViewXYZOrthoPlanesLayers {
       const { diagonal } = dimensions;
       const camRadius = diagonal * 0.5;
       this.threeScene.updateMatrixWorld(true);
+      const viewportControls = camControls.getOrthoControls();
       const planeCamConfigs = [
         {
-          viewport: layout.getBottomLeft(),
+          viewport: viewportControls[0].getViewport(),
+          controls: viewportControls[0],
           plane: scene.getXY(),
           layer: 1,
           cameraPosition: new THREE.Vector3(0, 0, camRadius)
         },
         {
-          viewport: layout.getTopLeft(),
+          viewport: viewportControls[1].getViewport(),
+          controls: viewportControls[1],
           plane: scene.getXZ(),
           layer: 2,
           cameraPosition: new THREE.Vector3(0, -camRadius, 0)
         },
         {
-          viewport: layout.getTopRight(),
+          viewport: viewportControls[2].getViewport(),
+          controls: viewportControls[2],
           plane: scene.getYZ(),
           layer: 3,
           cameraPosition: new THREE.Vector3(-camRadius, 0, 0)
@@ -128,6 +158,12 @@ export default class QuadViewXYZOrthoPlanesLayers {
         config.layer,
         config.cameraPosition
       ));
+      this.orthoShifters = planeCamConfigs.map(config => new OrthoViewPlaneShifter(
+        config.plane,
+        config.controls,
+        this.planeSystem,
+        scene.getBoundingBox()
+      ));
       this.axisSystems.filter(R.identity).forEach((axes) => {
         axes.dispose();
       });
@@ -142,13 +178,6 @@ export default class QuadViewXYZOrthoPlanesLayers {
         quadviewCameraAxes.createParentedAxes(
           layout.getBottomRight(),
           this.planeSystem,
-          diagonal * 10,
-          thickness,
-          [0, 1, 2, 3]
-        );
-        quadviewCameraAxes.createFixedAxes(
-          layout.getBottomRight(),
-          ZERO,
           diagonal * 10,
           thickness,
           [0, 1, 2, 3]

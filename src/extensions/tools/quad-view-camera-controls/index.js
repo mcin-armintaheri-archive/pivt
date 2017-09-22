@@ -5,12 +5,7 @@ import TrackballControls from './TrackballControls';
 export default class QuadViewCameraControls {
   constructor(view) {
     const { layout } = view;
-    const viewports = [
-      layout.getBottomLeft(),
-      layout.getTopLeft(),
-      layout.getTopRight(),
-      layout.getBottomRight()
-    ];
+    const viewports = layout.getViewports();
     this.controls = viewports.slice(0, 3)
       .map(v => new ViewportCameraControls(v, layout.canvas));
     this.controls.push(new TrackballControls(viewports[3], layout.canvas));
