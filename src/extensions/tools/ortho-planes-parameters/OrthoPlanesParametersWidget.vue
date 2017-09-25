@@ -7,25 +7,22 @@
       <el-input-number
         size="small"
         class="plane-number-component"
-        v-model="pos.x"
-        @change="x => updatePlanePos({ x })"
+        v-model="posX"
       >
       </el-input-number>
       <el-input-number
         size="small"
         class="plane-number-component"
-        v-model="pos.y"
-        @change="y => updatePlanePos({ y })"
+        v-model="posY"
       >
       </el-input-number>
       <el-input-number
         size="small"
         class="plane-number-component"
-        v-model="pos.z"
-        @change="z => updatePlanePos({ z })"
+        v-model="posZ"
       >
       </el-input-number>
-      <el-button class="reset-button" @click="updatePlanePos({ x: 0, y: 0, z: 0 })">
+      <el-button class="reset-button" @click="resetPlanePos()">
         <icon name="refresh"></icon>
       </el-button>
     </div>
@@ -37,22 +34,19 @@
       <el-input-number
         size="small"
         class="plane-number-component"
-        v-model="rot.x"
-        @change="x => updatePlaneRot({ x })"
+        v-model="rotX"
       >
       </el-input-number>
       <el-input-number
         size="small"
         class="plane-number-component"
-        v-model="rot.y"
-        @change="y => updatePlaneRot({ y })"
+        v-model="rotY"
       >
       </el-input-number>
       <el-input-number
         size="small"
         class="plane-number-component"
-        v-model="rot.z"
-        @change="z => updatePlaneRot({ z })"
+        v-model="rotZ"
       >
       </el-input-number>
       <el-button class="reset-button" @click="resetPlaneRot">
@@ -63,6 +57,13 @@
 </template>
 
 <script>
+function deg2Rad(angle) {
+  return Math.PI * (angle / 180);
+}
+
+function rad2Deg(angle) {
+  return 180 * (angle / Math.PI);
+}
 /**
  * ortho-planes-parameters-widget offers inputs for the user to
  * precisely orient the planes in an OrthoPlanes scene.
@@ -71,44 +72,49 @@
 export default {
   name: 'ortho-planes-parameters-widget',
   props: ['controller'],
-  mounted() {
-    this.controller.onSceneUpdate((pos, rot) => {
-      this.updatePlanePos({ x: pos.x, y: pos.y, z: pos.z });
-      this.updatePlaneRot({ x: rot.x, y: rot.y, z: rot.z }, true);
-    });
-  },
   data() {
     return {
-      pos: { x: 0, y: 0, z: 0 },
-      rot: { x: 0, y: 0, z: 0 }
+      pos: this.controller.getPlaneSystem().position,
+      rot: this.controller.getPlaneSystem().rotation
     };
   },
-  methods: {
-    updatePlanePos(newpos) {
-      Object.assign(this.pos, newpos);
-      const { x, y, z } = this.pos;
-      this.controller.setPlanePos(x, y, z);
-      const mul = a => Math.floor(a * 100) / 100;
-      this.pos.x = mul(this.pos.x);
-      this.pos.y = mul(this.pos.y);
-      this.pos.z = mul(this.pos.z);
+  computed: {
+    posX: {
+      get() { return this.pos.x; },
+      set(v) { this.pos.x = v; }
     },
-    updatePlaneRot(newrot, rads = false) {
-      Object.assign(this.rot, newrot);
-      const { x, y, z } = this.rot;
-      this.controller.setPlaneRot(x, y, z, rads);
-      let mul;
-      if (rads) {
-        mul = a => Math.floor(a * 100 * (180 / Math.PI)) / 100;
-      } else {
-        mul = a => Math.floor(a * 100) / 100;
-      }
-      this.rot.x = mul(this.rot.x);
-      this.rot.y = mul(this.rot.y);
-      this.rot.z = mul(this.rot.z);
+    posY: {
+      get() { return this.pos.y; },
+      set(v) { this.pos.y = v; }
+    },
+    posZ: {
+      get() { return this.pos.z; },
+      set(v) { this.pos.z = v; }
+    },
+    rotX: {
+      get() { return rad2Deg(this.rot.x); },
+      set(v) { this.rot.x = deg2Rad(v); }
+    },
+    rotY: {
+      get() { return rad2Deg(this.rot.y); },
+      set(v) { this.rot.y = deg2Rad(v); }
+    },
+    rotZ: {
+      get() { return rad2Deg(this.rot.z); },
+      set(v) { this.rot.z = deg2Rad(v); }
+    }
+  },
+  methods: {
+    resetPlanePos() {
+      this.posX = 0;
+      this.posY = 0;
+      this.posZ = 0;
+      this.controller.rotationResetCallbacks.forEach(f => f());
     },
     resetPlaneRot() {
-      this.updatePlaneRot({ x: 0, y: 0, z: 0 });
+      this.rotX = 0;
+      this.rotY = 0;
+      this.rotZ = 0;
       this.controller.rotationResetCallbacks.forEach(f => f());
     }
   }

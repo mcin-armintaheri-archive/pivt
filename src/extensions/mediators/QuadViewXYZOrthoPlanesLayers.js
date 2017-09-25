@@ -118,8 +118,8 @@ export default class QuadViewXYZOrthoPlanesLayers {
     this.axisSystems = [];
     planeParams.onRotationReset(this.resetCameraUps.bind(this));
     materialManager.onMaterialChange((material, dimensions) => {
-      planeParams.setPlaneRot(0, 0, 0);
-      planeParams.setPlanePos(0, 0, 0);
+      scene.getPlaneSystem().position.set(0, 0, 0);
+      scene.getPlaneSystem().rotation.set(0, 0, 0);
       this.resetCameraUps();
       const { diagonal } = dimensions;
       const camRadius = diagonal * 0.5;

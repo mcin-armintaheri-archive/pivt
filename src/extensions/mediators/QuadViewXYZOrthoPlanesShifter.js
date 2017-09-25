@@ -16,8 +16,7 @@ import { PlaneShifter } from 'PlaneShifter';
 export default function QuadViewXYZOrthoPlanesShifter(
   view,
   camControls,
-  materialManager,
-  planeParams
+  materialManager
 ) {
   const { scene, layout } = view;
   const perspCam = layout.getBottomRight();
@@ -34,7 +33,6 @@ export default function QuadViewXYZOrthoPlanesShifter(
     });
     this.planeshifter.on('stopInteraction', () => {
       camControls.getTrackballControls().setEnabled(true);
-      planeParams.updateFromScene();
     });
     this.planeshifter.setBoundingBox(scene.getBoundingBox());
   });
