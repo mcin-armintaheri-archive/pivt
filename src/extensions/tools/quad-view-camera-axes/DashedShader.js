@@ -16,6 +16,7 @@ export const FRAGMENT = `
   uniform float r;
   uniform float g;
   uniform float b;
+  uniform float opacity;
   uniform float dashLength;
 
   varying vec3 modelCoord;
@@ -31,12 +32,12 @@ export const FRAGMENT = `
   {
     if (modelCoord.x + modelCoord.y + modelCoord.z >= 0.0)
     {
-      gl_FragColor = vec4(r, g, b, 1.0);
+      gl_FragColor = vec4(r, g, b, opacity);
       return;
     }
     if (evenBoxCheck(modelCoord))
     {
-      gl_FragColor = vec4(r, g, b, 1.0);
+      gl_FragColor = vec4(r, g, b, opacity);
       return;
     }
     discard;

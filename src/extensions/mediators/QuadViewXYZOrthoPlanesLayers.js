@@ -174,12 +174,13 @@ export default class QuadViewXYZOrthoPlanesLayers {
         create the axes for each orthographic camera.
        */
       if (quadviewCameraAxes) {
-        const thickness = 1;
+        const thickness = 0.6;
         quadviewCameraAxes.createParentedAxes(
           layout.getBottomRight(),
           this.planeSystem,
           diagonal * 10,
           thickness,
+          0.5,
           [0, 1, 2, 3]
         );
       }

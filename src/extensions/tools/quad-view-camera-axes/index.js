@@ -44,7 +44,7 @@ function createXYZLines(radius) {
  * If the target is a THREE.Vector3 the axes are simply placed at that position.
  */
 class CameraAxes {
-  constructor(viewport, size, thickness, layers, dashLength) {
+  constructor(viewport, size, thickness, opacity, layers, dashLength) {
     this.viewport = viewport;
     this.system = new THREE.Object3D();
     this.system.add(...createXYZLines(size / 2).map(line => new THREE.Mesh(
@@ -66,6 +66,10 @@ class CameraAxes {
           b: {
             type: 'f',
             value: line.color.b
+          },
+          opacity: {
+            type: 'f',
+            value: opacity
           },
           dashLength: {
             type: 'f',
@@ -99,8 +103,8 @@ class CameraAxes {
 }
 
 class CameraAxesProjected extends CameraAxes {
-  constructor(viewport, target, size, thickness, layer, dashLength) {
-    super(viewport, size, thickness, layer, dashLength);
+  constructor(viewport, target, size, thickness, layer, dashLength, opacity) {
+    super(viewport, size, thickness, layer, dashLength, opacity);
     this.target = target;
     this.projPlane = new THREE.Plane();
   }
@@ -120,8 +124,8 @@ class CameraAxesProjected extends CameraAxes {
 }
 
 class CameraAxesFixed extends CameraAxes {
-  constructor(viewport, position, size, thickness, layer, dashLength) {
-    super(viewport, size, thickness, layer, dashLength);
+  constructor(viewport, position, size, thickness, layer, dashLength, opacity) {
+    super(viewport, size, thickness, layer, dashLength, opacity);
     this.system.position.copy(position);
   }
 }
@@ -150,12 +154,21 @@ export default class QuadViewCameraAxes {
    * @param  {Number} [layer=0] scene layer for filtering to cameras
    * @param  {Number} [dashLength=10] length of axes dashes in negative direction.
    */
-  createProjectedAxes(viewport, target, size, thickness, layers = [0], dashLength = 10) {
+  createProjectedAxes(
+    viewport,
+    target,
+    size,
+    thickness,
+    opacity = 1.0,
+    layers = [0],
+    dashLength = 10
+  ) {
     const cameraAxes = new CameraAxesProjected(
       viewport,
       target,
       size,
       thickness,
+      opacity,
       layers,
       dashLength
     );
@@ -171,11 +184,20 @@ export default class QuadViewCameraAxes {
    * @param  {Number} [layer=0] scene layer for filtering to cameras
    * @param  {Number} [dashLength=10] length of axes dashes in negative direction.
    */
-  createFixedAxes(viewport, position, size, thickness, layers = [0], dashLength = 10) {
+  createFixedAxes(
+    viewport,
+    position,
+    size,
+    thickness,
+    opacity = 1.0,
+    layers = [0],
+    dashLength = 10
+  ) {
     const cameraAxes = new CameraAxesFixed(
       viewport,
       position,
       size,
+      opacity,
       thickness,
       layers,
       dashLength
@@ -183,12 +205,21 @@ export default class QuadViewCameraAxes {
     this.scene.getTHREEScene().add(cameraAxes.getAxisSystem());
     this.cameraAxesList.push(cameraAxes);
   }
-  createParentedAxes(viewport, target, size, thickness, layers = [0], dashLength = 10) {
+  createParentedAxes(
+    viewport,
+    target,
+    size,
+    thickness,
+    opacity = 1.0,
+    layers = [0],
+    dashLength = 10
+  ) {
     const cameraAxes = new CameraAxesFixed(
       viewport,
       ZERO,
       size,
       thickness,
+      opacity,
       layers,
       dashLength
     );

@@ -79,8 +79,8 @@ export default class ViewportEventHandler {
       this.mouseWheelAction(event.deltaY);
     }
   }
-  mouseWheelAction(x, y, clickCode) {
-    this.doMouseAction('mouseWheelAction', x, y, clickCode);
+  mouseWheelAction(deltaY) {
+    return this.doMouseAction('mouseWheelAction', deltaY);
   }
   dispose() {
     R.keys(this.listeners).forEach((key) => {
