@@ -1,6 +1,8 @@
-import QuadViewCameraControlsWidget from './QuadViewCameraControlsWidget';
+import * as THREE from 'three';
+import QuadViewCameraControlsWindow from './QuadViewCameraControlsWindow';
+import QuadViewCameraControlsSidebarWidget from './QuadViewCameraControlsSidebarWidget';
 
-
+const ZERO = new THREE.Vector3(0, 0, 0);
 /**
  * CameraController offers an application a sidebar widget for
  * orienting a camera in a certain viewport layout.
@@ -24,6 +26,13 @@ class CameraController {
   getViewport() {
     return this.viewport;
   }
+  flipCamera() {
+    this.viewport.inversePan();
+    const cam = this.viewport.getTHREECamera();
+    cam.position.multiplyScalar(-1);
+    cam.lookAt(ZERO);
+    this.viewport.applyPan();
+  }
 }
 
 /**
@@ -32,13 +41,22 @@ class CameraController {
  */
 export default class QuadViewCameraParameters {
   constructor(view) {
-    this.sidebarWidget = QuadViewCameraControlsWidget;
+    this.sidebarWidget = QuadViewCameraControlsSidebarWidget;
+    this.windowConfig = {
+      widget: QuadViewCameraControlsWindow,
+      title: 'Camera Parameters',
+      openPosition: { x: 0.45, y: 0.02, viewportCoords: true },
+      open: false
+    };
     this.layout = view.layout;
     this.topright = new CameraController(this.layout.getTopLeft());
     this.topleft = new CameraController(this.layout.getTopRight());
     this.bottomleft = new CameraController(this.layout.getBottomLeft());
     this.bottomright = new CameraController(this.layout.getBottomRight());
     this.resetControlsCallbacks = [];
+  }
+  openCamControls() {
+    this.windowConfig.open = true;
   }
   /**
    * Reset the perspective camera and offset it in the y-direction slightly.

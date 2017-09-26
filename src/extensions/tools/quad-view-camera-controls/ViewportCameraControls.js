@@ -29,8 +29,8 @@ export default class ViewportCameraControls extends ViewportEventHandler {
     }
     return true;
   }
-  mouseWheelAction(deltaY, x, y) {
-    const propagation = super.mouseWheelAction(deltaY, x, y);
+  mouseWheelAction(deltaY) {
+    const propagation = super.mouseWheelAction(deltaY);
     if (!propagation) {
       return false;
     }

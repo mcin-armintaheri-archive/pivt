@@ -31,11 +31,6 @@ export default {
       dependencies: ['view']
     },
     {
-      name: 'contrast',
-      tool: 'CurveTool',
-      dependencies: ['view']
-    },
-    {
       name: 'planeParams',
       tool: 'OrthoPlanesParameters',
       dependencies: ['view']
@@ -48,6 +43,11 @@ export default {
     {
       name: 'cameraControls',
       tool: 'QuadViewCameraControls',
+      dependencies: ['view']
+    },
+    {
+      name: 'contrast',
+      tool: 'CurveTool',
       dependencies: ['view']
     }
   ],

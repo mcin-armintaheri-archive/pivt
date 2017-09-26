@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+const ZERO = new THREE.Vector3(0, 0, 0);
+
 export const ORTHOGRAPHIC = 'ORTHOGRAPHIC';
 export const PERSPECTIVE = 'PERSPECTIVE';
 export const TRACKBALL = 'TRACKBALL';
@@ -141,6 +143,7 @@ export default class ViewPort {
     this.inversePan();
     const axis = this.camera.getWorldDirection().normalize().multiplyScalar(-1.0);
     this.camera.up.applyAxisAngle(axis, angle);
+    this.camera.lookAt(ZERO);
     this.applyPan();
   }
   setNear(near) {
