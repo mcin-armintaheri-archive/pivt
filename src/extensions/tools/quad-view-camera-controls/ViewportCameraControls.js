@@ -29,15 +29,19 @@ export default class ViewportCameraControls extends ViewportEventHandler {
     }
     return true;
   }
-  mouseWheelAction(deltaY) {
-    const propagation = super.mouseWheelAction(deltaY);
+  mouseWheelAction(deltaY, x, y) {
+    const propagation = super.mouseWheelAction(deltaY, x, y);
     if (!propagation) {
       return false;
     }
     const cam = this.viewport.getTHREECamera();
-    cam.zoom += -(deltaY * cam.zoom) / 600;
+    const incr = -(deltaY * cam.zoom) / 600;
+    cam.zoom += incr;
     if (cam.zoom < 0.5) {
       cam.zoom = 0.5;
+    }
+    if (cam.zoom > 20) {
+      cam.zoom = 20;
     }
     return true;
   }

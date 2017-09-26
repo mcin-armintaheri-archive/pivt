@@ -76,11 +76,12 @@ export default class ViewportEventHandler {
   }
   wheel(event) {
     if (this.viewport.mouseIntersects()) {
-      this.mouseWheelAction(event.deltaY);
+      const mouse = this.viewport.getMousePosReference();
+      this.mouseWheelAction(event.deltaY, mouse.x, mouse.y);
     }
   }
-  mouseWheelAction(deltaY) {
-    return this.doMouseAction('mouseWheelAction', deltaY);
+  mouseWheelAction(deltaY, x, y) {
+    return this.doMouseAction('mouseWheelAction', deltaY, x, y);
   }
   dispose() {
     R.keys(this.listeners).forEach((key) => {

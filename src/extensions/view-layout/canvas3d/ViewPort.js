@@ -66,6 +66,14 @@ export default class ViewPort {
     this.camera.position.z = 5.0;
   }
   /**
+   * Get the Orthographic viewport dimensions
+   * @type {[type]}
+   */
+  getOrthographicDimensions() {
+    const { left, right, top, bottom } = this.camera;
+    return { left, right, top, bottom };
+  }
+  /**
    * Get the reference to the THREE.Camera used by this viewport.
    */
   getTHREECamera() {
