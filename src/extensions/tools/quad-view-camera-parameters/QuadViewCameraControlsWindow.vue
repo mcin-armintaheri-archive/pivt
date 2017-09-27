@@ -3,49 +3,34 @@
     <div class="controls-container">
       <div class="top-row">
         <viewport-controls
-          title="XY Plane"
           v-bind:camControls="controller.getTopRight()"
           v-bind:controller="controller"
+          v-on:swap-viewport="c => controller.swapViewport(0, c, swapModes)"
+          v-bind:swap-mode="swapModes[0]"
         >
-          <ortho-controls
-            v-bind:camControls="controller.getTopRight()"
-            slot="extra-controls"
-          >
-          </ortho-controls>
         </viewport-controls>
         <viewport-controls
-          title="YZ Plane"
           v-bind:camControls="controller.getTopLeft()"
           v-bind:controller="controller"
+          v-on:swap-viewport="c => controller.swapViewport(1, c, swapModes)"
+          v-bind:swap-mode="swapModes[1]"
         >
-          <ortho-controls
-            slot="extra-controls"
-            v-bind:camControls="controller.getTopLeft()"
-          >
-          </ortho-controls>
         </viewport-controls>
       </div>
       <div class="bottom-row">
         <viewport-controls
-          title="XZ Plane"
           v-bind:camControls="controller.getBottomLeft()"
           v-bind:controller="controller"
+          v-on:swap-viewport="c => controller.swapViewport(2, c, swapModes)"
+          v-bind:swapMode="swapModes[2]"
         >
-          <ortho-controls
-            slot="extra-controls"
-            v-bind:camControls="controller.getBottomLeft()"
-          >
-          </ortho-controls>
         </viewport-controls>
         <viewport-controls
-          title="Perspective View"
           v-bind:camControls="controller.getBottomRight()"
           v-bind:controller="controller"
+          v-on:swap-viewport="c => controller.swapViewport(3, c, swapModes)"
+          v-bind:swap-mode="swapModes[3]"
         >
-          <trackball-controls
-            slot="extra-controls"
-            v-bind:controller="controller"
-          ></trackball-controls>
         </viewport-controls>
       </div>
     </div>
@@ -54,8 +39,6 @@
 
 <script>
 import ViewportControls from './ViewportControls';
-import TrackballControls from './TrackballControls';
-import OrthoControls from './OrthoControls';
 
 /**
  * quad-view-camera-controls shows a 2x2 table of inputs for controlling
@@ -64,13 +47,18 @@ import OrthoControls from './OrthoControls';
 export default {
   name: 'quad-view-camera-controls-window',
   components: {
-    'viewport-controls': ViewportControls,
-    'trackball-controls': TrackballControls,
-    'ortho-controls': OrthoControls
+    'viewport-controls': ViewportControls
   },
   props: ['controller'],
   data() {
-    return {};
+    return {
+      swapModes: [
+        'Swap Viewport',
+        'Swap Viewport',
+        'Swap Viewport',
+        'Swap Viewport'
+      ]
+    };
   }
 };
 </script>

@@ -50,6 +50,7 @@ export default class ViewPort {
     this.lastMouseUp = new THREE.Vector2();
     this.clearColor = new THREE.Color().setRGB(1.0, 1.0, 1.0);
     this.pan = { x: 0, y: 0 };
+    this.type = type;
     switch (type) {
       case PERSPECTIVE: {
         this.camera = new THREE.PerspectiveCamera();
@@ -67,6 +68,9 @@ export default class ViewPort {
     this.setFar(far);
     this.camera.position.z = 5.0;
   }
+  getType() {
+    return this.type;
+  }
   /**
    * Get the Orthographic viewport dimensions
    * @type {[type]}
@@ -74,6 +78,14 @@ export default class ViewPort {
   getOrthographicDimensions() {
     const { left, right, top, bottom } = this.camera;
     return { left, right, top, bottom };
+  }
+  getScreenPosition() {
+    const { left, bottom } = this.viewport;
+    return { left, bottom };
+  }
+  setScreenPosition(left, bottom) {
+    this.viewport.left = left;
+    this.viewport.bottom = bottom;
   }
   /**
    * Get the reference to the THREE.Camera used by this viewport.

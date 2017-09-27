@@ -19,7 +19,7 @@ export default {
   props: ['controller'],
   methods: {
     openPlotWindow() {
-      this.controller.windowConfig.open = true;
+      this.controller.windowConfig.open = !this.controller.windowConfig.open;
       setTimeout(this.controller.redrawPlot.bind(this.controller), 50);
     }
   }

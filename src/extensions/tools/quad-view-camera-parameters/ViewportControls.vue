@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="input-title">
-      {{ this.title }}
+      {{ this.camControls.getTitle() }}
     </div>
     <div class="input-group">
       <div class="labeled-input">
@@ -45,15 +45,31 @@
       </el-button>
     </div>
     <div class="input-group">
-      <el-button type="primary">Swap Viewport</el-button>
+      <el-button
+        type="primary"
+        @click="$emit('swap-viewport', camControls)"
+      >
+        {{ this.swapMode }}
+      </el-button>
     </div>
-    <div class="extra-controls-slot">
-      <slot name="extra-controls"></slot>
-    </div>
+    <trackball-controls
+      v-if="camControls.getViewport().getType() === 'PERSPECTIVE'"
+      v-bind:controller="controller"
+    >
+    </trackball-controls>
+    <ortho-controls
+      v-if="camControls.getViewport().getType() === 'ORTHOGRAPHIC'"
+      v-bind:controller="controller"
+      v-bind:camControls="camControls"
+    >
+    </ortho-controls>
   </div>
 </template>
 
 <script>
+import TrackballControls from './TrackballControls';
+import OrthoControls from './OrthoControls';
+
 /**
  * orthographic-controls is a child component for containing the inputs
  * associated with a single orthographic layout. It offers
@@ -61,10 +77,21 @@
  */
 export default {
   name: 'viewport-controls',
-  props: ['controller', 'title', 'camControls'],
+  props: ['controller', 'camControls', 'swapMode'],
+  components: {
+    'trackball-controls': TrackballControls,
+    'ortho-controls': OrthoControls
+  },
+  beforeUpdate() {
+    const vp = this.camControls.getViewport();
+    if (vp !== this.viewport) {
+      this.viewportPan = vp.pan;
+    }
+  },
   data() {
     return {
       roll: 0,
+      viewport: this.camControls.getViewport(),
       viewportPan: this.camControls.getViewport().pan
     };
   },

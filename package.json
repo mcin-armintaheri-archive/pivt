@@ -21,7 +21,7 @@
     "element-ui": "^1.3.5",
     "file-size": "^1.0.0",
     "pixbincodec": "github:pixpipe/pixbincodec",
-    "pixpipejs": "github:pixpipe/pixpipejs",
+    "pixpipejs": "github:jonathanlurie/pixpipejs",
     "ramda": "^0.24.1",
     "rx": "^4.1.0",
     "three": "^0.85.2",
