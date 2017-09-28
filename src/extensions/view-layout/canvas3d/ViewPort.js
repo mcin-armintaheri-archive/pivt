@@ -43,7 +43,7 @@ export default class ViewPort {
     this.canvas = canvas;
     this.renderer = renderer;
     this.canvasRectangle = rectangle;
-    this.frustrumSize = height * rectangle.height;
+    this.frustrumSize = (height * rectangle.height) / 2;
     this.viewport = { bottom, left, width, height };
     this.mouse = new THREE.Vector2();
     this.lastMouseDown = new THREE.Vector2();
