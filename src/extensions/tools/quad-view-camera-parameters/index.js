@@ -10,53 +10,71 @@ const ZERO = new THREE.Vector3(0, 0, 0);
  * @type {[type]}
  */
 class CameraController {
-  constructor(title, viewport) {
-    this.viewport = viewport;
-    this.title = title;
+  constructor(index, title, viewport) {
+    this.state = {
+      title,
+      viewport,
+      quadPosition: index,
+      flipped: false
+    };
+  }
+  getState() {
+    return this.state;
+  }
+  setState(state) {
+    this.state = state;
   }
   getTitle() {
-    return this.title;
+    return this.state.title;
   }
   setTitle(string) {
-    this.title = string;
+    this.state.title = string;
+  }
+  getQuadPosition() {
+    return this.state.quadPosition;
+  }
+  setQuadPosition(i) {
+    this.state.quadPosition = i;
   }
   rollBy(angle, isRad = false) {
     let angRad = angle;
     if (!isRad) {
       angRad = Math.PI * (angRad / 180);
     }
-    this.viewport.rollBy(angRad);
+    this.state.viewport.rollBy(angRad);
   }
   setPan(pan) {
     const { x, y } = pan;
-    this.viewport.setPan({ x, y });
+    this.state.viewport.setPan({ x, y });
   }
   getViewport() {
-    return this.viewport;
+    return this.state.viewport;
   }
   setViewport(viewport) {
-    this.viewport = viewport;
+    this.state.viewport = viewport;
+  }
+  isFlipped() {
+    return this.state.flipped;
   }
   flipCamera() {
-    this.viewport.inversePan();
-    const cam = this.viewport.getTHREECamera();
+    this.state.viewport.inversePan();
+    const cam = this.state.viewport.getTHREECamera();
     cam.position.multiplyScalar(-1);
     cam.lookAt(ZERO);
-    this.viewport.applyPan();
+    this.state.viewport.applyPan();
+    this.state.flipped = !this.state.flipped;
   }
   swapViewportWith(otherCamController) {
-    const title1 = this.getTitle();
-    const title2 = otherCamController.getTitle();
     const vp1 = this.getViewport();
     const vp2 = otherCamController.getViewport();
     const vpPos1 = vp1.getScreenPosition();
     const vpPos2 = vp2.getScreenPosition();
     vp1.setScreenPosition(vpPos2.left, vpPos2.bottom);
     vp2.setScreenPosition(vpPos1.left, vpPos1.bottom);
-    this.setViewport(vp2);
-    otherCamController.setViewport(vp1); // eslint-disable-line no-param-reassign
-    this.setTitle(title2);
-    otherCamController.setTitle(title1);
+    const state1 = this.state;
+    const state2 = otherCamController.state;
+    this.state = state2;
+    otherCamController.state = state1; // eslint-disable-line no-param-reassign
   }
 }
 
@@ -74,13 +92,17 @@ export default class QuadViewCameraParameters {
       open: false
     };
     this.layout = view.layout;
-    this.topright = new CameraController('XY Plane', this.layout.getTopLeft());
-    this.topleft = new CameraController('XZ Plane', this.layout.getTopRight());
-    this.bottomleft = new CameraController('YZ Plane', this.layout.getBottomLeft());
-    this.bottomright = new CameraController('Perspective View', this.layout.getBottomRight());
+    this.camControlsList = [
+      new CameraController(0, 'XY Plane', this.layout.getTopLeft()),
+      new CameraController(1, 'XZ Plane', this.layout.getTopRight()),
+      new CameraController(2, 'YZ Plane', this.layout.getBottomLeft()),
+      new CameraController(3, 'Perspective View', this.layout.getBottomRight())
+    ];
     this.resetControlsCallbacks = [];
     this.currentSwap = null;
-    this.viewportMap = [0, 1, 2, 3];
+  }
+  getCamControls(index) {
+    return this.camControlsList[index];
   }
   swapViewport(index, camControls, vuejsSwapModes) {
     /* eslint-disable no-param-reassign */
@@ -97,9 +119,6 @@ export default class QuadViewCameraParameters {
       return;
     }
     this.currentSwap.camControls.swapViewportWith(camControls);
-    const tmp = this.viewportMap[this.currentSwap.index];
-    this.viewportMap[this.currentSwap.index] = this.viewportMap[index];
-    this.viewportMap[index] = tmp;
     vuejsSwapModes.forEach((_, i) => { Vue.set(vuejsSwapModes, i, 'Swap Viewport'); });
     this.currentSwap = null;
   }
@@ -120,16 +139,23 @@ export default class QuadViewCameraParameters {
   getLayout() {
     return this.layout;
   }
-  getTopLeft() {
-    return this.topleft;
+  serialize() {
+    return {
+      permutation: this.camControlsList.map(c => c.getQuadPosition()),
+      flipped: this.camControlsList.map(c => c.isFlipped())
+    };
   }
-  getTopRight() {
-    return this.topright;
-  }
-  getBottomLeft() {
-    return this.bottomleft;
-  }
-  getBottomRight() {
-    return this.bottomright;
+  deserialize(json) {
+    const { permutation, flipped } = json;
+    const states = this.camControlsList.map(c => c.getState());
+    const vpPositions = this.camControlsList.map(c => c.getViewport().getScreenPosition());
+    permutation.forEach((i1, i2) => {
+      const { left, bottom } = vpPositions[i2];
+      this.camControlsList[i1].getViewport().setScreenPosition(left, bottom);
+      this.camControlsList[i1].setState(states[i2]);
+      if (flipped[i2]) {
+        this.camControlsList[i2].flipCamera();
+      }
+    });
   }
 }

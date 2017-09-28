@@ -38,7 +38,5 @@ export default class OrthoPlanesParameters {
     const system = this.scene.getPlaneSystem();
     system.position.set(position.x, position.y, position.z);
     system.rotation.set(rotation.x, rotation.y, rotation.z);
-    // TODO: use vue set/get
-    this.updateFromScene();
   }
 }

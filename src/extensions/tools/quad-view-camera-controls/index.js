@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import ViewportCameraControls from './ViewportCameraControls';
 import TrackballControls from './TrackballControls';
 
+const ZERO = new THREE.Vector3(0, 0, 0);
+
 export default class QuadViewCameraControls {
   constructor(view) {
     const { layout } = view;
@@ -30,12 +32,12 @@ export default class QuadViewCameraControls {
   }
   deserialize(json) {
     json.forEach((serializedPanner, i) => {
-      this.panners[i].getViewport().setPan(serializedPanner.pan);
-      this.panners[i].getViewport().getTHREECamera().zoom = serializedPanner.zoom;
+      this.controls[i].getViewport().setPan(serializedPanner.pan);
+      this.controls[i].getViewport().getTHREECamera().zoom = serializedPanner.zoom;
     });
     const { x, y, z } = json[3].pos;
     const perspCam = this.controls[3].getViewport().getTHREECamera();
-    perspCam.position = new THREE.Vector3(x, y, z);
-    perspCam.lookAt(new THREE.Vector3(0, 0, 0));
+    perspCam.position.set(x, y, z);
+    perspCam.lookAt(ZERO);
   }
 }

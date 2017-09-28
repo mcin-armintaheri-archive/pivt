@@ -47,9 +47,9 @@ export default class XYZPerspectiveQuadView extends Canvas3DLayout {
       PERSPECTIVE
     );
     // TODO: better colors for quadrants.
-    this.topleft.setClearColor(new THREE.Color().setRGB(0.7, 0.0, 0.0));
-    this.topright.setClearColor(new THREE.Color().setRGB(0.0, 0.7, 0.0));
-    this.bottomleft.setClearColor(new THREE.Color().setRGB(0.0, 0.0, 0.7));
+    this.topleft.setClearColor(new THREE.Color().setRGB(0.85, 0.0, 0.0));
+    this.topright.setClearColor(new THREE.Color().setRGB(0.0, 0.85, 0.0));
+    this.bottomleft.setClearColor(new THREE.Color().setRGB(0.0, 0.0, 0.85));
     this.bottomright.setClearColor(new THREE.Color().setRGB(0.9, 0.9, 0.9));
     this.addViewports(
       this.topleft,

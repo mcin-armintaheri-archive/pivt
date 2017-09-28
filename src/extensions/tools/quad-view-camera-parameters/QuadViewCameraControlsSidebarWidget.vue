@@ -1,6 +1,6 @@
 <template>
     <el-button class="cam-controls-button" type="primary" @click="controller.openCamControls()">
-      <icon name="video-camera"></icon> Open Camera Controls
+      <icon name="video-camera"></icon> &nbsp; Open Camera Controls
     </el-button>
 </template>
 
@@ -20,4 +20,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 </style>

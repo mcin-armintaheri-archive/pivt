@@ -3,14 +3,14 @@
     <div class="controls-container">
       <div class="top-row">
         <viewport-controls
-          v-bind:camControls="controller.getTopRight()"
+          v-bind:camControls="controller.getCamControls(0)"
           v-bind:controller="controller"
           v-on:swap-viewport="c => controller.swapViewport(0, c, swapModes)"
           v-bind:swap-mode="swapModes[0]"
         >
         </viewport-controls>
         <viewport-controls
-          v-bind:camControls="controller.getTopLeft()"
+          v-bind:camControls="controller.getCamControls(1)"
           v-bind:controller="controller"
           v-on:swap-viewport="c => controller.swapViewport(1, c, swapModes)"
           v-bind:swap-mode="swapModes[1]"
@@ -19,14 +19,14 @@
       </div>
       <div class="bottom-row">
         <viewport-controls
-          v-bind:camControls="controller.getBottomLeft()"
+          v-bind:camControls="controller.getCamControls(2)"
           v-bind:controller="controller"
           v-on:swap-viewport="c => controller.swapViewport(2, c, swapModes)"
           v-bind:swapMode="swapModes[2]"
         >
         </viewport-controls>
         <viewport-controls
-          v-bind:camControls="controller.getBottomRight()"
+          v-bind:camControls="controller.getCamControls(3)"
           v-bind:controller="controller"
           v-on:swap-viewport="c => controller.swapViewport(3, c, swapModes)"
           v-bind:swap-mode="swapModes[3]"
