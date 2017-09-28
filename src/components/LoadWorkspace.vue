@@ -45,7 +45,8 @@ export default {
   },
   methods: {
     addWorkspace(file) {
-      this.$el.value = '';
+      const input = this.$el.querySelector('.add-file-input');
+      input.value = '';
       const reader = new FileReader();
       const decoder = new PixBinDecoder();
       reader.readAsArrayBuffer(file);
