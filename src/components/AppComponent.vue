@@ -1,5 +1,5 @@
 <template>
-  <div class="app-component">
+  <div v-bind:class="sidebarShow">
     <application-page :application="application">
     </application-page>
   </div>
@@ -13,7 +13,16 @@ export default {
   components: {
     'application-page': ApplicationPage
   },
-  props: ['application']
+  props: ['application', 'showSidebar'],
+  computed: {
+    sidebarShow() {
+      return {
+        'app-component': true,
+        'sidebar-showing': this.showSidebar,
+        fullscreen: this.application.getPageController().getPageConfig().fullScreen
+      };
+    }
+  }
 };
 </script>
 
@@ -23,5 +32,15 @@ export default {
   overflow: hidden;
   position: absolute;
   z-index: 0;
+}
+.app-component.sidebar-showing {
+  margin-left: 431px;
+}
+.app-component.fullscreen {
+  width: 100vw;
+  height: 100vh;
+}
+.app-component.fullscreen.sidebar-showing {
+  width: calc(100vw - 431px);
 }
 </style>

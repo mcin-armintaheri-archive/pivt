@@ -16,7 +16,7 @@
           </div>
           <div class="button-container">
             <el-button class="sidebar-button" type="primary" @click="$emit('show-buffer-list')">
-              <i class="el-icon-upload2"></i>&nbsp;&nbsp;&nbsp;File Buffer List
+              <i class="el-icon-upload2"></i>&nbsp;&nbsp;&nbsp;File List
             </el-button>
           </div>
           <div class="button-container">
@@ -59,7 +59,7 @@
       </el-col>
       <el-col :span="1">
         <div class="sidebar-toggle" v-on:click="toggleSideBar">
-          <i v-bind:class="toggled ? 'el-icon-caret-left' : 'el-icon-caret-right'"></i>
+          <i v-bind:class="showSidebar ? 'el-icon-caret-left' : 'el-icon-caret-right'"></i>
         </div>
       </el-col>
     </el-row>
@@ -82,7 +82,7 @@ export default {
     'sidebar-widget': SidebarWidget,
     'application-sidebar-widgets': ApplicationSidebarWidgets
   },
-  props: ['applications', 'three-mount'],
+  props: ['applications', 'three-mount', 'showSidebar'],
   mounted() {
     window.addEventListener('keydown', (event) => {
       if (event.ctrlKey || event.metaKey) {
@@ -95,13 +95,13 @@ export default {
     });
   },
   data() {
-    return { toggled: true };
+    return {};
   },
   computed: {
     sidebarShow() {
       return {
         'sidebar-menu': true,
-        'sidebar-hide': !this.toggled
+        'sidebar-hide': !this.showSidebar
       };
     }
   },
@@ -116,7 +116,7 @@ export default {
       }).catch(() => {});
     },
     toggleSideBar() {
-      this.toggled = !this.toggled;
+      this.$emit('toggle-sidebar');
     },
     newApplication() {
       this.$emit('new-application');
@@ -170,6 +170,9 @@ export default {
 }
 .sidebar-hide {
   display: none;
+}
+.sidebar-toggle:hover {
+  cursor: pointer;
 }
 .sidebar-toggle {
   pointer-events: all;

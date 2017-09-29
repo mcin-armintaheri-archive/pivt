@@ -9,6 +9,9 @@ export default class Page {
     this.canvas3dCallbacks = {};
     this.resolved = {};
   }
+  getPageConfig() {
+    return this.pageConfig;
+  }
   /**
    * Get a promise which resolves when the mount point for a canvaslayout has mounted
    * into the UI.

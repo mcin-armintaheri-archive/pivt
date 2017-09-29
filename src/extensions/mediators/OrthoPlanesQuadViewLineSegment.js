@@ -18,7 +18,6 @@ export default class OrthoPlanesQuadViewLineSegment {
       const { x, y, z } = dimensions;
       const offset = new THREE.Vector3(x / 2, y / 2, z / 2);
       lineSegmentTool.onSegmentChange((begin, end) => {
-        console.log(begin, end);
         const fromPos = begin.clone();
         fromPos.y *= -1;
         const toPos = end.clone();

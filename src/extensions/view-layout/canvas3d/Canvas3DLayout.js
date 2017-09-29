@@ -21,7 +21,6 @@ export default class Canvas3DLayout {
     this.mousedownSuper = this.mouseDown.bind(this);
     this.mouseupSuper = this.mouseUp.bind(this);
     this.mousemoveSuper = this.mouseMove.bind(this);
-    this.resizeSuper = this.resizeCanvas.bind(this);
   }
   getCanvas() {
     return this.canvas;
@@ -30,13 +29,11 @@ export default class Canvas3DLayout {
     this.canvas.addEventListener('mousedown', this.mousedownSuper);
     this.canvas.addEventListener('mouseup', this.mouseupSuper);
     this.canvas.addEventListener('mousemove', this.mousemoveSuper);
-    window.addEventListener('resize', this.resizeSuper);
   }
   removeLayoutListeners() {
     this.canvas.removeEventListener('mousedown', this.mousedownSuper);
     this.canvas.removeEventListener('mouseup', this.mouseupSuper);
     this.canvas.removeEventListener('mousemove', this.mousemoveSuper);
-    window.removeEventListener('resize', this.resizeSuper);
   }
   mouseIsDown() {
     return this.mouseisdown;
@@ -107,6 +104,7 @@ export default class Canvas3DLayout {
     });
   }
   render(scene) {
+    this.resizeCanvas();
     this.getViewports().forEach(v => v.updateCamera(scene));
   }
 }

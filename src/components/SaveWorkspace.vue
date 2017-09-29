@@ -7,9 +7,10 @@
       <h4>Applications:</h4>
       <el-checkbox-group class="item-checkbox-group" v-model="appChecklist">
         <el-checkbox
-          v-for="app in appManager.getApplications()"
-          :label="app.getName()"
+          v-for="(app, idx) in appManager.getApplications()"
+          :label="`${idx}. ${app.getName()}`"
           :key="app.getName()"
+          checked
           @change="checkboxChangeApp(app, $event)"
         ></el-checkbox>
       </el-checkbox-group>
@@ -19,6 +20,7 @@
           v-for="(buffer, idx) in bufferManager.getBufferList()"
           :label="`${idx}. ${buffer.name}`"
           :key="buffer.checksum + idx"
+          checked
           @change="checkboxChangeBuffer(buffer, $event)"
         ></el-checkbox>
       </el-checkbox-group>
@@ -48,10 +50,13 @@ export default {
       bufferManager,
       showWorkspaceSave: this.showDialog,
       appChecklist: [],
-      checkedApps: {},
-      bufferChecklist: [],
-      checkedBuffers: {}
+      checkedApps: [],
+      bufferChecklist: []
     };
+  },
+  beforeUpdate() {
+    this.checkedApps = R.fromPairs(appManager.getApplications().map(a => [a.getUid(), a]));
+    this.checkedBuffers = R.fromPairs(bufferManager.getBufferList().map(b => [b.checksum, b]));
   },
   methods: {
     saveWorkspace() {

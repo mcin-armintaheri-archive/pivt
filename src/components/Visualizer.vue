@@ -8,6 +8,8 @@
       v-on:show-buffer-list="showBufferList = true"
       v-on:show-workspace-save="showWorkspaceSave = true"
       v-on:show-workspace-load="$refs.loadInput.$el.querySelector('.add-file-input').click()"
+      v-bind:showSidebar="showSidebar"
+      v-on:toggle-sidebar="showSidebar = !showSidebar"
     >
     </sidebar>
     <floating-window-manager v-bind:applications="appManager.currentApplications">
@@ -17,6 +19,7 @@
       :style="`visibility: ${application.isRunning ? 'visible' : 'hidden'}`"
       :key="application.uid"
       :application="application"
+      v-bind:showSidebar="showSidebar"
     >
     </app-component>
     <el-dialog
@@ -79,6 +82,7 @@ export default {
   data() {
     return {
       appManager,
+      showSidebar: true,
       appSelectDialog: false,
       showBufferList: false,
       showWorkspaceSave: false
