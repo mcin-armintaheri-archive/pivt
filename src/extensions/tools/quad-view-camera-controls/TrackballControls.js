@@ -9,6 +9,7 @@ export default class TrackballControls extends ViewportCameraControls {
     this.enabled = true;
     this.lastMouse = null;
     this.resetPosition = new THREE.Vector3();
+    this.quatOffset = null;
     this.dscreen = new THREE.Vector2();
     this.rotAxis = new THREE.Vector3();
     this.mouseScreenToWorld = new THREE.Vector3();
@@ -55,14 +56,27 @@ export default class TrackballControls extends ViewportCameraControls {
     }
     return true;
   }
-  setResetPosition(x, y, z) {
-    this.resetPosition.set(x, y, z);
+  setResetPosition(pos) {
+    this.resetPosition.copy(pos);
+  }
+  getResetPosition() {
+    return this.resetPosition;
+  }
+  setQuaternionOffset(quat) {
+    this.quatOffset = quat;
+  }
+  getQuaternionOffset() {
+    return this.quatOffset;
   }
   resetControls() {
     const cam = this.getViewport().getTHREECamera();
     this.getViewport().setPan({ x: 0, y: 0 });
     cam.position.copy(this.resetPosition);
     cam.up.set(0, 1, 0);
+    if (this.quatOffset) {
+      cam.up.applyQuaternion(this.quatOffset);
+      cam.position.applyQuaternion(this.quatOffset);
+    }
     cam.lookAt(ZERO);
   }
   setEnabled(boolean) {

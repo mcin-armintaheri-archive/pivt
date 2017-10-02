@@ -104,6 +104,12 @@ export default class QuadViewCameraParameters {
   getCamControls(index) {
     return this.camControlsList[index];
   }
+  getOrthoParams() {
+    return this.camControlsList.filter(c => c.getViewport().getType() === 'ORTHOGRAPHIC');
+  }
+  getPerspParams() {
+    return this.camControlsList.filter(c => c.getViewport().getType() === 'PERSPECTIVE');
+  }
   swapViewport(index, camControls, vuejsSwapModes) {
     /* eslint-disable no-param-reassign */
     if (this.currentSwap === null) {
@@ -129,6 +135,8 @@ export default class QuadViewCameraParameters {
    * Reset the perspective camera and offset it in the y-direction slightly.
    */
   resetControls() {
+    this.getOrthoParams().forEach((c) => { c.getViewport().setPan({ x: 0, y: 0 }); });
+    this.camControlsList.forEach((c) => { c.getViewport().getTHREECamera().zoom = 1; });
     this.resetControlsCallbacks.forEach((f) => { f(); });
   }
   onResetControls(f) {

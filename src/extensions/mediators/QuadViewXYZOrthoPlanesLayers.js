@@ -2,6 +2,7 @@ import R from 'ramda';
 
 import * as THREE from 'three';
 
+const ZERO = new THREE.Vector3(0, 0, 0);
 /**
  * PlaneCameraAligner associated a viewport with a particular plane in
  * OrthoPlanes. The aligner makes the camera in the viewport rotate and move with the
@@ -62,8 +63,13 @@ class PlaneCameraAligner {
     this.viewport.inversePan();
     this.updateCameraOrientation();
     camera.up.copy(this.initialUp);
-    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    camera.lookAt(ZERO);
     this.viewport.applyPan();
+  }
+  rollDefaultUpBy(angle) {
+    const { zDir } = this.viewport.getCameraAxes();
+    const rotation = new THREE.Quaternion().setFromAxisAngle(zDir, angle).normalize();
+    this.initialUp.applyQuaternion(rotation);
   }
 }
 
@@ -120,7 +126,6 @@ export default class QuadViewXYZOrthoPlanesLayers {
     materialManager.onMaterialChange((material, dimensions) => {
       scene.getPlaneSystem().position.set(0, 0, 0);
       scene.getPlaneSystem().rotation.set(0, 0, 0);
-      this.resetCameraUps();
       const { diagonal } = dimensions;
       const camRadius = diagonal * 0.5;
       this.threeScene.updateMatrixWorld(true);
@@ -145,7 +150,7 @@ export default class QuadViewXYZOrthoPlanesLayers {
           controls: viewportControls[2],
           plane: scene.getYZ(),
           layer: 3,
-          cameraPosition: new THREE.Vector3(-camRadius, 0, 0)
+          cameraPosition: new THREE.Vector3(camRadius, 0, 0)
         }
       ];
       planeCamConfigs.forEach((config) => {
@@ -167,8 +172,19 @@ export default class QuadViewXYZOrthoPlanesLayers {
       this.axisSystems.filter(R.identity).forEach((axes) => {
         axes.dispose();
       });
-      camControls.getTrackballControls().setResetPosition(0, 10, diagonal);
-      camControls.getTrackballControls().resetControls();
+      const resetPosition = new THREE.Vector3().set(0, 10, diagonal);
+      const perspRotation = new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(1, 0, 0),
+        Math.PI / 2
+      );
+      const trackballControls = camControls.getTrackballControls();
+      trackballControls.setResetPosition(resetPosition);
+      trackballControls.setQuaternionOffset(perspRotation);
+      trackballControls.resetControls();
+      // Fix YZ camera orientation.
+      this.resetCameraUps();
+      this.aligners[2].rollDefaultUpBy(Math.PI / 2);
+      this.resetCameraUps();
       /*
         If the QuadViewCameraAxes tool is bundled with the application,
         create the axes for each orthographic camera.
