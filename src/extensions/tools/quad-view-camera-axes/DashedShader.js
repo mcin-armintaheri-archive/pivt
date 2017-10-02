@@ -30,16 +30,6 @@ export const FRAGMENT = `
 
   void main( void )
   {
-    if (modelCoord.x + modelCoord.y + modelCoord.z >= 0.0)
-    {
-      gl_FragColor = vec4(r, g, b, opacity);
-      return;
-    }
-    if (evenBoxCheck(modelCoord))
-    {
-      gl_FragColor = vec4(r, g, b, opacity);
-      return;
-    }
-    discard;
+    gl_FragColor = vec4(r, g, b, opacity);
   }
 `;

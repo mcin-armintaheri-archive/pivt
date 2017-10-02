@@ -13,8 +13,9 @@
         v-if="tool.windowConfig && tool.windowConfig.widget && tool.windowConfig.open"
         v-bind:window-controller="tool"
         v-on:window-grab="dragging = true"
+        v-on:window-focus="focused = idx"
         v-on:window-release="dragging = false"
-        v-bind:class="dragging ? 'dragging-mode' : ''"
+        v-bind:class="windowClass(idx)"
       >
       </floating-window-container>
     </div>
@@ -38,7 +39,15 @@ export default {
   },
   props: ['applications'],
   data() {
-    return { dragging: false };
+    return { dragging: false, focused: 0 };
+  },
+  methods: {
+    windowClass(idx) {
+      return {
+        'dragging-mode': this.dragging,
+        focused: this.focused === idx
+      };
+    }
   }
 };
 </script>

@@ -94,14 +94,19 @@ export default {
         this.windowPos.y = initialWindowPos.top + (event.clientY - mouseDownPos.y);
       }
     };
+    const focusWindow = () => {
+      this.$emit('window-focus');
+    };
     const topbar = this.$el.querySelector('.top-bar');
     topbar.addEventListener('mousedown', grabWindow);
+    this.$el.addEventListener('mousedown', focusWindow);
     window.addEventListener('mousemove', moveWindow);
-    this.windowHandlers = { topbar, releaseWindow, grabWindow, moveWindow };
+    this.windowHandlers = { topbar, releaseWindow, grabWindow, moveWindow, focusWindow };
   },
   destroyed() {
-    const { topbar, releaseWindow, grabWindow, moveWindow } = this.windowHandlers;
+    const { topbar, releaseWindow, grabWindow, moveWindow, focusWindow } = this.windowHandlers;
     topbar.removeEventListener('mousedown', grabWindow);
+    this.$el.removeEventListener('mousedown', focusWindow);
     window.removeEventListener('mousemove', moveWindow);
     window.removeEventListener('mouseup', releaseWindow);
   },
@@ -121,6 +126,10 @@ export default {
   pointer-events: all;
   display: inline-block;
   position: absolute;
+  z-index: 0;
+}
+.container.focused {
+  z-index: 1;
 }
 .window-widget {
   position: relative;
