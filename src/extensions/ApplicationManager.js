@@ -199,10 +199,7 @@ class ApplicationManager {
       application
     );
     this.appCount[application.type] += 1;
-    if (this.currentApplications.length === 0) {
-      // Run the application after it loads.
-      creationPromise.then(() => app.run());
-    }
+    creationPromise.then(() => this.startApplication(app));
     this.currentApplications.push(app);
     return { app, creationPromise };
   }
@@ -210,7 +207,7 @@ class ApplicationManager {
     application.dispose();
     this.currentApplications = this.currentApplications.filter(a => a !== application);
     if (this.currentApplications.length > 0) {
-      this.startApplication(0);
+      this.startApplication(this.currentApplications[0]);
     }
   }
   startApplication(application) {
