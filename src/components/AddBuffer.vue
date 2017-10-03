@@ -6,7 +6,7 @@
     >
       <buffer-manager-widget>
       </buffer-manager-widget>
-      <input type="file" class="add-file-input" @change="addFile($event.target)"/>
+      <input multiple type="file" class="add-file-input" @change="addFiles($event.target)"/>
       <span slot="footer">
         <el-button @click="$el.querySelector('.add-file-input').click()">Add</el-button>
         <el-button @click="$emit('update:showDialog', false)">Cancel</el-button>
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import R from 'ramda';
 import BufferManagerWidget from '@/components/BufferManagerWidget';
 import BufferManager from '@/extensions/BufferManager';
 
@@ -58,15 +59,15 @@ export default {
      * reference as payload.
      * @param {[FILE]} file The file reference taken from the input.
      */
-    addFile(input) {
+    addFiles(input) {
       // TODO: Kind of specific to add a volume for a general buffer adder.
       this.addBufferLoading = true;
-      buffermanager.loadBuffer(input.files[0])
-        .then(() => {
-          this.addBufferLoading = false;
-          /* eslint-disable no-param-reassign */
-          input.value = '';
-        });
+      const ps = R.values(input.files).map(file => buffermanager.loadBuffer(file));
+      Promise.all(ps).then(() => {
+        this.addBufferLoading = false;
+        /* eslint-disable no-param-reassign */
+        input.value = '';
+      });
     }
   }
 };

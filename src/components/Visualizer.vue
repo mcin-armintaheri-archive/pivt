@@ -75,6 +75,16 @@ export default {
     'floating-window-manager': FloatingWindowManager
   },
   mounted() {
+    const canvas = document.createElement('canvas');
+    // Get WebGLRenderingContext from canvas element.
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    // Report the result.
+    if (!gl || !(gl instanceof WebGLRenderingContext)) {
+      this.$alert('Your browser does not support WebGL!', 'Warning!', {
+        confirmButtonText: 'OK'
+      });
+      throw new Error('No WebGL Detected.');
+    }
     if (window.initializationHandler instanceof Function) {
       window.initializationHandler(ApplicationManager, BufferManager, this.$message);
     }
