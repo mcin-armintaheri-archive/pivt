@@ -6,6 +6,7 @@
           default-active="2"
           class="sidebar-menu"
           theme="dark"
+          ref="app-menu"
           unique-opened
           @open="startApplication"
         >
@@ -28,6 +29,9 @@
             </el-button>
           </div>
           <div class="app-menu-scroll">
+            <el-button class="app-collapse-all-button" type="primary" @click="collapseAll">
+              <icon name="minus"></icon> &nbsp; Collapse All
+            </el-button>
             <el-submenu
               v-for="(application, idx) in applications"
               :key="idx"
@@ -106,6 +110,11 @@ export default {
     }
   },
   methods: {
+    collapseAll() {
+      this.applications.forEach((_, idx) => {
+        this.$refs['app-menu'].closeMenu(idx);
+      });
+    },
     editAppName(event, application) {
       event.stopPropagation();
       this.$prompt('Enter a name for the running application.', 'Info', {
@@ -199,6 +208,9 @@ export default {
 .app-collapse {
   display: flex;
   justify-content: space-between;
+}
+.app-collapse-all-button {
+  margin: 10px 15px;
 }
 .app-collapse-controls {
   margin-right: 20px;
