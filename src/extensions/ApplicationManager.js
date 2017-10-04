@@ -22,6 +22,7 @@ import OrthoPlanes from './scene/OrthoPlanes';
 
 
 // Begin Tool Imports
+import AppHelp from './tools/app-help';
 import CurveTool from './tools/curve-tool/';
 import PlanesMaterialManager from './tools/planes-material-manager';
 import OrthoPlanesParameters from './tools/ortho-planes-parameters';
@@ -35,6 +36,7 @@ import EEGFileLoader from './tools/eeg-file-loader';
 // End Tool Imports
 
 // Begin Mediator Imports
+import BrainSlicerHelp from './mediators/brain-slicer-help';
 import QuadViewControlsReset from './mediators/QuadViewControlsReset';
 import OrthoPlanesQuadViewLineSegment from './mediators/OrthoPlanesQuadViewLineSegment';
 import OrthoPlanesShaderInjector from './mediators/OrthoPlanesShaderInjector';
@@ -64,6 +66,7 @@ class ApplicationManager {
     // End Scene Registers
 
     // Begin Tool Registers
+    this.registerConstructor(AppHelp);
     this.registerConstructor(CurveTool);
     this.registerConstructor(PlanesMaterialManager);
     this.registerConstructor(OrthoPlanesParameters);
@@ -77,6 +80,7 @@ class ApplicationManager {
     // End Tool Registers
 
     // Begin Mediator Registers
+    this.registerConstructor(BrainSlicerHelp);
     this.registerConstructor(QuadViewControlsReset);
     this.registerConstructor(OrthoPlanesQuadViewLineSegment);
     this.registerConstructor(OrthoPlanesShaderInjector);

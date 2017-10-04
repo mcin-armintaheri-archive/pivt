@@ -11,6 +11,11 @@ export default {
   },
   tools: [
     {
+      name: 'helpWindow',
+      tool: 'AppHelp',
+      dependencies: []
+    },
+    {
       name: 'materialManager',
       tool: 'PlanesMaterialManager',
       dependencies: ['view']
@@ -81,6 +86,11 @@ export default {
       name: 'cameraControlsReset',
       mediator: 'QuadViewControlsReset',
       dependencies: ['cameraControls', 'cameraParams']
+    },
+    {
+      name: 'brainSlicerHelp',
+      mediator: 'BrainSlicerHelp',
+      dependencies: ['helpWindow']
     }
   ]
 };

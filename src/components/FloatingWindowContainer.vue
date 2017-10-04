@@ -54,6 +54,7 @@ export default {
     return { windowPos: initialOpenPosition(this.windowController.windowConfig.openPosition) };
   },
   mounted() {
+    this.$emit('window-focus');
     let initialWindowPos;
     let mouseDownPos;
     let dragging = false;
