@@ -14,7 +14,7 @@ export default class XYZPerspectiveQuadView extends Canvas3DLayout {
       this.canvas,
       this.renderer,
       0.0,
-      0.5,
+      0.0,
       0.5,
       0.5,
       ORTHOGRAPHIC
@@ -32,7 +32,7 @@ export default class XYZPerspectiveQuadView extends Canvas3DLayout {
       this.canvas,
       this.renderer,
       0.0,
-      0.0,
+      0.5,
       0.5,
       0.5,
       ORTHOGRAPHIC

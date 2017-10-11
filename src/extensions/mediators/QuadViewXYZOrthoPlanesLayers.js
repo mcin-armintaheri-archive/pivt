@@ -194,7 +194,7 @@ export default class QuadViewXYZOrthoPlanesLayers {
         quadviewCameraAxes.createParentedAxes(
           layout.getBottomRight(),
           this.planeSystem,
-          diagonal * 10,
+          diagonal * 0.9,
           thickness,
           0.5,
           [0, 1, 2, 3]

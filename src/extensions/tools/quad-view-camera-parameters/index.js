@@ -93,9 +93,9 @@ export default class QuadViewCameraParameters {
     };
     this.layout = view.layout;
     this.camControlsList = [
-      new CameraController(0, 'XY Plane', this.layout.getTopLeft()),
-      new CameraController(1, 'XZ Plane', this.layout.getTopRight()),
-      new CameraController(2, 'YZ Plane', this.layout.getBottomLeft()),
+      new CameraController(0, 'YZ Plane', this.layout.getBottomLeft()),
+      new CameraController(1, 'XY Plane', this.layout.getTopRight()),
+      new CameraController(2, 'XZ Plane', this.layout.getTopLeft()),
       new CameraController(3, 'Perspective View', this.layout.getBottomRight())
     ];
     this.resetControlsCallbacks = [];
