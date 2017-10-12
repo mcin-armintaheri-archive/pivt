@@ -33,6 +33,8 @@ import LineSegmentTool from './tools/line-segment-tool';
 import IntensityPlotWindow from './tools/intensity-plot-window';
 import EEGSpectrumPlot from './tools/eeg-spectrum-plot';
 import EEGFileLoader from './tools/eeg-file-loader';
+import ActiveViewportIndicator from './tools/ActiveViewportIndicator';
+import SliceTraversal from './tools/SliceTraversal';
 // End Tool Imports
 
 // Begin Mediator Imports
@@ -78,6 +80,8 @@ class ApplicationManager {
     this.registerConstructor(IntensityPlotWindow);
     this.registerConstructor(EEGSpectrumPlot);
     this.registerConstructor(EEGFileLoader);
+    this.registerConstructor(ActiveViewportIndicator);
+    this.registerConstructor(SliceTraversal);
     // End Tool Registers
 
     // Begin Mediator Registers

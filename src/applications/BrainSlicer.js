@@ -54,13 +54,23 @@ export default {
       name: 'contrast',
       tool: 'CurveTool',
       dependencies: ['view']
+    },
+    {
+      name: 'activeViewportIndicator',
+      tool: 'ActiveViewportIndicator',
+      dependencies: []
+    },
+    {
+      name: 'sliceTraversal',
+      tool: 'SliceTraversal',
+      dependencies: []
     }
   ],
   mediators: [
     {
       name: 'activeViewport',
       mediator: 'ActiveViewportControlsManager',
-      dependencies: ['cameraControls', 'lineSegmentTool']
+      dependencies: ['cameraControls', 'activeViewportIndicator', 'lineSegmentTool', 'sliceTraversal']
     },
     {
       name: 'shaderInjector',

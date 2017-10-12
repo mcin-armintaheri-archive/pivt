@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import ScreenScene from './ScreenScene';
 
 const ZERO = new THREE.Vector3(0, 0, 0);
 
@@ -42,6 +43,8 @@ export default class ViewPort {
     this.enabled = false;
     this.canvas = canvas;
     this.renderer = renderer;
+    this.renderer.autoClear = false;
+    this.screenScene = new ScreenScene();
     this.canvasRectangle = rectangle;
     this.frustrumSize = (height * rectangle.height) / 2;
     this.viewport = { bottom, left, width, height };
@@ -92,6 +95,13 @@ export default class ViewPort {
    */
   getTHREECamera() {
     return this.camera;
+  }
+  /**
+   * Get the scene associated with the HUD
+   * @type {THREE.Scene}
+   */
+  getScreenScene() {
+    return this.screenScene;
   }
   /**
    * Get a reference to the mouse position local to the current viewport's center.
@@ -265,6 +275,9 @@ export default class ViewPort {
     );
     this.renderer.setScissorTest(true);
     this.renderer.setClearColor(this.clearColor, 1);
+    this.renderer.clear();
     this.renderer.render(scene, this.camera);
+    this.renderer.clearDepth();
+    this.screenScene.renderWith(this.renderer);
   }
 }
