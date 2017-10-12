@@ -58,6 +58,11 @@ export default {
   ],
   mediators: [
     {
+      name: 'activeViewport',
+      mediator: 'ActiveViewportControlsManager',
+      dependencies: ['cameraControls', 'lineSegmentTool']
+    },
+    {
       name: 'shaderInjector',
       mediator: 'OrthoPlanesShaderInjector',
       dependencies: ['materialManager']

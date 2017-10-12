@@ -36,6 +36,7 @@ import EEGFileLoader from './tools/eeg-file-loader';
 // End Tool Imports
 
 // Begin Mediator Imports
+import ActiveViewportControlsManager from './mediators/ActiveViewportControlsManager';
 import BrainSlicerHelp from './mediators/brain-slicer-help';
 import QuadViewControlsReset from './mediators/QuadViewControlsReset';
 import OrthoPlanesQuadViewLineSegment from './mediators/OrthoPlanesQuadViewLineSegment';
@@ -80,6 +81,7 @@ class ApplicationManager {
     // End Tool Registers
 
     // Begin Mediator Registers
+    this.registerConstructor(ActiveViewportControlsManager);
     this.registerConstructor(BrainSlicerHelp);
     this.registerConstructor(QuadViewControlsReset);
     this.registerConstructor(OrthoPlanesQuadViewLineSegment);

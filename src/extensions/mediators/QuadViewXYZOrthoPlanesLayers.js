@@ -90,12 +90,16 @@ class OrthoViewPlaneShifter {
         }
       }
     };
-    camControls.withAction('mouseDownAction', (s, x, y, clickCode) => {
-      shiftMode = true;
-      movePlanesToMouse(x, y, clickCode);
+    camControls.withAction('mouseDownAction', (s, enabled, x, y, clickCode) => {
+      if (enabled) {
+        shiftMode = true;
+        movePlanesToMouse(x, y, clickCode);
+      }
     });
-    camControls.withAction('mouseMoveAction', (_, x, y, clickCode) => {
-      movePlanesToMouse(x, y, clickCode);
+    camControls.withAction('mouseMoveAction', (_, enabled, x, y, clickCode) => {
+      if (enabled) {
+        movePlanesToMouse(x, y, clickCode);
+      }
     });
     camControls.withAction('mouseUpAction', () => { shiftMode = false; });
   }

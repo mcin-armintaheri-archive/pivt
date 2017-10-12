@@ -3,6 +3,7 @@ import R from 'ramda';
 export default class ViewportEventHandler {
   constructor(viewport, container) {
     this.viewport = viewport;
+    this.enabled = true;
     this.container = container;
     this.mousedownpan = this.viewport.getPan();
     this.mousedownpos = { x: 0, y: 0 };
@@ -18,6 +19,9 @@ export default class ViewportEventHandler {
     this.container.addEventListener('mousedown', this.listeners.mousedown);
     this.container.addEventListener('wheel', this.listeners.wheel);
     this.container.oncontextmenu = () => false;
+  }
+  setEnabled(boolean) {
+    this.enabled = boolean;
   }
   getViewport() {
     return this.viewport;
@@ -36,10 +40,10 @@ export default class ViewportEventHandler {
     const handlers = this.handlerExtensions[methodName] || [];
     handlers.forEach((f) => {
       if (propagation) {
-        f(stopPropagation, ...args);
+        f(stopPropagation, this.enabled, ...args);
       }
     });
-    return propagation;
+    return this.enabled && propagation;
   }
   mouseUp() {
     this.container.removeEventListener('mousemove', this.listeners.mousemove);
@@ -68,8 +72,9 @@ export default class ViewportEventHandler {
       const zoom = this.viewport.getTHREECamera().zoom;
       const x = (event.clientX - this.mousedownpos.x) / Math.sqrt(zoom);
       const y = (event.clientY - this.mousedownpos.y) / Math.sqrt(zoom);
-      this.mouseMoveAction(x, y, this.mousedownbutton);
+      return this.mouseMoveAction(x, y, this.mousedownbutton);
     }
+    return false;
   }
   mouseMoveAction(x, y, clickCode) {
     return this.doMouseAction('mouseMoveAction', x, y, clickCode);

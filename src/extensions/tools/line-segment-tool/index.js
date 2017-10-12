@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { SegmentDraw } from 'SegmentDraw';
 
+/* eslint-disable no-underscore-dangle */
+
 /**
  * LineSegmentTool uses the SegmentDraw package to draw line segments
  * into an OrthoPlanes scene. When the segment tool draws, the begin
@@ -24,11 +26,15 @@ export default class LineSegmentTool {
         mouse: viewport.getMousePosReference()
       }
     );
+    this.segment._sampleSegment.segment.layers.enable(0);
+    this.segment._sampleSegment.segment.layers.enable(1);
+    this.segment._sampleSegment.segment.layers.enable(2);
+    this.segment._sampleSegment.segment.layers.enable(3);
     this.segment.on('startInteraction', () => {
-      camControls.getTrackballControls().setEnabled(false);
+      camControls.getViewportControls().forEach((c) => { c.setEnabled(false); });
     });
     this.segment.on('stopInteraction', () => {
-      camControls.getTrackballControls().setEnabled(true);
+      camControls.getViewportControls().forEach((c) => { c.setEnabled(true); });
     });
     this.segment.setBoundingBox(this.scene.getBoundingBox());
     this.segment.on('draw', (begin, end) => {
@@ -38,6 +44,11 @@ export default class LineSegmentTool {
       });
     });
     this.resolve();
+  }
+  switchActiveViewportControls(controls) {
+    const viewport = controls.getViewport();
+    this.segment._camera = viewport.getTHREECamera();
+    this.segment._mouse = viewport.getMousePosReference();
   }
   onSegmentChange(callback) {
     if (callback instanceof Function) {

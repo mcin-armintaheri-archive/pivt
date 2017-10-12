@@ -6,7 +6,6 @@ const ZERO = new THREE.Vector3(0, 0, 0);
 export default class TrackballControls extends ViewportCameraControls {
   constructor(viewport, container) {
     super(viewport, container);
-    this.enabled = true;
     this.lastMouse = null;
     this.resetPosition = new THREE.Vector3();
     this.quatOffset = null;
@@ -26,10 +25,10 @@ export default class TrackballControls extends ViewportCameraControls {
   }
   mouseMoveAction(x, y, clickCode) {
     const propagation = super.mouseMoveAction(x, y, clickCode);
-    if (!propagation) {
+    if (!propagation || !this.enabled) {
       return false;
     }
-    if (this.enabled && clickCode === 0) {
+    if (clickCode === 0) {
       if (!this.lastMouse) {
         this.lastMouse = { x, y };
         return true;
@@ -78,8 +77,5 @@ export default class TrackballControls extends ViewportCameraControls {
       cam.position.applyQuaternion(this.quatOffset);
     }
     cam.lookAt(ZERO);
-  }
-  setEnabled(boolean) {
-    this.enabled = boolean;
   }
 }

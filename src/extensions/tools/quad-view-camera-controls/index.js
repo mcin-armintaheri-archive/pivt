@@ -18,6 +18,9 @@ export default class QuadViewCameraControls {
   getOrthoControls() {
     return this.controls.slice(0, 3);
   }
+  getViewportControls() {
+    return this.controls;
+  }
   dispose() {
     this.controls.forEach((control) => { control.dispose(); });
   }
