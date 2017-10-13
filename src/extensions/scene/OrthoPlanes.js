@@ -15,6 +15,7 @@ export default class OrthoPlanes {
     this.planes = [];
     this.boundingBox = null;
     this.planesAreLoaded = false;
+    this.planesInitCallbacks = [];
   }
   getTHREEScene() {
     return this.scene;
@@ -43,6 +44,9 @@ export default class OrthoPlanes {
   getYZ() {
     return this.planeYZ;
   }
+  onPlanesInitialized(f) {
+    this.planesInitCallbacks.push(f);
+  }
   initializePlanes() {
     this.planeXY = new THREE.Mesh(this.planeGeometry, this.planeMaterial);
     this.planeXZ = new THREE.Mesh(this.planeGeometry, this.planeMaterial);
@@ -57,6 +61,7 @@ export default class OrthoPlanes {
       this.planeSystem.add(plane);
     });
     this.planesAreLoaded = true;
+    this.planesInitCallbacks.forEach((f) => { f(this.planeSystem, this.planes); });
   }
   update() {
     if (!this.planesAreLoaded) {

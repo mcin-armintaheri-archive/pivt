@@ -46,6 +46,9 @@ export default class LineSegmentTool {
     this.resolve();
   }
   switchActiveViewportControls(controls) {
+    if (!this.segment) {
+      return;
+    }
     const viewport = controls.getViewport();
     this.segment._camera = viewport.getTHREECamera();
     this.segment._mouse = viewport.getMousePosReference();

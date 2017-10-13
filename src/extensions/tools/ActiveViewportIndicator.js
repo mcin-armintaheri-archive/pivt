@@ -25,7 +25,7 @@ const fragmentShader = `
 
   void main(void) {
     if (active && (abs(vUv.x) > 1.0 - thickness || abs(vUv.y) > 1.0 - thickness)) {
-      gl_FragColor = vec4(0.0, 0.8, 0.0, 1.0);
+      gl_FragColor = vec4(0.0, 0.9, 0.0, 1.0);
       return;
     }
     discard;
@@ -40,7 +40,7 @@ class ViewportIndicator {
       vertexShader,
       fragmentShader,
       uniforms: {
-        thickness: { value: 0.02 },
+        thickness: { value: 0.012 },
         active: { value: false }
       }
     });

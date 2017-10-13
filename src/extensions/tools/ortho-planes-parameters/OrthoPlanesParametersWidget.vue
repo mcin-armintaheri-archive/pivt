@@ -81,15 +81,15 @@ export default {
   computed: {
     posX: {
       get() { return this.pos.x; },
-      set(v) { this.pos.x = Math.round(v); }
+      set(v) { this.pos.x = v; }
     },
     posY: {
       get() { return this.pos.y; },
-      set(v) { this.pos.y = Math.round(v); }
+      set(v) { this.pos.y = v; }
     },
     posZ: {
       get() { return this.pos.z; },
-      set(v) { this.pos.z = Math.round(v); }
+      set(v) { this.pos.z = v; }
     },
     rotX: {
       get() { return rad2Deg(this.rot.x); },

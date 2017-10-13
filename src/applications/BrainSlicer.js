@@ -63,7 +63,7 @@ export default {
     {
       name: 'sliceTraversal',
       tool: 'SliceTraversal',
-      dependencies: []
+      dependencies: ['view']
     }
   ],
   mediators: [
