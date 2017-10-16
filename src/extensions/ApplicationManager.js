@@ -1,11 +1,9 @@
 import R from 'ramda';
 
-// Applications
-import BrainSlicer from '@/applications/BrainSlicer';
-import EEGViewer from '@/applications/EEGViewer';
-
-
 import Application from './Application';
+
+// Applications
+import BrainSlicer from '../applications/BrainSlicer';
 
 // Begin Page Imports
 import QuadViewOrthoPlanes from './pages/quad-view-ortho-planes';
@@ -263,5 +261,5 @@ export default {
   getInstance() {
     return instance || (instance = new ApplicationManager());
   },
-  APPLICATION_TYPES: { BrainSlicer, EEGViewer }
+  APPLICATION_TYPES: { BrainSlicer }
 };

@@ -1,4 +1,4 @@
-import { CanvasSpliner } from 'CanvasSpliner';
+import { CanvasSpliner } from '../../../../../canvasSpliner/src/CanvasSpliner';
 import CurveToolWidget from './CurveToolWidget';
 
 /**
@@ -11,6 +11,8 @@ export default class CurveTool {
     this.sidebarWidget = CurveToolWidget;
     this.pointMoveCallbacks = [];
     this.title = '';
+    this.splineType = 'monotonic';
+    this.addedPoints = [];
   }
   /**
    * Given a DOM container, inject the curve spliner tool into the element
@@ -23,6 +25,8 @@ export default class CurveTool {
     this.spliner = new CanvasSpliner(container, 250, 250);
     this.spliner.add({ x: 0, y: 0, xLocked: true, safe: true });
     this.spliner.add({ x: 1, y: 1, xLocked: true, safe: true });
+    this.addedPoints.forEach((p) => { this.spliner.add(p); });
+    this.spliner.setSplineType(this.splineType);
     this.spliner.setBackgroundColor('#ffffff');
     this.spliner.draw();
     let locked = false;
@@ -36,10 +40,12 @@ export default class CurveTool {
     this.spliner.on('releasePoint', (csObj) => {
       this.pointMoveCallbacks.forEach(f => f(csObj));
     });
-    this.spliner.on('pointAdded', (csObj) => {
+    this.spliner.on('pointAdded', (csObj, p) => {
+      this.addedPoints.push(p);
       this.pointMoveCallbacks.forEach(f => f(csObj));
     });
-    this.spliner.on('pointRemoved', (csObj) => {
+    this.spliner.on('pointRemoved', (csObj, i) => {
+      this.addedPoints.splice(i, 1);
       this.pointMoveCallbacks.forEach(f => f(csObj));
     });
   }
@@ -57,5 +63,24 @@ export default class CurveTool {
    */
   setTitle(title) {
     this.title = title;
+  }
+  setSplineType(type) {
+    this.splineType = type;
+    this.spliner.setSplineType(type);
+    this.spliner.draw();
+  }
+  getSplineType() {
+    return this.splineType;
+  }
+  serialize() {
+    const splineType = this.splineType;
+    const points = this.addedPoints;
+    return { points, splineType };
+  }
+  deserialize(json) {
+    this.setSplineType(json.splineType);
+    this.addedPoints = json.points;
+    this.addedPoints.forEach((p) => { this.spliner.add(p); });
+    this.spliner.draw();
   }
 }

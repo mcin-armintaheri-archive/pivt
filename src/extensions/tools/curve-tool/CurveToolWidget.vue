@@ -33,10 +33,9 @@ export default {
   props: ['controller'],
   mounted() {
     this.controller.initialize(this.$el.querySelector('.curve-tool-mount'));
-    this.controller.getSpliner().setSplineType('monotonic');
   },
   data() {
-    return { splineType: 'Monotonic' };
+    return {};
   },
   methods: {
     setType(type) {
@@ -45,8 +44,16 @@ export default {
         this.splineType[0].toUpperCase() +
         this.splineType.slice(1, this.splineType.length)
       );
-      this.controller.getSpliner().setSplineType(type);
-      this.controller.getSpliner().draw();
+      this.controller.setSplineType(type);
+    }
+  },
+  computed: {
+    splineType() {
+      const splineType = this.controller.splineType;
+      return (
+        splineType[0].toUpperCase() +
+        splineType.slice(1, splineType.length)
+      );
     }
   }
 };
