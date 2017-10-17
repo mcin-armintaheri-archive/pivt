@@ -4,7 +4,10 @@
       <h3>{{ this.controller.title }}</h3>
     </div>
     <el-row>
-      <el-col :span="24" class="curve-tool-mount">
+      <el-col :span="12" class="curve-tool-mount">
+      </el-col>
+      <el-col :span="12">
+        <brightness v-bind:controller="controller"></brightness>
       </el-col>
     </el-row>
     <el-row>
@@ -24,12 +27,16 @@
 </template>
 
 <script>
+import Brightness from './Brightness';
 /**
  * curve-tool-widget renders the CanvasSpliner's DOM element
  * and allows the user to change the type of the spline.
  */
 export default {
   name: 'curve-tool-widget',
+  components: {
+    brightness: Brightness
+  },
   props: ['controller'],
   mounted() {
     this.controller.initialize(this.$el.querySelector('.curve-tool-mount'));

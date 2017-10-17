@@ -10,6 +10,7 @@ export default class CurveTool {
   constructor() {
     this.sidebarWidget = CurveToolWidget;
     this.pointMoveCallbacks = [];
+    this.brightnessChangeCallbacks = [];
     this.title = '';
     this.splineType = 'monotonic';
     this.addedPoints = [];
@@ -49,10 +50,18 @@ export default class CurveTool {
       this.pointMoveCallbacks.forEach(f => f(csObj));
     });
   }
-  onChange(callback) {
+  onContrastChange(callback) {
     if (callback instanceof Function) {
       this.pointMoveCallbacks.push(callback);
     }
+  }
+  onBrightnessChange(callback) {
+    if (callback instanceof Function) {
+      this.brightnessChangeCallbacks.push(callback);
+    }
+  }
+  setBrightness(brightness) {
+    this.brightnessChangeCallbacks.forEach((f) => { f(brightness); });
   }
   getSpliner() {
     return this.spliner;

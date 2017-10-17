@@ -2,7 +2,7 @@
 <template>
   <div class="container">
     <el-button @click="showMaterialAdd = true" type="primary">
-      <i class="el-icon-caret-top"></i>&nbsp;Load Volume Buffer
+      <i class="el-icon-caret-top"></i>&nbsp;Load MRI File 
     </el-button>
     <el-dialog
       title="Select a volume buffer to view."

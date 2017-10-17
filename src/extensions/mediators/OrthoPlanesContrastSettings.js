@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+const BRIGHTNESS_FACTOR = 3;
+
 /**
  * Using the interpolated values of the CurveTool, update the material
  * of the OrthoPlanes scene with the new contrast mapping.
@@ -8,8 +10,12 @@ import * as THREE from 'three';
  * @constructor
  */
 export default function OrthoPlanesContrastSettings(curvetool, materialManager) {
-  curvetool.setTitle('Contrast');
-  curvetool.onChange((csObj) => {
+  curvetool.setTitle('Contrast and Brightness');
+  let savedUniforms = null;
+  curvetool.onContrastChange((csObj) => {
+    if (!savedUniforms) {
+      savedUniforms = {};
+    }
     const planeMaterial = materialManager.getPlaneMaterial();
     if (planeMaterial && planeMaterial.uniforms && planeMaterial.uniforms.curveTexture) {
       const ys = csObj.getYSeriesInterpolated();
@@ -22,7 +28,27 @@ export default function OrthoPlanesContrastSettings(curvetool, materialManager) 
       );
       texture.needsUpdate = true;
       planeMaterial.uniforms.curveTexture.value = texture;
+      savedUniforms.curveTexture = planeMaterial.uniforms.curveTexture.value;
       planeMaterial.uniforms.enableCurve.value = true;
+    }
+  });
+  curvetool.onBrightnessChange((brightness) => {
+    if (!savedUniforms) {
+      savedUniforms = {};
+    }
+    const planeMaterial = materialManager.getPlaneMaterial();
+    if (planeMaterial && planeMaterial.uniforms && planeMaterial.uniforms.brightness) {
+      planeMaterial.uniforms.brightness.value = 1 + (brightness * BRIGHTNESS_FACTOR);
+      savedUniforms.brightness = planeMaterial.uniforms.brightness.value;
+    }
+  });
+  materialManager.onMaterialChange(() => {
+    const planeMaterial = materialManager.getPlaneMaterial();
+    if (savedUniforms) {
+      savedUniforms.curveTexture.needsUpdate = true;
+      planeMaterial.uniforms.curveTexture.value = savedUniforms.curveTexture;
+      planeMaterial.uniforms.enableCurve.value = true;
+      planeMaterial.uniforms.brightness.value = savedUniforms.brightness;
     }
   });
 }

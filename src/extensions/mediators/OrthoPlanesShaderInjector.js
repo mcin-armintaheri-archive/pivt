@@ -42,11 +42,18 @@ const FRAGMENT = `
   uniform sampler2D textures[maxNbOfTextures];
   uniform bool trilinearInterpol;
 
+  // brightness factor of the voxels
+  uniform float brightness;
+
   // texture that represent the curve data to look up
   uniform sampler2D curveTexture;
 
   // enable contrast curve
   uniform bool enableCurve;
+
+  // color map textures
+  uniform sampler2D colorMapMain;
+  uniform sampler2D colorMapOverlay;
 
   // Shared with the vertex shader
   varying  vec4 worldCoord;
@@ -228,7 +235,14 @@ const FRAGMENT = `
     // forcing a lower alpha (when given)
     color.a = min(color.a, forcedAlpha);
 
-    gl_FragColor = color;
+    vec4 outcolor = color;
+    if (brightness >= 0.0) {
+      outcolor.r = max(min(color.r * brightness, 1.0), 0.0);
+      outcolor.g = max(min(color.g * brightness, 1.0), 0.0);
+      outcolor.b = max(min(color.b * brightness, 1.0), 0.0);
+      outcolor.a = color.a;
+    }
+    gl_FragColor = outcolor;
   }
 `;
 
@@ -310,6 +324,10 @@ export default function OrthoPlanesShaderInjector(materialManager) {
         enableCurve: {
           type: 'b',
           value: false
+        },
+        brightness: {
+          type: 'f',
+          value: -1.0
         }
       }
     });
