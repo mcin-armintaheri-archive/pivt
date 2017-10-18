@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <input class="slider" type="range" v-model="brightness"/>
-    <input class="slider-value" v-model="brightness" />
+    <input type="number" min="0" max="100" class="slider-value" v-model="brightness" />
   </div>
 </template>
 
@@ -21,7 +21,10 @@ export default {
   },
   watch: {
     brightness(v) {
-      this.controller.setBrightness(v / 100);
+      let vclamped = v;
+      if (v > 100) { vclamped = 100; }
+      if (v > 0) { vclamped = 0; }
+      this.controller.setBrightness(vclamped / 100);
     }
   }
 };
@@ -43,6 +46,6 @@ export default {
   }
   .slider-value {
     margin-top: 117px;
-    width: 20px;
+    width: 40px;
   }
 </style>

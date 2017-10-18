@@ -14,14 +14,14 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
-    "CanvasSpliner": "github:jonathanlurie/canvasSpliner",
+    "CanvasSpliner": "github:armintaheri/CanvasSpliner",
     "PlaneShifter": "github:jonathanlurie/Planeshifter",
     "SegmentDraw": "github:jonathanlurie/SegmentDraw",
     "SpectrumPlot2": "github:jonathanlurie/SpectrumPlot2",
     "element-ui": "^1.3.5",
     "file-size": "^1.0.0",
     "pixbincodec": "github:pixpipe/pixbincodec",
-    "pixpipejs": "github:armintaheri/pixpipejs",
+    "pixpipejs": "github:pixpipe/pixpipejs",
     "ramda": "^0.24.1",
     "rx": "^4.1.0",
     "three": "^0.85.2",

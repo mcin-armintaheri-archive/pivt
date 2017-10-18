@@ -142,6 +142,9 @@ let instance = null;
 
 export default {
   getInstance() {
-    return instance || (instance = new BufferManager());
+    if (!instance) {
+      instance = new BufferManager();
+    }
+    return instance;
   }
 };

@@ -55,6 +55,16 @@ export default class PlanesMaterialManager {
       }
     });
   }
+  setMainColorMap(colorMap) {
+    console.log(colorMap);
+    if (this.scene.planeMaterial) {
+      this.scene.planeMaterial.uniforms.colorMap.value = colorMap;
+    }
+  }
+  setOverlayColorMap(colorMap) {
+    this.overLayColorMap = colorMap;
+    console.warn('Feature not implemented!', colorMap);
+  }
   /**
    * Using a buffer in the file buffer list, use pixpipe Image3DGenericDecoder
    * to decode the buffer and then use Image3DToMosaicFilter to convert the

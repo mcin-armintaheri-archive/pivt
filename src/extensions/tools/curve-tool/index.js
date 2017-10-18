@@ -1,4 +1,4 @@
-import { CanvasSpliner } from '../../../../../canvasSpliner/src/CanvasSpliner';
+import { CanvasSpliner } from 'CanvasSpliner';
 import CurveToolWidget from './CurveToolWidget';
 
 /**

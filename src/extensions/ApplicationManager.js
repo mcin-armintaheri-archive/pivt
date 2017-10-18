@@ -259,7 +259,10 @@ class ApplicationManager {
 let instance;
 export default {
   getInstance() {
-    return instance || (instance = new ApplicationManager());
+    if (!instance) {
+      instance = new ApplicationManager();
+    }
+    return instance;
   },
   APPLICATION_TYPES: { BrainSlicer }
 };
