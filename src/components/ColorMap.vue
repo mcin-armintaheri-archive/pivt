@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import * as THREE from 'three';
 import { Colormap, CanvasImageWriter } from 'pixpipejs';
 
 /**
@@ -48,7 +49,14 @@ export default {
       this.colorMapper.setStyle(map);
       this.colorMapper.buildLut(CANVAS_WIDTH);
       const cmap = this.colorMapper.createHorizontalLutImage(false).getData();
-      this.$emit('colormap-select', cmap);
+      const cmaptex = new THREE.DataTexture(
+        new Uint8Array(cmap),
+        cmap.length / 3,
+        1,
+        THREE.RGBFormat
+      );
+      cmaptex.needsUpdate = true;
+      this.$emit('colormap-select', cmaptex);
       const canvas = this.$refs.colorMap;
       const ctx = canvas.getContext('2d');
       canvas.width = CANVAS_WIDTH;

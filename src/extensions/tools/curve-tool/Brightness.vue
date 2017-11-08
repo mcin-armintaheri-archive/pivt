@@ -23,7 +23,7 @@ export default {
     brightness(v) {
       let vclamped = v;
       if (v > 100) { vclamped = 100; }
-      if (v > 0) { vclamped = 0; }
+      if (v < 0) { vclamped = 0; }
       this.controller.setBrightness(vclamped / 100);
     }
   }

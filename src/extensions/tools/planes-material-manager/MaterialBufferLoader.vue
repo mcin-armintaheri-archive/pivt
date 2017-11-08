@@ -3,32 +3,29 @@
     <el-row>
       <el-col>
         <el-button class="load-button" @click="showMaterialAdd = true" type="primary">
-          <i class="el-icon-caret-top"></i>&nbsp;Load Main MRI File
+          <i class="el-icon-caret-top"></i>&nbsp;Add MRI File
         </el-button>
       </el-col>
     </el-row>
     <el-row>
-      <el-col>
-        <color-map v-on:colormap-select="m => controller.setMainColorMap(m)"></color-map>
+      <el-col v-for="(o, i) in controller.getShaderManager().getMRIs()">
+        <color-map v-on:colormap-select="m => updateColorMap(i, m)"></color-map>
+        <div class="voxel-mixer">
+          <label class="voxel-mixer-title">Weight: </label>
+          <input
+            type="range"
+            class="voxel-mixer-slider"
+            v-model="voxelMix[i]"
+          >
+          <input
+            type="number"
+            min="0" max="100"
+            class="voxel-mixer-value"
+            v-model="voxelMix[i]"
+          >
+        </div>
       </el-col>
     </el-row>
-    <el-row>
-      <el-col>
-        <el-button class="load-button" @click="showMaterialAdd = true" type="primary">
-          <i class="el-icon-caret-top"></i>&nbsp;Load Overlay MRI File
-        </el-button>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col>
-        <color-map v-on:colormap-select="m => controller.setOverlayColorMap(m)"></color-map>
-      </el-col>
-    </el-row>
-    <div class="voxel-mixer">
-      <label class="voxel-mixer-title">Mixer: </label>
-      <input type="range" class="voxel-mixer-slider" v-model="voxelMix">
-      <input type="number" min="0" max="100" class="voxel-mixer-value" v-model="voxelMix">
-    </div>
     <el-dialog
       title="Select a volume buffer to view."
       :visible.sync="showMaterialAdd"
@@ -77,8 +74,15 @@ export default {
     return {
       showMaterialAdd: false,
       showLoading: false,
-      voxelMix: 0
+      voxelMix: []
     };
+  },
+  beforeUpdate() {
+    this.controller.getShaderManager().getMRIs().forEach((_, i) => {
+      if (isNaN(this.voxelMix[i])) {
+        this.voxelMix[i] = 100;
+      }
+    });
   },
   methods: {
     /**
@@ -90,9 +94,19 @@ export default {
       this.showMaterialAdd = false;
       this.showLoading = true;
       setTimeout(() => {
-        this.controller.createTextureFromBuffer(buffermanager.getBuffer(uid))
+        this.controller.addMaterialFromBuffer(buffermanager.getBuffer(uid))
           .then(() => { this.showLoading = false; });
       }, 100); // Timeout for the ui to show loading modal.
+    },
+    updateColorMap(i, map) {
+      this.controller.getShaderManager().setArrayUniform('colorMap', i, map);
+      this.controller.getShaderManager().setArrayUniform('enableColorMap', i, 1);
+    }
+  },
+  watch: {
+    voxelMix(v) {
+      const weights = v.map(x => Number(x) / 100);
+      this.controller.getShaderManager().setUniform('weight', weights);
     }
   }
 };
@@ -104,6 +118,7 @@ export default {
   display: flex;
   flex-direction: row;
   margin-top: 10px;
+  margin-bottom: 10px;
   width: 350px;
 }
 .voxel-mixer-title {

@@ -26,7 +26,6 @@ export default class CurveTool {
     this.spliner = new CanvasSpliner(container, 250, 250);
     this.spliner.add({ x: 0, y: 0, xLocked: true, safe: true });
     this.spliner.add({ x: 1, y: 1, xLocked: true, safe: true });
-    this.addedPoints.forEach((p) => { this.spliner.add(p); });
     this.spliner.setSplineType(this.splineType);
     this.spliner.setBackgroundColor('#ffffff');
     this.spliner.draw();
@@ -83,12 +82,12 @@ export default class CurveTool {
   }
   serialize() {
     const splineType = this.splineType;
-    const points = this.addedPoints;
+    const points = this.addedPoints.map(p => ({ x: p.x, y: p.y }));
     return { points, splineType };
   }
   deserialize(json) {
     this.setSplineType(json.splineType);
-    this.addedPoints = json.points;
+    this.addedPoints = json.points.map(p => ({ x: p.x, y: p.y }));
     this.addedPoints.forEach((p) => { this.spliner.add(p); });
     this.spliner.draw();
   }

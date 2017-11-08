@@ -21,7 +21,7 @@ class BufferManager {
    * @return {Array} buffers.
    */
   getBufferList() {
-    return Object.values(this.buffers);
+    return R.values(this.buffers);
   }
   /**
    * Get a buffer by uid

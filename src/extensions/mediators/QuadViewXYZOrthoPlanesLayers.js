@@ -127,10 +127,13 @@ export default class QuadViewXYZOrthoPlanesLayers {
     this.aligners = [];
     this.axisSystems = [];
     planeParams.onRotationReset(this.resetCameraUps.bind(this));
-    materialManager.onMaterialChange((material, dimensions) => {
+    materialManager.onMaterialChange((shaderManager) => {
       scene.getPlaneSystem().position.set(0, 0, 0);
       scene.getPlaneSystem().rotation.set(0, 0, 0);
-      const { diagonal } = dimensions;
+      const diagonal = shaderManager.getDiagonal();
+      if (!diagonal) {
+        return;
+      }
       const camRadius = diagonal * 0.5;
       this.threeScene.updateMatrixWorld(true);
       const viewportControls = camControls.getOrthoControls();
@@ -195,14 +198,17 @@ export default class QuadViewXYZOrthoPlanesLayers {
        */
       if (quadviewCameraAxes) {
         const thickness = 0.6;
-        quadviewCameraAxes.createParentedAxes(
-          layout.getBottomRight(),
-          this.planeSystem,
-          diagonal * 0.9,
-          thickness,
-          0.5,
-          [0, 1, 2, 3]
-        );
+        quadviewCameraAxes.dispose();
+        if (shaderManager.getMRIs().length === 1) {
+          quadviewCameraAxes.createParentedAxes(
+            layout.getBottomRight(),
+            this.planeSystem,
+            diagonal,
+            thickness,
+            0.5,
+            [0, 1, 2, 3]
+          );
+        }
       }
       this.planesAreLoaded = true;
     });

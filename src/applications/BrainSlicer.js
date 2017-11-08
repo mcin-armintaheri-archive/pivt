@@ -73,11 +73,6 @@ export default {
       dependencies: ['cameraControls', 'activeViewportIndicator', 'lineSegmentTool', 'sliceTraversal']
     },
     {
-      name: 'shaderInjector',
-      mediator: 'OrthoPlanesShaderInjector',
-      dependencies: ['materialManager']
-    },
-    {
       name: 'planeLayers',
       mediator: 'QuadViewXYZOrthoPlanesLayers',
       dependencies: ['view', 'materialManager', 'cameraControls', 'planeParams', 'quadviewCameraAxes']

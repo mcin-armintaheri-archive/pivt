@@ -40,7 +40,6 @@ import ActiveViewportControlsManager from './mediators/ActiveViewportControlsMan
 import BrainSlicerHelp from './mediators/brain-slicer-help';
 import QuadViewControlsReset from './mediators/QuadViewControlsReset';
 import OrthoPlanesQuadViewLineSegment from './mediators/OrthoPlanesQuadViewLineSegment';
-import OrthoPlanesShaderInjector from './mediators/OrthoPlanesShaderInjector';
 import QuadViewXYZOrthoPlanesLayers from './mediators/QuadViewXYZOrthoPlanesLayers';
 import QuadViewXYZOrthoPlanesShifter from './mediators/QuadViewXYZOrthoPlanesShifter';
 import OrthoPlanesContrastSettings from './mediators/OrthoPlanesContrastSettings';
@@ -87,7 +86,6 @@ class ApplicationManager {
     this.registerConstructor(BrainSlicerHelp);
     this.registerConstructor(QuadViewControlsReset);
     this.registerConstructor(OrthoPlanesQuadViewLineSegment);
-    this.registerConstructor(OrthoPlanesShaderInjector);
     this.registerConstructor(QuadViewXYZOrthoPlanesLayers);
     this.registerConstructor(QuadViewXYZOrthoPlanesShifter);
     this.registerConstructor(OrthoPlanesContrastSettings);

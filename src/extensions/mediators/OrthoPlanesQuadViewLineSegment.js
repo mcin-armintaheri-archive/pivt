@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+// import * as THREE from 'three';
 
 /**
  * OrthoPlanesLineSegmentTool is a mediator that takes the begin and end
@@ -13,9 +13,12 @@ import * as THREE from 'three';
 export default class OrthoPlanesQuadViewLineSegment {
   constructor(view, camControls, materialManager, lineSegmentTool, intensityPlot) {
     intensityPlot.setWindowTitle('Segment Intensity Plot');
-    materialManager.onMaterialChange((_1, dimensions, mniVolume) => {
+    materialManager.onMaterialChange((shaderManager, mriVolume) => {
+      console.log(shaderManager, mriVolume);
       lineSegmentTool.initialize(view.layout.getBottomRight(), camControls);
-      const { x, y, z } = dimensions;
+      // can dump this
+      /*
+      const { x, y, z } = shaderManager.getDimensions();
       const offset = new THREE.Vector3(x / 2, y / 2, z / 2);
       lineSegmentTool.onSegmentChange((begin, end) => {
         const fromPos = begin.clone();
@@ -24,9 +27,10 @@ export default class OrthoPlanesQuadViewLineSegment {
         toPos.y *= -1;
         fromPos.add(offset);
         toPos.add(offset);
-        const intensities = mniVolume.getSegmentSample(fromPos, toPos, 0);
+        const intensities = mriVolume.getSegmentSample(fromPos, toPos, 0);
         intensityPlot.updateSeries(intensities.colors[0], intensities.labels);
       });
+      */
     });
   }
 }

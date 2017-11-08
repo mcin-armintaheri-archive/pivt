@@ -15,9 +15,7 @@ export default class SliceTraversal {
     this.planeSystem = null;
     this.steps = AXES.map(a => a.clone());
     this.direction = new THREE.Vector3();
-    view.scene.onPlanesInitialized((planeSystem) => {
-      this.planeSystem = planeSystem;
-    });
+    this.planeSystem = view.scene.getPlaneSystem();
     this.activeControls = null;
     window.addEventListener('keydown', (evt) => {
       if (!this.planeSystem ||
