@@ -12,17 +12,25 @@ const compareVecs = comp => (a1, a2) => {
 };
 
 const ZERO_VEC_ARRAY = [0, 0, 0];
+const DEFAULT_SHADER = `
+  void main() {
+    discard;
+  }
+`;
 
 /**
- * ShaderManager is used to manage the shaders used to sample an MRI volume and shade
- * faces based on the sampled intensity at points in the volume.
- * @param       {OrthoPlanes} scene
- * @param       {Layout} layout
+* ShaderManager is used to manage the shaders used to sample an MRI volume and shade
+* faces based on the sampled intensity at points in the volume.
+* @param       {OrthoPlanes} scene
+* @param       {Layout} layout
  * @param       {PlanesMaterialManager} materialManager
  * @constructor
  */
 export default class ShaderManager {
   constructor() {
+    this.material = new THREE.ShaderMaterial({
+      fragmentShader: DEFAULT_SHADER
+    });
     this.box = new THREE.Box3();
     this.overlayMRIBuffers = [];
     this.uniforms = {
@@ -75,6 +83,15 @@ export default class ShaderManager {
       compareVecs((x1, x2) => (x1 > x2 ? x1 : x2)),
       ZERO_VEC_ARRAY
     );
+    const v1 = new THREE.Vector3().fromArray(this.uniforms.worldMin.value);
+    const v2 = new THREE.Vector3().fromArray(this.uniforms.worldMax.value);
+    this.diagonal = new THREE.Vector3().subVectors(v2, v1).length();
+    this.box.copy(new THREE.Box3(v1, v2));
+    if (bs.length === 0) {
+      this.material.fragmentShader = DEFAULT_SHADER;
+      this.material.needsUpdate = true;
+      return;
+    }
     this.uniforms.w2v.value = R.flatten(bs.map(R.prop('w2v')));
     this.uniforms.swapMat.value = R.flatten(bs.map(R.prop('swapMat')));
     this.uniforms.stride.value = R.flatten(bs.map(R.prop('stride')));
@@ -92,7 +109,7 @@ export default class ShaderManager {
       offset += this.uniforms.nbTexturesUsed.value[i];
     }
     // Generate texture Offsets:
-    this.material = new THREE.ShaderMaterial({
+    this.material.copy(new THREE.ShaderMaterial({
       side: THREE.DoubleSide,
       transparent: true,
       uniforms: this.uniforms,
@@ -101,11 +118,8 @@ export default class ShaderManager {
         this.uniforms.textures.value.length,
         this.uniforms.textureOffsets.value.length
       )
-    });
-    const v1 = new THREE.Vector3().fromArray(this.uniforms.worldMin.value);
-    const v2 = new THREE.Vector3().fromArray(this.uniforms.worldMax.value);
-    this.diagonal = new THREE.Vector3().subVectors(v2, v1).length();
-    this.box.copy(new THREE.Box3(v1, v2));
+    }));
+    this.material.needsUpdate = true;
   }
   shadePlane(plane) {
     if (this.material) {

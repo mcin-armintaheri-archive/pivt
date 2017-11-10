@@ -10,10 +10,10 @@ export default class ViewportEventHandler {
     this.mousedownbutton = null;
     this.handlerExtensions = {};
     this.listeners = {
-      mouseup: this.mouseUp.bind(this),
-      mousedown: this.mouseDown.bind(this),
-      mousemove: this.mouseMove.bind(this),
-      wheel: this.wheel.bind(this)
+      mouseup: e => this.mouseUp(e),
+      mousedown: e => this.mouseDown(e),
+      mousemove: e => this.mouseMove(e),
+      wheel: e => this.wheel(e)
     };
     this.container.addEventListener('mouseup', this.listeners.mouseup);
     this.container.addEventListener('mousedown', this.listeners.mousedown);

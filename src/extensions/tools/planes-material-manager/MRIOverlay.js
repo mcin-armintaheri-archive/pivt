@@ -35,7 +35,9 @@ function makeGLTextureViews(data) {
 }
 
 export default class MRIOverlay {
-  constructor(image3d) {
+  constructor(name, image3d) {
+    this.name = name;
+    this.colorMapName = null;
     const { textures, textureSize, nbTexturesUsed } = makeGLTextureViews(image3d.getDataUint8());
     const { min, max } = image3d.getTransfoBox('v2w');
     this.uniforms = {
@@ -52,7 +54,15 @@ export default class MRIOverlay {
       colorMap: null,
       enableColorMap: 0
     };
-    // Generate the textures:
+  }
+  getColormapName() {
+    return this.colorMapName;
+  }
+  setColormapName(name) {
+    this.colorMapName = name;
+  }
+  getName() {
+    return this.name;
   }
   getImage3D() {
     return this.image3d;

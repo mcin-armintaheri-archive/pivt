@@ -33,19 +33,22 @@ export default class TrackballControls extends ViewportCameraControls {
         this.lastMouse = { x, y };
         return true;
       }
-      const viewport = this.getViewport();
-      const cam = viewport.getTHREECamera();
-      const { xDir, yDir, zDir } = viewport.getCameraAxes();
-      viewport.inversePan();
       this.dscreen.set(
         -(x - this.lastMouse.x) / 150,
         (y - this.lastMouse.y) / 150
       );
+      const angle = this.dscreen.length();
+      if (angle < 0.001) {
+        return true;
+      }
+      const viewport = this.getViewport();
+      const cam = viewport.getTHREECamera();
+      const { xDir, yDir, zDir } = viewport.getCameraAxes();
+      viewport.inversePan();
       this.mouseScreenToWorld = xDir.clone()
         .multiplyScalar(this.dscreen.x)
         .add(yDir.clone().multiplyScalar(this.dscreen.y));
       this.rotAxis.crossVectors(zDir, this.mouseScreenToWorld).normalize();
-      const angle = this.dscreen.length();
       this.dQuat.setFromAxisAngle(this.rotAxis, angle);
       cam.position.applyQuaternion(this.dQuat);
       cam.up.applyQuaternion(this.dQuat);

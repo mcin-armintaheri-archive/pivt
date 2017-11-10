@@ -28,15 +28,24 @@ import { Colormap, CanvasImageWriter } from 'pixpipejs';
  */
 export default {
   name: 'colormap',
+  props: ['shaderColorMap'],
+  beforeUpdate() {
+    if (this.colorMap !== this.shaderColorMap) {
+      this.setColorMap(this.shaderColorMap || this.colorMap);
+    }
+  },
+  ready() {
+    this.colorMap = this.shaderColorMap;
+  },
   mounted() {
     // TODO: get rid of this by-id abomination in pixpipe
     this.imageWriter.setMetadata('parentDivID', 'color-map-div');
-    this.setColorMap('greys');
+    this.setColorMap(this.shaderColorMap || 'greys');
   },
   data() {
     return {
       availableStyles: Colormap.getAvailableStyles(),
-      colorMap: null,
+      colorMap: this.shaderColorMap,
       colorMapper: new Colormap(),
       imageWriter: new CanvasImageWriter()
     };
@@ -49,14 +58,14 @@ export default {
       this.colorMapper.setStyle(map);
       this.colorMapper.buildLut(CANVAS_WIDTH);
       const cmap = this.colorMapper.createHorizontalLutImage(false).getData();
-      const cmaptex = new THREE.DataTexture(
+      const texture = new THREE.DataTexture(
         new Uint8Array(cmap),
         cmap.length / 3,
         1,
         THREE.RGBFormat
       );
-      cmaptex.needsUpdate = true;
-      this.$emit('colormap-select', cmaptex);
+      texture.needsUpdate = true;
+      this.$emit('colormap-select', { name: map, texture });
       const canvas = this.$refs.colorMap;
       const ctx = canvas.getContext('2d');
       canvas.width = CANVAS_WIDTH;

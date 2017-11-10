@@ -22,6 +22,7 @@ export default class PlanesMaterialManager {
     this.scene = view.scene;
     this.materialChangeCallbacks = [];
     this.texturesCreatedCallbacks = [];
+    this.bufferChecksums = [];
     this.shaderManager = new ShaderManager();
   }
   getMainVolumeTextures() {
@@ -63,7 +64,7 @@ export default class PlanesMaterialManager {
         resolve(null);
         return;
       }
-      this.shaderManager.addOverlay(new MRIOverlay(mriVolume));
+      this.shaderManager.addOverlay(new MRIOverlay(name, mriVolume));
       this.scene.setBoundingBox(this.shaderManager.getBoundingBox());
       this.scene.getPlanes().forEach((p) => { this.shaderManager.shadePlane(p); });
       this.materialChangeCallbacks.forEach((f) => {
@@ -71,7 +72,7 @@ export default class PlanesMaterialManager {
           f(this.shaderManager);
         }
       });
-      this.bufferChecksum = checksum;
+      this.bufferChecksums.push(checksum);
       resolve(this.shaderManager);
     });
   }
@@ -81,13 +82,19 @@ export default class PlanesMaterialManager {
     }
   }
   serialize() {
-    return { checksum: this.bufferChecksum };
+    const overlays = this.shaderManager.getMRIs().map((o, i) => ({
+      name: o.getName(),
+      colorMap: o.getColormapName(),
+      checksum: this.bufferChecksums[i]
+    }));
+    return { overlays };
   }
   deserialize(json) {
-    const buffer = bufferManager.getByChecksum(json.checksum);
-    if (buffer) {
-      return this.setMaterialFromBuffer(buffer);
-    }
-    return Promise.resolve();
+    const bufferMetas = json.overlays.map(o => bufferManager.getByChecksum(o.checksum));
+    return Promise.all(bufferMetas.map(b => this.addMaterialFromBuffer(b))).then(() => {
+      json.overlays.forEach((o, i) => {
+        this.shaderManager.getMRIs()[i].setColormapName(o.colorMap);
+      });
+    });
   }
 }

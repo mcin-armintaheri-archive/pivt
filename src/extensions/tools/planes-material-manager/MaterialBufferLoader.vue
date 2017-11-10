@@ -8,8 +8,18 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-col v-for="(o, i) in controller.getShaderManager().getMRIs()">
-        <color-map v-on:colormap-select="m => updateColorMap(i, m)"></color-map>
+      <el-col v-for="(o, i) in overlays">
+        <div class="overlay-name-container">
+          <div class="overlay-name">File Name: {{o.getName()}}</div>
+          <el-button type="primary" @click="controller.getShaderManager().removeOverlay(i)">
+            Remove
+          </el-button>
+        </div>
+        <color-map
+          v-bind:shaderColorMap="o.colorMapName"
+          v-on:colormap-select="(m) => updateColorMap(i, m.name, m.texture)"
+        >
+        </color-map>
         <div class="voxel-mixer">
           <label class="voxel-mixer-title">Weight: </label>
           <input
@@ -74,7 +84,8 @@ export default {
     return {
       showMaterialAdd: false,
       showLoading: false,
-      voxelMix: []
+      voxelMix: [],
+      overlays: this.controller.getShaderManager().getMRIs()
     };
   },
   beforeUpdate() {
@@ -98,9 +109,11 @@ export default {
           .then(() => { this.showLoading = false; });
       }, 100); // Timeout for the ui to show loading modal.
     },
-    updateColorMap(i, map) {
-      this.controller.getShaderManager().setArrayUniform('colorMap', i, map);
-      this.controller.getShaderManager().setArrayUniform('enableColorMap', i, 1);
+    updateColorMap(i, name, texture) {
+      const shaderManager = this.controller.getShaderManager();
+      shaderManager.setArrayUniform('colorMap', i, texture);
+      shaderManager.setArrayUniform('enableColorMap', i, 1);
+      shaderManager.getMRIs()[i].setColormapName(name);
     }
   },
   watch: {
@@ -120,6 +133,18 @@ export default {
   margin-top: 10px;
   margin-bottom: 10px;
   width: 350px;
+}
+.overlay-name {
+  align-items: center;
+}
+.overlay-name-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  height: 40px;
+  color: #fff;
 }
 .voxel-mixer-title {
   color: #fff;
