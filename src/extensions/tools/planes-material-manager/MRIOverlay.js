@@ -38,6 +38,10 @@ export default class MRIOverlay {
   constructor(name, image3d) {
     this.name = name;
     this.colorMapName = null;
+    this.weight = 1.0;
+    this.timeIndex = 0;
+    const timeDim = image3d.getMetadata('dimensions').find(d => d.nameWorldSpace === 't');
+    this.maxTimeIndex = timeDim ? timeDim.length : 0;
     const { textures, textureSize, nbTexturesUsed } = makeGLTextureViews(image3d.getDataUint8());
     const { min, max } = image3d.getTransfoBox('v2w');
     this.uniforms = {
@@ -47,7 +51,9 @@ export default class MRIOverlay {
       swapMat: image3d.getVoxelCoordinatesSwapMatrix(true),
       stride: image3d.getMetadata('dimensions').map(R.prop('stride')).slice(0, 3).reverse(),
       dimensions: image3d.getMetadata('dimensions').map(R.prop('length')).slice(0, 3).reverse(),
-      weight: 1.0,
+      weight: this.weight,
+      timeIndex: this.timeIndex,
+      timeStride: timeDim ? timeDim.stride : 0,
       nbTexturesUsed,
       textureSize,
       textures,
@@ -60,6 +66,21 @@ export default class MRIOverlay {
   }
   setColormapName(name) {
     this.colorMapName = name;
+  }
+  getWeight() {
+    return this.weight;
+  }
+  setWeight(weight) {
+    this.weight = weight;
+  }
+  getTimeIndex() {
+    return this.timeIndex;
+  }
+  setTimeIndex(timeIndex) {
+    this.timeIndex = timeIndex;
+  }
+  getMaxTime() {
+    return this.maxTimeIndex;
   }
   getName() {
     return this.name;

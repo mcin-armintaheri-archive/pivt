@@ -20,20 +20,22 @@
           v-on:colormap-select="(m) => updateColorMap(i, m.name, m.texture)"
         >
         </color-map>
-        <div class="voxel-mixer">
-          <label class="voxel-mixer-title">Weight: </label>
-          <input
-            type="range"
-            class="voxel-mixer-slider"
-            v-model="voxelMix[i]"
-          >
-          <input
-            type="number"
-            min="0" max="100"
-            class="voxel-mixer-value"
-            v-model="voxelMix[i]"
-          >
-        </div>
+        <uniform-slider
+          title="Weight: "
+          v-bind:shaderValue="o.weight"
+          maxValue="100"
+          multiplier="100"
+          v-on:value-change="w => updateWeight(i, w)"
+        >
+        </uniform-slider>
+        <uniform-slider
+          v-if="o.getMaxTime() > 1"
+          title="Time Index: "
+          v-bind:shaderValue="o.timeIndex"
+          v-bind:maxValue="o.getMaxTime()"
+          v-on:value-change="t => updateTimeIndex(i, t)"
+        >
+        </uniform-slider>
       </el-col>
     </el-row>
     <el-dialog
@@ -66,6 +68,7 @@
 import ColorMap from '@/components/ColorMap';
 import BufferManager from '@/extensions/BufferManager';
 import BufferManagerWidget from '@/components/BufferManagerWidget';
+import UniformSlider from './UniformSlider';
 
 const buffermanager = BufferManager.getInstance();
 
@@ -78,22 +81,15 @@ export default {
   props: ['controller'],
   components: {
     'buffer-manager-widget': BufferManagerWidget,
-    'color-map': ColorMap
+    'color-map': ColorMap,
+    'uniform-slider': UniformSlider
   },
   data() {
     return {
       showMaterialAdd: false,
       showLoading: false,
-      voxelMix: [],
       overlays: this.controller.getShaderManager().getMRIs()
     };
-  },
-  beforeUpdate() {
-    this.controller.getShaderManager().getMRIs().forEach((_, i) => {
-      if (isNaN(this.voxelMix[i])) {
-        this.voxelMix[i] = 100;
-      }
-    });
   },
   methods: {
     /**
@@ -114,12 +110,16 @@ export default {
       shaderManager.setArrayUniform('colorMap', i, texture);
       shaderManager.setArrayUniform('enableColorMap', i, 1);
       shaderManager.getMRIs()[i].setColormapName(name);
-    }
-  },
-  watch: {
-    voxelMix(v) {
-      const weights = v.map(x => Number(x) / 100);
-      this.controller.getShaderManager().setUniform('weight', weights);
+    },
+    updateWeight(i, w) {
+      const shaderManager = this.controller.getShaderManager();
+      shaderManager.setArrayUniform('weight', i, w);
+      shaderManager.getMRIs()[i].setWeight(w);
+    },
+    updateTimeIndex(i, t) {
+      const shaderManager = this.controller.getShaderManager();
+      shaderManager.setArrayUniform('timeIndex', i, t);
+      shaderManager.getMRIs()[i].setTimeIndex(t);
     }
   }
 };
@@ -127,13 +127,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.voxel-mixer {
-  display: flex;
-  flex-direction: row;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  width: 350px;
-}
 .overlay-name {
   align-items: center;
 }
@@ -142,22 +135,11 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-top: 15px;
   margin-bottom: 15px;
   height: 40px;
   color: #fff;
 }
-.voxel-mixer-title {
-  color: #fff;
-}
-.voxel-mixer-slider {
-  margin-left: 30px;
-  margin-right: 30px;
-  width: 100%;
-}
-.voxel-mixer-value {
-  width: 40px;
-}
-
 .load-button {
   margin-top: 5px;
   margin-bottom: 5px;

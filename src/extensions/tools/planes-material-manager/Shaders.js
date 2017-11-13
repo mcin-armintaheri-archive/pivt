@@ -14,8 +14,6 @@ export const VERTEX = `
 export const FRAGMENT = (nbTextures, numMRIs) => `
   precision highp float;
 
-  // time index
-  uniform float timeIndex;
 
   // Use trinlinear interpolation
   uniform bool trilinearInterpolation;
@@ -36,8 +34,13 @@ export const FRAGMENT = (nbTextures, numMRIs) => `
   uniform mat3 swapMat[${numMRIs}];
   uniform vec3 stride[${numMRIs}];
   uniform vec3 dimensions[${numMRIs}];
+
   // sampling weights
   uniform float weight[${numMRIs}];
+
+  // Time index and stride for fMRI
+  uniform float timeIndex[${numMRIs}];
+  uniform float timeStride[${numMRIs}];
 
   // number of textures used, and texture array offset of the volumes
   uniform int nbTexturesUsed[${numMRIs}];
@@ -67,9 +70,10 @@ export const FRAGMENT = (nbTextures, numMRIs) => `
 
   float getIntensityWorldNearest(
     vec3 voxelPos,
-    float timeIndex,
     vec3 dimensions,
     vec3 stride,
+    float timeIndex,
+    float timeStride,
     int textureOffset,
     int nbTexturesUsed
   )
@@ -87,6 +91,7 @@ export const FRAGMENT = (nbTextures, numMRIs) => `
           continue;
         }
         float offset = floor(dot(voxelPos, stride));
+        offset += timeIndex * timeStride;
         offset -= skipped;
         vec2 tex;
         tex.x = mod(offset, textureSize[i].x) + 0.5;
@@ -101,7 +106,7 @@ export const FRAGMENT = (nbTextures, numMRIs) => `
   const float EPSILON = 0.06;
   // return the color corresponding to the given shifted world cooridinates
   // using a neirest neighbors approx (no interpolation)
-  void getIntensityWorld(inout vec4 colors[${numMRIs}], vec4 worldCoord, float timeIndex)
+  void getIntensityWorld(inout vec4 colors[${numMRIs}], vec4 worldCoord)
   {
     float maxIntensity = -1.0;
     for (int i = 0; i < ${numMRIs}; i++)
@@ -111,9 +116,10 @@ export const FRAGMENT = (nbTextures, numMRIs) => `
       voxelPos = floor(voxelPos);
       float intensity = getIntensityWorldNearest(
         voxelPos,
-        timeIndex,
         dimensions[i],
         stride[i],
+        timeIndex[i],
+        timeStride[i],
         textureOffsets[i],
         nbTexturesUsed[i]
       );
@@ -188,7 +194,7 @@ export const FRAGMENT = (nbTextures, numMRIs) => `
 
     // interpolation or not
     vec4 colors[${numMRIs}];
-    getIntensityWorld(colors, worldCoord, timeIndex);
+    getIntensityWorld(colors, worldCoord);
 
     gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
     for (int i = 0; i < ${numMRIs}; i++)

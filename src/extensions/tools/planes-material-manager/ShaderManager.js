@@ -34,7 +34,6 @@ export default class ShaderManager {
     this.box = new THREE.Box3();
     this.overlayMRIBuffers = [];
     this.uniforms = {
-      timeIndex: { type: 'i', value: 0 },
       trilinearInterpol: { type: 'b', value: false },
       contrastTexture: { type: 't', value: null },
       enableConstrast: { type: 'b', value: false },
@@ -47,6 +46,8 @@ export default class ShaderManager {
       stride: { type: '3fv', value: [] },
       dimensions: { type: '3fv', value: [] },
       weight: { type: '1fv', value: [] },
+      timeIndex: { type: '1fv', value: [] },
+      timeStride: { type: '1fv', value: [] },
       nbTexturesUsed: { type: '1iv', value: [] },
       textureSize: { type: '2fv', value: [] },
       textures: { type: 'tv', value: [] },
@@ -97,6 +98,8 @@ export default class ShaderManager {
     this.uniforms.stride.value = R.flatten(bs.map(R.prop('stride')));
     this.uniforms.dimensions.value = R.flatten(bs.map(R.prop('dimensions')));
     this.uniforms.weight.value = bs.map(R.prop('weight'));
+    this.uniforms.timeIndex.value = bs.map(R.prop('timeIndex'));
+    this.uniforms.timeStride.value = bs.map(R.prop('timeStride'));
     this.uniforms.nbTexturesUsed.value = bs.map(R.prop('nbTexturesUsed'));
     this.uniforms.textureSize.value = R.flatten(bs.map(R.prop('textureSize')));
     this.uniforms.textures.value = R.unnest(bs.map(R.prop('textures')));

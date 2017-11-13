@@ -85,7 +85,9 @@ export default class PlanesMaterialManager {
     const overlays = this.shaderManager.getMRIs().map((o, i) => ({
       name: o.getName(),
       colorMap: o.getColormapName(),
-      checksum: this.bufferChecksums[i]
+      checksum: this.bufferChecksums[i],
+      weight: o.getWeight(),
+      timeIndex: o.getTimeIndex()
     }));
     return { overlays };
   }
@@ -93,7 +95,13 @@ export default class PlanesMaterialManager {
     const bufferMetas = json.overlays.map(o => bufferManager.getByChecksum(o.checksum));
     return Promise.all(bufferMetas.map(b => this.addMaterialFromBuffer(b))).then(() => {
       json.overlays.forEach((o, i) => {
-        this.shaderManager.getMRIs()[i].setColormapName(o.colorMap);
+        const mriOverlay = this.shaderManager.getMRIs()[i];
+        if (!mriOverlay) {
+          return;
+        }
+        mriOverlay.setColormapName(o.colorMap);
+        mriOverlay.setWeight(o.weight);
+        mriOverlay.setTimeIndex(o.timeIndex);
       });
     });
   }
