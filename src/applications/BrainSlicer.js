@@ -16,6 +16,16 @@ export default {
       dependencies: []
     },
     {
+      name: 'volumeInfo',
+      tool: 'VolumeInfo',
+      dependencies: ['view']
+    },
+    {
+      name: 'intensityPlot',
+      tool: 'IntensityPlotWindow',
+      dependencies: ['view']
+    },
+    {
       name: 'materialManager',
       tool: 'PlanesMaterialManager',
       dependencies: ['view']
@@ -23,11 +33,6 @@ export default {
     {
       name: 'quadviewCameraAxes',
       tool: 'QuadViewCameraAxes',
-      dependencies: ['view']
-    },
-    {
-      name: 'intensityPlot',
-      tool: 'IntensityPlotWindow',
       dependencies: ['view']
     },
     {
@@ -89,8 +94,8 @@ export default {
     },
     {
       name: 'lineSegmentMediator',
-      mediator: 'OrthoPlanesQuadViewLineSegment',
-      dependencies: ['view', 'cameraControls', 'materialManager', 'lineSegmentTool', 'intensityPlot']
+      mediator: 'LineSegmentTransmitter',
+      dependencies: ['view', 'cameraControls', 'materialManager', 'lineSegmentTool', 'intensityPlot', 'volumeInfo']
     },
     {
       name: 'cameraControlsReset',
@@ -101,6 +106,11 @@ export default {
       name: 'brainSlicerHelp',
       mediator: 'BrainSlicerHelp',
       dependencies: ['helpWindow']
+    },
+    {
+      name: 'shaderTransmitter',
+      mediator: 'PlanesShaderTransmitter',
+      dependencies: ['materialManager', 'volumeInfo', 'intensityPlot']
     }
   ]
 };

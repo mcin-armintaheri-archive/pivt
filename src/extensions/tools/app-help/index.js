@@ -4,11 +4,14 @@ export default class AppHelp {
   constructor() {
     this.windowConfig = {
       widget: null,
-      title: 'Camera Parameters',
+      title: '',
       openPosition: { x: 0.4, y: 0.02, viewportCoords: true },
       open: false
     };
     this.sidebarWidget = HelpSidebarWidget;
+  }
+  setHelpTitle(title) {
+    this.windowConfig.title = title;
   }
   setHelpMessageComponent(component) {
     this.windowConfig.widget = component;

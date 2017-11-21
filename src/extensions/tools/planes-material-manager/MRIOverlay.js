@@ -37,11 +37,12 @@ function makeGLTextureViews(data) {
 export default class MRIOverlay {
   constructor(name, image3d) {
     this.name = name;
+    this.image3d = image3d;
     this.colorMapName = null;
     this.weight = 1.0;
     this.timeIndex = 0;
     const timeDim = image3d.getMetadata('dimensions').find(d => d.nameWorldSpace === 't');
-    this.maxTimeIndex = timeDim ? timeDim.length : 0;
+    this.maxTimeIndex = timeDim ? timeDim.length - 1 : 0;
     const { textures, textureSize, nbTexturesUsed } = makeGLTextureViews(image3d.getDataUint8());
     const { min, max } = image3d.getTransfoBox('v2w');
     this.uniforms = {

@@ -23,6 +23,7 @@ import OrthoPlanes from './scene/OrthoPlanes';
 import AppHelp from './tools/app-help';
 import CurveTool from './tools/curve-tool/';
 import PlanesMaterialManager from './tools/planes-material-manager';
+import VolumeInfo from './tools/volume-info';
 import OrthoPlanesParameters from './tools/ortho-planes-parameters';
 import QuadViewCameraParameters from './tools/quad-view-camera-parameters';
 import QuadViewCameraControls from './tools/quad-view-camera-controls';
@@ -39,10 +40,11 @@ import SliceTraversal from './tools/SliceTraversal';
 import ActiveViewportControlsManager from './mediators/ActiveViewportControlsManager';
 import BrainSlicerHelp from './mediators/brain-slicer-help';
 import QuadViewControlsReset from './mediators/QuadViewControlsReset';
-import OrthoPlanesQuadViewLineSegment from './mediators/OrthoPlanesQuadViewLineSegment';
+import LineSegmentTransmitter from './mediators/LineSegmentTransmitter';
 import QuadViewXYZOrthoPlanesLayers from './mediators/QuadViewXYZOrthoPlanesLayers';
 import QuadViewXYZOrthoPlanesShifter from './mediators/QuadViewXYZOrthoPlanesShifter';
 import OrthoPlanesContrastSettings from './mediators/OrthoPlanesContrastSettings';
+import PlanesShaderTransmitter from './mediators/PlanesShaderTransmitter';
 // End Mediator Imports
 
 class ApplicationManager {
@@ -69,6 +71,7 @@ class ApplicationManager {
     this.registerConstructor(AppHelp);
     this.registerConstructor(CurveTool);
     this.registerConstructor(PlanesMaterialManager);
+    this.registerConstructor(VolumeInfo);
     this.registerConstructor(OrthoPlanesParameters);
     this.registerConstructor(QuadViewCameraParameters);
     this.registerConstructor(QuadViewCameraControls);
@@ -85,10 +88,11 @@ class ApplicationManager {
     this.registerConstructor(ActiveViewportControlsManager);
     this.registerConstructor(BrainSlicerHelp);
     this.registerConstructor(QuadViewControlsReset);
-    this.registerConstructor(OrthoPlanesQuadViewLineSegment);
+    this.registerConstructor(LineSegmentTransmitter);
     this.registerConstructor(QuadViewXYZOrthoPlanesLayers);
     this.registerConstructor(QuadViewXYZOrthoPlanesShifter);
     this.registerConstructor(OrthoPlanesContrastSettings);
+    this.registerConstructor(PlanesShaderTransmitter);
     // End Mediator Registers
   }
   /**

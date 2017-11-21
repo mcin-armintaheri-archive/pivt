@@ -14,7 +14,7 @@
 <script>
 
 /**
- * The sidebar button for opening the controls window.
+ * The sidebar button for opening the help window.
  */
 export default {
   name: 'brain-slicer-help-window-content',
