@@ -60,8 +60,9 @@ class BufferManager {
    * @param  {Function} callback function called with buffer when loading is complete.
    * @return {Promise} promise that resolves when the buffer loads.
    */
-  loadBuffer(file) {
+  loadBuffer(file, readAsText = false) {
     const file2Buff = new FileToArrayBufferReader();
+    file2Buff.setMetadata('readAsText', readAsText);
     file2Buff.addInput(file);
     file2Buff.update();
     const loader = this;

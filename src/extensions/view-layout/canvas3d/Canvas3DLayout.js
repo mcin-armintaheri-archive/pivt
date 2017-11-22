@@ -14,6 +14,7 @@ export default class Canvas3DLayout {
   constructor(renderer, canvas) {
     this.viewports = [];
     this.renderer = renderer;
+    this.renderer.localClippingEnabled = true;
     this.canvas = canvas;
     this.resizeCanvas();
     // TODO: rxjs the events.

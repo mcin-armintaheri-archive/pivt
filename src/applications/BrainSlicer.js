@@ -31,6 +31,11 @@ export default {
       dependencies: ['view']
     },
     {
+      name: 'mniMesh',
+      tool: 'MNIMesh',
+      dependencies: ['view']
+    },
+    {
       name: 'quadviewCameraAxes',
       tool: 'QuadViewCameraAxes',
       dependencies: ['view']
@@ -64,11 +69,6 @@ export default {
       name: 'activeViewportIndicator',
       tool: 'ActiveViewportIndicator',
       dependencies: []
-    },
-    {
-      name: 'sliceTraversal',
-      tool: 'SliceTraversal',
-      dependencies: ['view']
     }
   ],
   mediators: [
@@ -110,7 +110,7 @@ export default {
     {
       name: 'shaderTransmitter',
       mediator: 'PlanesShaderTransmitter',
-      dependencies: ['materialManager', 'volumeInfo', 'intensityPlot']
+      dependencies: ['materialManager', 'volumeInfo', 'intensityPlot', 'mniMesh']
     }
   ]
 };

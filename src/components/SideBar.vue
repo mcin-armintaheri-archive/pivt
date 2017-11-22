@@ -161,7 +161,7 @@ export default {
   pointer-events: none;
   z-index: 3;
   position: fixed;
-  width: 470px;
+  width: 520px;
   min-height: 100%;
 }
 .sidebar-layout {
@@ -202,7 +202,7 @@ export default {
 .button-container {
   margin: 30px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 .app-collapse {

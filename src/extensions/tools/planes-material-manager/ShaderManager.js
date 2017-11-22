@@ -31,6 +31,7 @@ export default class ShaderManager {
     this.material = new THREE.ShaderMaterial({
       fragmentShader: DEFAULT_SHADER
     });
+    this.onResetCallbacks = [];
     this.box = new THREE.Box3();
     this.overlayMRIBuffers = [];
     this.uniforms = {
@@ -91,6 +92,7 @@ export default class ShaderManager {
     if (bs.length === 0) {
       this.material.fragmentShader = DEFAULT_SHADER;
       this.material.needsUpdate = true;
+      this.onResetCallbacks.forEach((f) => { f(); });
       return;
     }
     this.uniforms.w2v.value = R.flatten(bs.map(R.prop('w2v')));
@@ -123,6 +125,12 @@ export default class ShaderManager {
       )
     }));
     this.material.needsUpdate = true;
+    this.onResetCallbacks.forEach((f) => { f(); });
+  }
+  onReset(callback) {
+    if (callback instanceof Function) {
+      this.onResetCallbacks.push(callback);
+    }
   }
   shadePlane(plane) {
     if (this.material) {

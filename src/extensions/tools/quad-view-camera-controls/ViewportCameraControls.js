@@ -35,7 +35,7 @@ export default class ViewportCameraControls extends ViewportEventHandler {
       return false;
     }
     const cam = this.viewport.getTHREECamera();
-    const incr = -(deltaY * cam.zoom) / 600;
+    const incr = -(deltaY * cam.zoom) / 300;
     cam.zoom += incr;
     if (cam.zoom < 0.5) {
       cam.zoom = 0.5;

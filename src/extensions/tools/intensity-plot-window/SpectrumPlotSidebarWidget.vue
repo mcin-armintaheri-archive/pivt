@@ -4,7 +4,7 @@
       type="primary"
       @click="openPlotWindow"
     >
-      Show Segment Intensity Plot
+      Show Sampled Intensity Plot
     </el-button>
   </div>
 </template>

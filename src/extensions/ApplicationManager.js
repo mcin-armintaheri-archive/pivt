@@ -24,6 +24,7 @@ import AppHelp from './tools/app-help';
 import CurveTool from './tools/curve-tool/';
 import PlanesMaterialManager from './tools/planes-material-manager';
 import VolumeInfo from './tools/volume-info';
+import MNIMesh from './tools/mni-mesh';
 import OrthoPlanesParameters from './tools/ortho-planes-parameters';
 import QuadViewCameraParameters from './tools/quad-view-camera-parameters';
 import QuadViewCameraControls from './tools/quad-view-camera-controls';
@@ -72,6 +73,7 @@ class ApplicationManager {
     this.registerConstructor(CurveTool);
     this.registerConstructor(PlanesMaterialManager);
     this.registerConstructor(VolumeInfo);
+    this.registerConstructor(MNIMesh);
     this.registerConstructor(OrthoPlanesParameters);
     this.registerConstructor(QuadViewCameraParameters);
     this.registerConstructor(QuadViewCameraControls);

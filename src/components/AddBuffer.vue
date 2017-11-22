@@ -62,7 +62,10 @@ export default {
     addFiles(input) {
       // TODO: Kind of specific to add a volume for a general buffer adder.
       this.addBufferLoading = true;
-      const ps = R.values(input.files).map(file => buffermanager.loadBuffer(file));
+      const ps = R.values(input.files).map((file) => {
+        const asText = file.name.endsWith('.obj');
+        return buffermanager.loadBuffer(file, asText);
+      });
       Promise.all(ps).then(() => {
         this.addBufferLoading = false;
         /* eslint-disable no-param-reassign */
