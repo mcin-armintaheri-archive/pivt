@@ -10,6 +10,13 @@
     </el-table-column>
     <el-table-column prop="size" label="Size">
     </el-table-column>
+    <el-table-column prop="" label="Export">
+      <template scope="scope">
+        <span class="export-button" @click="exportFile($event, scope.row.uid)">
+          export
+        </span>
+      </template>
+    </el-table-column>
   </el-table>
 </template>
 
@@ -19,7 +26,7 @@ import BufferManager from '@/extensions/BufferManager';
 
 const filesize = require('file-size');
 
-const buffermanager = BufferManager.getInstance();
+const bufferManager = BufferManager.getInstance();
 
 /**
  * buffer-manager-widget renders a list of the currently
@@ -29,13 +36,13 @@ const buffermanager = BufferManager.getInstance();
 export default {
   name: 'buffer-manager-widget',
   mounted() {
-    buffermanager.onBufferLoad(() => {
-      this.loadedBuffers = buffermanager.getBufferList();
+    bufferManager.onBufferLoad(() => {
+      this.loadedBuffers = bufferManager.getBufferList();
     });
   },
   data() {
     return {
-      loadedBuffers: buffermanager.getBufferList()
+      loadedBuffers: bufferManager.getBufferList()
     };
   },
   computed: {
@@ -61,6 +68,18 @@ export default {
      */
     selectBuffer(row) {
       this.$emit('select-buffer', row.uid);
+    },
+    exportFile(event, uid) {
+      event.stopPropagation();
+      const bufMeta = bufferManager.getBuffer(uid);
+      if (bufMeta) {
+        const { buffer, name } = bufMeta;
+        const blob = new Blob([buffer], { type: 'octet/stream' });
+        const link = document.createElement('a');
+        link.download = name;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+      }
     }
   }
 };
@@ -68,6 +87,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.export-button {
+  color: #249CFA;
+  cursor: pointer;
+}
+.export-button:hover {
+  text-decoration: underline;
+}
 .buffer-table {
   width: 100%;
 }
