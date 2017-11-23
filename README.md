@@ -1,4 +1,4 @@
-# PIVT 
+# PIVT (Platform Independent Visualization Tool)
 
 > An extensible volumetric visualization tool.
 
